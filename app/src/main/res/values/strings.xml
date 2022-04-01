@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Spirala1</string>
+    <string-array name="filter">
+        <item>Sve ankete</item>
+        <item>Sve moje ankete</item>
+        <item>Uradjene ankete</item>
+        <item>Buduce ankete</item>
+        <item>Prosle (neuradjene) ankete</item>
+    </string-array>
+</resources>
