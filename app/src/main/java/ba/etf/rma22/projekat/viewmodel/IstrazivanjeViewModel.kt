@@ -1,6 +1,6 @@
-package ba.etf.rma22.projekat.data.models
+package ba.etf.rma22.projekat.viewmodel
 
-import ba.etf.rma22.projekat.data.istrazivanja.Istrazivanje
+import ba.etf.rma22.projekat.data.models.Istrazivanje
 import ba.etf.rma22.projekat.data.repositories.IstrazivanjeRepository
 
 class IstrazivanjeViewModel {

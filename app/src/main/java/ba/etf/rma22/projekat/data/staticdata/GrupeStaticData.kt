@@ -1,6 +1,6 @@
 package com.example.spirala1.data
 
-import ba.etf.rma22.projekat.data.grupe.Grupa
+import ba.etf.rma22.projekat.data.models.Grupa
 
 fun listaGrupa() : List<Grupa> {
     return listOf(

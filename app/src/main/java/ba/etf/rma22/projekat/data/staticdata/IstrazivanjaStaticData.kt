@@ -1,6 +1,6 @@
 package com.example.spirala1.data
 
-import ba.etf.rma22.projekat.data.istrazivanja.Istrazivanje
+import ba.etf.rma22.projekat.data.models.Istrazivanje
 
 fun listaIstrazivanja() : List<Istrazivanje> {
     return listOf(

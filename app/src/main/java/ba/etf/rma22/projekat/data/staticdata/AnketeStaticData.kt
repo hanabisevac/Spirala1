@@ -1,6 +1,6 @@
 package com.example.spirala1.data
 
-import ba.etf.rma22.projekat.data.ankete.Anketa
+import ba.etf.rma22.projekat.data.models.Anketa
 import java.util.*
 
 

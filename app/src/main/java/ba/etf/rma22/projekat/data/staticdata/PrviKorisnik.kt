@@ -1,6 +1,7 @@
 package ba.etf.rma22.projekat.data.Korisnik
 
-import ba.etf.rma22.projekat.data.ankete.Anketa
+import ba.etf.rma22.projekat.data.models.Anketa
+import ba.etf.rma22.projekat.data.models.Korisnik
 import com.example.spirala1.data.*
 
 fun dajKorisnika() : Korisnik {

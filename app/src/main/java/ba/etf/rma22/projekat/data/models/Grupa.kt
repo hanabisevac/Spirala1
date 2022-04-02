@@ -1,4 +1,4 @@
-package ba.etf.rma22.projekat.data.grupe
+package ba.etf.rma22.projekat.data.models
 
 class Grupa(
     val naziv : String,

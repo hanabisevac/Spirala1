@@ -1,4 +1,4 @@
-package com.example.spirala1
+package ba.etf.rma22
 
 import org.junit.Test
 

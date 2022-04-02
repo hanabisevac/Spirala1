@@ -9,7 +9,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spirala1.R
-import ba.etf.rma22.projekat.data.ankete.Anketa
+import ba.etf.rma22.projekat.data.models.Anketa
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round

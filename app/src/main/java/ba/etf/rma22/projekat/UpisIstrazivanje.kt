@@ -6,11 +6,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Spinner
-import ba.etf.rma22.projekat.data.models.IstrazivanjeViewModel
+import ba.etf.rma22.projekat.viewmodel.IstrazivanjeViewModel
 import android.widget.ArrayAdapter
 import android.widget.Button
 import com.example.spirala1.R
-import ba.etf.rma22.projekat.data.models.GrupeViewModel
+import ba.etf.rma22.projekat.viewmodel.GrupeViewModel
 
 class UpisIstrazivanje : AppCompatActivity() {
     lateinit var spinZaGodine : Spinner

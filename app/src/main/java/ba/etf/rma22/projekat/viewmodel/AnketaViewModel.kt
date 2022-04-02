@@ -1,6 +1,6 @@
-package ba.etf.rma22.projekat.data.models
+package ba.etf.rma22.projekat.viewmodel
 
-import ba.etf.rma22.projekat.data.ankete.Anketa
+import ba.etf.rma22.projekat.data.models.Anketa
 import ba.etf.rma22.projekat.data.repositories.AnketaRepository
 import java.util.*
 

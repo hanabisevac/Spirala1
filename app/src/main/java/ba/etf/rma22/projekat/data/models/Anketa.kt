@@ -1,4 +1,4 @@
-package ba.etf.rma22.projekat.data.ankete
+package ba.etf.rma22.projekat.data.models
 
 import java.util.*
 

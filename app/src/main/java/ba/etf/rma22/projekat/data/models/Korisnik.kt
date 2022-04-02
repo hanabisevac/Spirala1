@@ -1,6 +1,6 @@
-package ba.etf.rma22.projekat.data.Korisnik
+package ba.etf.rma22.projekat.data.models
 
-import ba.etf.rma22.projekat.data.ankete.Anketa
+import ba.etf.rma22.projekat.data.models.Anketa
 
 class Korisnik(
     val ime : String,

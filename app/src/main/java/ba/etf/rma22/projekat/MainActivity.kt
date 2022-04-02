@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spirala1.R
 import ba.etf.rma22.projekat.view.AnketaAdapter
-import ba.etf.rma22.projekat.data.models.AnketaViewModel
+import ba.etf.rma22.projekat.viewmodel.AnketaViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
@@ -35,11 +35,11 @@ class MainActivity : AppCompatActivity() {
         spiner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val izbor : String = adapterView?.getItemAtPosition(position).toString()
-                if(izbor == "Uradjene ankete") anketaAdapter.updateAnkete(anketaViewModel.getUradjeneAnkete())
+                if(izbor == "Urađene ankete") anketaAdapter.updateAnkete(anketaViewModel.getUradjeneAnkete())
 
-                else if(izbor == "Buduce ankete") anketaAdapter.updateAnkete(anketaViewModel.getSljedeceAnkete())
+                else if(izbor == "Buduće ankete") anketaAdapter.updateAnkete(anketaViewModel.getSljedeceAnkete())
 
-                else if(izbor == "Prosle (neuradjene) ankete") anketaAdapter.updateAnkete(anketaViewModel.getZavrseneAnkete())
+                else if(izbor == "Prošle ankete") anketaAdapter.updateAnkete(anketaViewModel.getZavrseneAnkete())
 
                 else if(izbor == "Sve moje ankete") anketaAdapter.updateAnkete(anketaViewModel.getMyAnkete())
 
