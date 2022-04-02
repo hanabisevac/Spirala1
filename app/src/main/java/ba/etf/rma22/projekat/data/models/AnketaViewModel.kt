@@ -1,13 +1,19 @@
-package com.example.spirala1.viewmodel
+package ba.etf.rma22.projekat.data.models
 
-import com.example.spirala1.data.Anketa
-import com.example.spirala1.data.AnketaRepository
+import ba.etf.rma22.projekat.data.ankete.Anketa
+import ba.etf.rma22.projekat.data.repositories.AnketaRepository
 import java.util.*
 
 class AnketaViewModel {
 
     fun getSveAnkete() : List<Anketa>{
         val lista : List<Anketa> = AnketaRepository.getAll()
+        Collections.sort(lista)
+        return lista
+    }
+
+    fun getMyAnkete() : List<Anketa> {
+        val lista : List<Anketa> = AnketaRepository.getMyAnkete()
         Collections.sort(lista)
         return lista
     }

@@ -1,4 +1,4 @@
-package com.example.spirala1.data
+package ba.etf.rma22.projekat.data.istrazivanja
 
 class Istrazivanje(
     val naziv : String,

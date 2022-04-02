@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="100dp"
     android:padding="20dp"
-    tools:context=".UpisIstrazivanje">
+    tools:context="ba.etf.rma22.projekat.UpisIstrazivanje">
 
         <Spinner
             android:id="@+id/odabirGodina"
@@ -43,8 +43,9 @@
         android:layout_marginTop="100dp"
         android:layout_marginRight="100dp"
         android:backgroundTint="@color/teal_200"
-        android:clickable="true"
         android:text="Upisi me"
+        android:clickable="true"
+        android:enabled="false"
         android:textColor="@color/black" />
 
 </LinearLayout>

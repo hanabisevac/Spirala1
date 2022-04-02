@@ -1,21 +1,17 @@
-package com.example.spirala1.view
+package ba.etf.rma22.projekat.view
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.DatePicker
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spirala1.R
-import com.example.spirala1.data.Anketa
-import java.text.DateFormat
+import ba.etf.rma22.projekat.data.ankete.Anketa
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.math.ceil
 import kotlin.math.round
 
 class AnketaAdapter(private var ankete : List<Anketa>) : RecyclerView.Adapter<AnketaAdapter.CustomViewHolder>() {

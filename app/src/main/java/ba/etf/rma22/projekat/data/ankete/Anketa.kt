@@ -1,4 +1,4 @@
-package com.example.spirala1.data
+package ba.etf.rma22.projekat.data.ankete
 
 import java.util.*
 

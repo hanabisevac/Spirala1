@@ -1,4 +1,7 @@
-package com.example.spirala1.data
+package ba.etf.rma22.projekat.data.repositories
+
+import ba.etf.rma22.projekat.data.grupe.Grupa
+import com.example.spirala1.data.listaGrupa
 
 object GrupaRepository {
 

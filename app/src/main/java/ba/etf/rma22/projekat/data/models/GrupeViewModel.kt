@@ -1,7 +1,7 @@
-package com.example.spirala1.viewmodel
+package ba.etf.rma22.projekat.data.models
 
-import com.example.spirala1.data.Grupa
-import com.example.spirala1.data.GrupaRepository
+import ba.etf.rma22.projekat.data.grupe.Grupa
+import ba.etf.rma22.projekat.data.repositories.GrupaRepository
 
 class GrupeViewModel {
 

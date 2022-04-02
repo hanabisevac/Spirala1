@@ -1,6 +1,8 @@
-package com.example.spirala1.data
+package ba.etf.rma22.projekat.data.repositories
 
-import com.example.spirala1.Korisnik.dajKorisnika
+import ba.etf.rma22.projekat.data.Korisnik.dajKorisnika
+import ba.etf.rma22.projekat.data.istrazivanja.Istrazivanje
+import com.example.spirala1.data.listaIstrazivanja
 
 object IstrazivanjeRepository {
 
