@@ -1,18 +1,17 @@
 package com.example.spirala1.data
 
-import java.time.LocalDate
 import java.util.*
 
 object AnketaRepository {
 
 
-    fun ankete() : List<Anketa> {
+    fun getAll() : List<Anketa> {
         return listaAnketa()
     }
 
-    fun uradjeneAnkete() : List<Anketa> {
-        var lista = mutableListOf<Anketa>()
-        val pomocna : List<Anketa> = ankete()
+    fun getDone() : List<Anketa> {
+        val lista = mutableListOf<Anketa>()
+        val pomocna : List<Anketa> = getAll()
         for(i in 0..pomocna.size-1){
             if(pomocna.get(i).datumRada != null) lista.add(pomocna.get(i))
         }
@@ -20,17 +19,17 @@ object AnketaRepository {
     }
 
     fun aktivneAnkete() : List<Anketa> {
-        var lista = mutableListOf<Anketa>()
-        val pomocna : List<Anketa> = ankete()
+        val lista = mutableListOf<Anketa>()
+        val pomocna : List<Anketa> = getAll()
         for(i in 0..pomocna.size-1){
             if(pomocna.get(i).datumRada == null && pomocna.get(i).datumPocetka.before(Date()) && pomocna.get(i).datumKraj.after(Date())) lista.add(pomocna.get(i))
         }
         return lista
     }
 
-    fun zavrseneAnkete() : List<Anketa> {
-        var lista = mutableListOf<Anketa>()
-        val pomocna : List<Anketa> = ankete()
+    fun getNotTaken() : List<Anketa> {
+        val lista = mutableListOf<Anketa>()
+        val pomocna : List<Anketa> = getAll()
         for(i in 0..pomocna.size-1){
             if(pomocna.get(i).datumRada == null && pomocna.get(i).datumKraj.before(Date())) lista.add(pomocna.get(i))
         }
@@ -38,9 +37,9 @@ object AnketaRepository {
 
     }
 
-    fun sljedeceAnkete() : List<Anketa> {
-        var lista = mutableListOf<Anketa>()
-        val pomocna : List<Anketa> = ankete()
+    fun getFuture() : List<Anketa> {
+        val lista = mutableListOf<Anketa>()
+        val pomocna : List<Anketa> = getAll()
         for(i in 0..pomocna.size-1){
             if(pomocna.get(i).datumPocetka.after(Date())) lista.add(pomocna.get(i))
         }

@@ -1,5 +1,6 @@
 package com.example.spirala1
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -10,10 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.spirala1.data.listaAnketa
 import com.example.spirala1.view.AnketaAdapter
 import com.example.spirala1.viewmodel.AnketaViewModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
     private lateinit var anketaAdapter: AnketaAdapter
     private lateinit var anketaRecyclerView: RecyclerView
+    private lateinit var dugme : FloatingActionButton
     private lateinit var spiner : Spinner
     private val anketaViewModel = AnketaViewModel()
 
@@ -32,11 +35,11 @@ class MainActivity : AppCompatActivity() {
         spiner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val izbor : String = adapterView?.getItemAtPosition(position).toString()
-                if(izbor == "Uradjene ankete") anketaAdapter.updateAnkete(anketaViewModel.getUradjeneAnkete())
+                if(izbor == "Uradjene getAll") anketaAdapter.updateAnkete(anketaViewModel.getUradjeneAnkete())
 
-                else if(izbor == "Buduce ankete") anketaAdapter.updateAnkete(anketaViewModel.getSljedeceAnkete())
+                else if(izbor == "Buduce getAll") anketaAdapter.updateAnkete(anketaViewModel.getSljedeceAnkete())
 
-                else if(izbor == "Prosle (neuradjene) ankete") anketaAdapter.updateAnkete(anketaViewModel.getZavrseneAnkete())
+                else if(izbor == "Prosle (neuradjene) getAll") anketaAdapter.updateAnkete(anketaViewModel.getZavrseneAnkete())
 
                 else anketaAdapter.updateAnkete(anketaViewModel.getSveAnkete())
             }
@@ -46,9 +49,17 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+        dugme = findViewById(R.id.upisDugme)
+
+        dugme.setOnClickListener {
+            val intent = Intent(this, UpisIstrazivanje::class.java)
+            startActivity(intent)
+        }
 
 
     }
+
+
 
 
 }
