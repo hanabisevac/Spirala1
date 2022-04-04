@@ -8,4 +8,8 @@ class IstrazivanjeViewModel {
     fun getIstrazivanjePoGodini(g : Int) : List<Istrazivanje>{
         return IstrazivanjeRepository.getIstrazivanjeByGodina(g)
     }
+
+    fun getMojaIstrazivanja() : List<Istrazivanje> {
+        return IstrazivanjeRepository.getUpisani()
+    }
 }

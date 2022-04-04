@@ -25,7 +25,7 @@ object IstrazivanjeRepository {
         val sve = getAll()
         for(i in 0..sve.size-1){
             for(j in 0..imena.size-1){
-                if(sve[i].naziv == imena[i]) nova.add(sve[i])
+                if(sve[i].naziv == imena[j]) nova.add(sve[i])
             }
         }
         return nova

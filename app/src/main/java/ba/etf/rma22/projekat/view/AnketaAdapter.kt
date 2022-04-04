@@ -12,6 +12,7 @@ import com.example.spirala1.R
 import ba.etf.rma22.projekat.data.models.Anketa
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.ceil
 import kotlin.math.round
 
 class AnketaAdapter(private var ankete : List<Anketa>) : RecyclerView.Adapter<AnketaAdapter.CustomViewHolder>() {
@@ -43,7 +44,10 @@ class AnketaAdapter(private var ankete : List<Anketa>) : RecyclerView.Adapter<An
         val strDate : String = datum.format(date)
         holder.datum.text = getText(boja)+strDate
         //progres
-        holder.prog.progress = round(ankete[position].progres*10).toInt()
+        val prog : Float = ankete[position].progres
+        var p : Int = (prog*10).toInt()
+        if(p%2 != 0) p = ceil(prog*10).toInt()
+        holder.prog.progress = p
     }
 
     fun getDate(position : Int) : Date {

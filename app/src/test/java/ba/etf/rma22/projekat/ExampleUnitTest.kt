@@ -1,4 +1,4 @@
-package ba.etf.rma22
+package ba.etf.rma22.projekat
 
 import org.junit.Test
 

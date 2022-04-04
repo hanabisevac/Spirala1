@@ -9,6 +9,8 @@ import android.widget.Spinner
 import ba.etf.rma22.projekat.viewmodel.IstrazivanjeViewModel
 import android.widget.ArrayAdapter
 import android.widget.Button
+import ba.etf.rma22.projekat.data.models.Istrazivanje
+import ba.etf.rma22.projekat.viewmodel.AnketaViewModel
 import com.example.spirala1.R
 import ba.etf.rma22.projekat.viewmodel.GrupeViewModel
 
@@ -20,6 +22,7 @@ class UpisIstrazivanje : AppCompatActivity() {
 
     private val istrazivanjeViewModel = IstrazivanjeViewModel()
     private val grupeViewModel = GrupeViewModel()
+    private val anketeViewModel = AnketaViewModel()
     private lateinit var adapterZaSpinner : ArrayAdapter<String>
 
     private var pozicija : Int = 0
@@ -61,13 +64,26 @@ class UpisIstrazivanje : AppCompatActivity() {
                 //kasnije
             }
 
+           /* fun dajMojaIstrazivanja() : List<String> {
+                val lista = anketeViewModel.getMyAnkete()
+                val nova = mutableListOf<String>()
+                for(i in 0..lista.size-1){
+                    nova.add(lista[i].nazivIstrazivanja)
+                }
+                return nova
+            }*/
+
             fun getStrings(godina : Int) : List<String> {
                 val lista = istrazivanjeViewModel.getIstrazivanjePoGodini(godina)
+                val mojaIstrazivanja = istrazivanjeViewModel.getMojaIstrazivanja()
+
                 val nova = mutableListOf<String>()
+                nova.add(0, "Nista nije selectovano")
                 for (i in 0..lista.size-1){
+                    if(mojaIstrazivanja.contains(lista[i])) continue
                     nova.add(lista[i].naziv)
                 }
-                nova.add(0, "Nista nije selectovano")
+
                 return nova
             }
 
