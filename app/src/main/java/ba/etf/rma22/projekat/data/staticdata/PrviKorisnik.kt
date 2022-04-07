@@ -10,8 +10,8 @@ fun dajKorisnika() : Korisnik {
 
 
 
-fun listaZaAnkete() : List<Anketa>{
-    return listOf(
+fun listaZaAnkete() : MutableList<Anketa>{
+    return mutableListOf(
         anketa1, anketa5, anketa7, anketa8
     )
 }

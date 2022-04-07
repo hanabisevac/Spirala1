@@ -12,6 +12,9 @@ class AnketaViewModel {
         return lista
     }
 
+
+
+
     fun getMyAnkete() : List<Anketa> {
         val lista : List<Anketa> = AnketaRepository.getMyAnkete()
         Collections.sort(lista)
@@ -30,6 +33,7 @@ class AnketaViewModel {
         return lista
 
     }
+
 
     fun getZavrseneAnkete() : List<Anketa> {
         val lista : List<Anketa> = AnketaRepository.getNotTaken()

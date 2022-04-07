@@ -1,12 +1,11 @@
 package ba.etf.rma22.projekat.data.repositories
 
-import ba.etf.rma22.projekat.data.Korisnik.dajKorisnika
+
 import ba.etf.rma22.projekat.data.models.Anketa
 import com.example.spirala1.data.listaAnketa
 import java.util.*
 
 object AnketaRepository {
-
 
     fun getAll() : List<Anketa> {
         return listaAnketa()
@@ -41,8 +40,7 @@ object AnketaRepository {
     }
     
     fun getMyAnkete() : List<Anketa> {
-        val korisnik = dajKorisnika()
-        return korisnik.listaAnketa
+        return KorisnikRepository.getAnkete()
     }
 
     fun getFuture() : List<Anketa> {
@@ -54,5 +52,7 @@ object AnketaRepository {
         return lista
 
     }
+
+
 
 }

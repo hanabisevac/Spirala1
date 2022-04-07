@@ -45,8 +45,8 @@ class AnketaAdapter(private var ankete : List<Anketa>) : RecyclerView.Adapter<An
         holder.datum.text = getText(boja)+strDate
         //progres
         val prog : Float = ankete[position].progres
-        var p : Int = (prog*10).toInt()
-        if(p%2 != 0) p = ceil(prog*10).toInt()
+        var p : Int = (round(prog*10)*10).toInt()
+        if((round(prog*10)).toInt() %2 != 0) p +=10
         holder.prog.progress = p
     }
 

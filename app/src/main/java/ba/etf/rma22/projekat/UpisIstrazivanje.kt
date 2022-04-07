@@ -1,6 +1,6 @@
 package ba.etf.rma22.projekat
 
-import android.content.SharedPreferences
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -9,7 +9,7 @@ import android.widget.Spinner
 import ba.etf.rma22.projekat.viewmodel.IstrazivanjeViewModel
 import android.widget.ArrayAdapter
 import android.widget.Button
-import ba.etf.rma22.projekat.data.models.Istrazivanje
+import ba.etf.rma22.projekat.data.repositories.KorisnikRepository
 import ba.etf.rma22.projekat.viewmodel.AnketaViewModel
 import com.example.spirala1.R
 import ba.etf.rma22.projekat.viewmodel.GrupeViewModel
@@ -25,12 +25,18 @@ class UpisIstrazivanje : AppCompatActivity() {
     private val anketeViewModel = AnketaViewModel()
     private lateinit var adapterZaSpinner : ArrayAdapter<String>
 
-    private var pozicija : Int = 0
+    companion object{
+        private var pozicija : Int = 0
 
-
+        fun update(broj : Int){
+            this.pozicija = broj
+        }
+        fun dajPoz() : Int = this.pozicija
+    }
 
     private var izbor1 : String = ""
     private var izbor2 : String = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +45,8 @@ class UpisIstrazivanje : AppCompatActivity() {
         spinZaIstrazivanja = findViewById(R.id.odabirIstrazivanja)
         spinZaGrupe = findViewById(R.id.odabirGrupa)
         dugme = findViewById(R.id.dodajIstrazivanjeDugme)
-        LoadPreferences()
 
+        spinZaGodine.setSelection(dajPoz())
         dugme.isClickable = false
         dugme.isEnabled = false
 
@@ -56,23 +62,13 @@ class UpisIstrazivanje : AppCompatActivity() {
                 spinZaIstrazivanja.setSelection(0)
                 dugme.isClickable = false
                 dugme.isEnabled = false
-                pozicija = position
+                update(position)
 
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 //kasnije
             }
-
-           /* fun dajMojaIstrazivanja() : List<String> {
-                val lista = anketeViewModel.getMyAnkete()
-                val nova = mutableListOf<String>()
-                for(i in 0..lista.size-1){
-                    nova.add(lista[i].nazivIstrazivanja)
-                }
-                return nova
-            }*/
-
             fun getStrings(godina : Int) : List<String> {
                 val lista = istrazivanjeViewModel.getIstrazivanjePoGodini(godina)
                 val mojaIstrazivanja = istrazivanjeViewModel.getMojaIstrazivanja()
@@ -120,10 +116,13 @@ class UpisIstrazivanje : AppCompatActivity() {
             override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val str : String = adapterView?.getItemAtPosition(position).toString()
                 izbor2 = str
+                dugme.isEnabled = false
+                dugme.isClickable = false
                 if(izbor2 != "Nista nije selectovano" && izbor2!="" && izbor1 != "Nista nije selectovano" && izbor1 != ""){
                     dugme.isEnabled = true
                     dugme.isClickable = true
                 }
+
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -132,44 +131,17 @@ class UpisIstrazivanje : AppCompatActivity() {
 
         }
         dugme.setOnClickListener {
-            SavePreferences()
+            val ankete = anketeViewModel.getSveAnkete()
+            for(i in 0..ankete.size-1){
+                if(ankete[i].nazivGrupe==izbor2 && ankete[i].nazivIstrazivanja==izbor1){
+                    KorisnikRepository.addAnkete(ankete[i])
+                }
+            }
             finish()
         }
 
 
     }
-/*
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt("pozicija", pozicija)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        pozicija = savedInstanceState.getInt("pozicija")
-        spinZaGodine.setSelection(pozicija)
-    }
-*/
-
-    override fun onBackPressed() {
-        SavePreferences()
-        super.onBackPressed()
-    }
-
-    fun SavePreferences(){
-        val sharedPreferences : SharedPreferences = getPreferences(MODE_PRIVATE)
-        val editor : SharedPreferences.Editor = sharedPreferences.edit()
-        editor.putInt("pozicija", pozicija)
-        editor.commit()
-    }
-
-    fun LoadPreferences(){
-        val sharedPreferences : SharedPreferences = getPreferences(MODE_PRIVATE)
-        var poz : Int = sharedPreferences.getInt("pozicija", pozicija)
-        spinZaGodine.setSelection(poz)
-    }
-
 
 
     fun napuniSpinnerIstrazivanje(lista : List<String>) {
