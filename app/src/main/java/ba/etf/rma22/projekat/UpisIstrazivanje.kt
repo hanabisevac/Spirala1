@@ -131,7 +131,10 @@ class UpisIstrazivanje : AppCompatActivity() {
             }
 
         }
-
+        dugme.setOnClickListener {
+            SavePreferences()
+            finish()
+        }
 
 
     }
@@ -183,3 +186,5 @@ class UpisIstrazivanje : AppCompatActivity() {
     }
 
 }
+
+
