@@ -8,12 +8,27 @@ import java.util.*
 object AnketaRepository {
 
     fun getAll() : List<Anketa> {
-        return listaAnketa()
+        val korisnikove = KorisnikRepository.getAnkete()
+        val sve = listaAnketa()
+        val lista = mutableListOf<Anketa>()
+        var ima : Int = 0
+        for(i in 0..sve.size-1){
+            for(j in 0..korisnikove.size-1){
+                if(sve[i].equals(korisnikove[j])) ima=1
+            }
+            if(ima==1){
+                ima=0
+            }
+            else{
+                lista.add(sve[i])
+            }
+        }
+        return lista
     }
 
     fun getDone() : List<Anketa> {
         val lista = mutableListOf<Anketa>()
-        val pomocna : List<Anketa> = getAll()
+        val pomocna : List<Anketa> = KorisnikRepository.getAnkete()
         for(i in 0..pomocna.size-1){
             if(pomocna.get(i).datumRada != null) lista.add(pomocna.get(i))
         }
@@ -22,7 +37,7 @@ object AnketaRepository {
 
     fun aktivneAnkete() : List<Anketa> {
         val lista = mutableListOf<Anketa>()
-        val pomocna : List<Anketa> = getAll()
+        val pomocna : List<Anketa> = KorisnikRepository.getAnkete()
         for(i in 0..pomocna.size-1){
             if(pomocna.get(i).datumRada == null && pomocna.get(i).datumPocetka.before(Date()) && pomocna.get(i).datumKraj.after(Date())) lista.add(pomocna.get(i))
         }
@@ -31,7 +46,7 @@ object AnketaRepository {
 
     fun getNotTaken() : List<Anketa> {
         val lista = mutableListOf<Anketa>()
-        val pomocna : List<Anketa> = getAll()
+        val pomocna : List<Anketa> = KorisnikRepository.getAnkete()
         for(i in 0..pomocna.size-1){
             if(pomocna.get(i).datumRada == null && pomocna.get(i).datumKraj.before(Date())) lista.add(pomocna.get(i))
         }
@@ -45,7 +60,7 @@ object AnketaRepository {
 
     fun getFuture() : List<Anketa> {
         val lista = mutableListOf<Anketa>()
-        val pomocna : List<Anketa> = getAll()
+        val pomocna : List<Anketa> = KorisnikRepository.getAnkete()
         for(i in 0..pomocna.size-1){
             if(pomocna.get(i).datumPocetka.after(Date())) lista.add(pomocna.get(i))
         }
