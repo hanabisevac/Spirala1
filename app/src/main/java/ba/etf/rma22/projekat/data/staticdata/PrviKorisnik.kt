@@ -12,6 +12,6 @@ fun dajKorisnika() : Korisnik {
 
 fun listaZaAnkete() : MutableList<Anketa>{
     return mutableListOf(
-        anketa1, anketa5, anketa7, anketa8
+        anketa4, anketa14, anketa10, anketa15
     )
 }

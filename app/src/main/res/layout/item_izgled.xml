@@ -21,15 +21,15 @@
 
         <TextView
             android:id="@+id/ime_ankete"
-            android:layout_width="wrap_content"
-            android:layout_height="22dp"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="13dp"
             android:layout_marginTop="14dp"
             android:text="Anketa 1"
             android:textColor="@color/black"
-            android:textSize="15sp" />
+            android:textSize="13sp" />
 
 
         <ImageView
@@ -38,7 +38,7 @@
             android:layout_height="10dp"
             android:layout_alignTop="@+id/ime_ankete"
             android:layout_centerVertical="true"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="10dp"
             android:layout_alignParentEnd="true"
             android:layout_marginLeft="58dp"
             android:layout_marginTop="4dp"
@@ -48,11 +48,12 @@
 
         <TextView
             android:id="@+id/istrazivanje"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/ime_ankete"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
+            android:textAlignment="center"
             android:textColor="@color/black"
             android:text="Istrazivanje br 1"
             android:textSize="10dp" />
