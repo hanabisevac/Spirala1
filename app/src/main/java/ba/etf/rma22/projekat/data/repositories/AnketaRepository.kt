@@ -39,7 +39,7 @@ object AnketaRepository {
         val lista = mutableListOf<Anketa>()
         val pomocna : List<Anketa> = KorisnikRepository.getAnkete()
         for(i in 0..pomocna.size-1){
-            if(pomocna.get(i).datumRada == null && pomocna.get(i).datumPocetka.before(Date()) && pomocna.get(i).datumKraj.after(Date())) lista.add(pomocna.get(i))
+            if(pomocna.get(i).datumRada == null && pomocna.get(i).datumPocetak.before(Date()) && pomocna.get(i).datumKraj.after(Date())) lista.add(pomocna.get(i))
         }
         return lista
     }
@@ -62,7 +62,7 @@ object AnketaRepository {
         val lista = mutableListOf<Anketa>()
         val pomocna : List<Anketa> = KorisnikRepository.getAnkete()
         for(i in 0..pomocna.size-1){
-            if(pomocna.get(i).datumPocetka.after(Date())) lista.add(pomocna.get(i))
+            if(pomocna.get(i).datumPocetak.after(Date())) lista.add(pomocna.get(i))
         }
         return lista
 

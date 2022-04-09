@@ -53,7 +53,7 @@ class AnketaAdapter(private var ankete : List<Anketa>) : RecyclerView.Adapter<An
     fun getDate(position : Int) : Date {
         if(ankete[position].datumRada != null) return ankete[position].datumRada!!
         else if(ankete[position].datumKraj.before(Date())) return ankete[position].datumKraj
-        else if(ankete[position].datumPocetka.after(Date())) return ankete[position].datumPocetka
+        else if(ankete[position].datumPocetak.after(Date())) return ankete[position].datumPocetak
         return ankete[position].datumKraj
     }
 

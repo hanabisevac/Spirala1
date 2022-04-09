@@ -4,7 +4,7 @@ import java.util.*
 
 class Anketa(val naziv : String,
              val nazivIstrazivanja : String,
-             val datumPocetka : Date,
+             val datumPocetak : Date,
              val datumKraj : Date,
              val datumRada : Date ?,
              val trajanje : Int,
@@ -12,7 +12,7 @@ class Anketa(val naziv : String,
              val progres : Float) : Comparable<Anketa> {
 
     override fun compareTo(other: Anketa): Int {
-        val cmp = this.datumPocetka.compareTo(other.datumPocetka)
+        val cmp = this.datumPocetak.compareTo(other.datumPocetak)
         if(cmp<0) return -1
         return 1
     }
@@ -20,7 +20,7 @@ class Anketa(val naziv : String,
 
     fun getStatus() : String{
         if(datumRada != null) return "plava"
-        else if(datumPocetka.before(Date()) && datumKraj.after(Date())) return "zelena"
+        else if(datumPocetak.before(Date()) && datumKraj.after(Date())) return "zelena"
         else if(datumKraj.before(Date())) return "crvena"
         return "zuta"
     }
@@ -33,7 +33,7 @@ class Anketa(val naziv : String,
 
         if (naziv != other.naziv) return false
         if (nazivIstrazivanja != other.nazivIstrazivanja) return false
-        if (datumPocetka != other.datumPocetka) return false
+        if (datumPocetak != other.datumPocetak) return false
         if (datumKraj != other.datumKraj) return false
         if (datumRada != other.datumRada) return false
         if (trajanje != other.trajanje) return false
@@ -46,7 +46,7 @@ class Anketa(val naziv : String,
     override fun hashCode(): Int {
         var result = naziv.hashCode()
         result = 31 * result + nazivIstrazivanja.hashCode()
-        result = 31 * result + datumPocetka.hashCode()
+        result = 31 * result + datumPocetak.hashCode()
         result = 31 * result + datumKraj.hashCode()
         result = 31 * result + (datumRada?.hashCode() ?: 0)
         result = 31 * result + trajanje
