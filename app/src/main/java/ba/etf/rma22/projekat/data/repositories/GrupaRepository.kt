@@ -8,7 +8,7 @@ object GrupaRepository {
     fun getGroupsByIstrazivanje(nazivIstrazivanja : String) : List<Grupa> {
         val lista = listaGrupa()
         val nova = mutableListOf<Grupa>()
-        for(i in 0..lista.size-1){
+        for(i in lista.indices){
             if(lista[i].nazivIstrazivanja == nazivIstrazivanja) nova.add(lista[i])
         }
         return nova

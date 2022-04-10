@@ -7,10 +7,7 @@ import ba.etf.rma22.projekat.data.models.Korisnik
 
 class KorisnikRepository {
     companion object {
-        var korisnik : Korisnik
-        init {
-            korisnik = dajKorisnika()
-        }
+        var korisnik : Korisnik = dajKorisnika()
 
         fun getGrupe() : List<Grupa>{
             return korisnik.listaGrupa

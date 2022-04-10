@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
                 val izbor : String = adapterView?.getItemAtPosition(position).toString()
                 if(izbor == "Urađene ankete") anketaAdapter.updateAnkete(anketaViewModel.getUradjeneAnkete())
 
-                else if(izbor == "Buduće ankete") anketaAdapter.updateAnkete(anketaViewModel.getSljedeceAnkete())
+                else if(izbor == "Buduće ankete") anketaAdapter.updateAnkete(anketaViewModel.getAktvineIBuduce())
 
                 else if(izbor == "Prošle ankete") anketaAdapter.updateAnkete(anketaViewModel.getZavrseneAnkete())
 
