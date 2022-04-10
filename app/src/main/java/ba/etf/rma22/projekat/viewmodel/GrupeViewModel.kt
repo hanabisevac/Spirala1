@@ -8,4 +8,7 @@ class GrupeViewModel {
     fun getGrupeByIstrazivanje(str : String) : List<Grupa> {
         return GrupaRepository.getGroupsByIstrazivanje(str)
     }
+    fun getSveGrupe() : List<Grupa> {
+        return GrupaRepository.getAll()
+    }
 }

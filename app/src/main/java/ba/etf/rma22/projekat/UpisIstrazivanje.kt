@@ -1,6 +1,7 @@
 package ba.etf.rma22.projekat
 
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -131,15 +132,14 @@ class UpisIstrazivanje : AppCompatActivity() {
 
         }
         dugme.setOnClickListener {
-            val ankete = anketeViewModel.getSveAnkete()
-            for(i in 0..ankete.size-1){
-                if(ankete[i].nazivGrupe==izbor2 && ankete[i].nazivIstrazivanja==izbor1){
-                    KorisnikRepository.addAnkete(ankete[i])
+            val grupe = grupeViewModel.getSveGrupe()
+            for(i in 0..grupe.size-1){
+                if(grupe[i].naziv==izbor2 && grupe[i].nazivIstrazivanja==izbor1){
+                    KorisnikRepository.addGrupu(grupe[i])
                 }
             }
             finish()
         }
-
 
     }
 

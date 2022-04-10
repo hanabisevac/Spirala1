@@ -1,17 +1,18 @@
 package ba.etf.rma22.projekat.data.Korisnik
 
-import ba.etf.rma22.projekat.data.models.Anketa
+import ba.etf.rma22.projekat.data.models.Grupa
 import ba.etf.rma22.projekat.data.models.Korisnik
 import com.example.spirala1.data.*
 
 fun dajKorisnika() : Korisnik {
-    return Korisnik("Hana", listaZaAnkete())
+    return Korisnik("Hana", listaZaGrupe())
 }
 
 
 
-fun listaZaAnkete() : MutableList<Anketa>{
+fun listaZaGrupe() : MutableList<Grupa>{
     return mutableListOf(
-        anketa4, anketa14, anketa10, anketa15
+        g3
     )
 }
+

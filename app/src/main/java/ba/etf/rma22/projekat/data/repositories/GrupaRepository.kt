@@ -13,4 +13,8 @@ object GrupaRepository {
         }
         return nova
     }
+
+    fun getAll() : List<Grupa> {
+        return listaGrupa()
+    }
 }
