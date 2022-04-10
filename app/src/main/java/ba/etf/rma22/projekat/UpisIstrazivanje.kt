@@ -136,6 +136,7 @@ class UpisIstrazivanje : AppCompatActivity() {
             for(i in 0..grupe.size-1){
                 if(grupe[i].naziv==izbor2 && grupe[i].nazivIstrazivanja==izbor1){
                     KorisnikRepository.addGrupu(grupe[i])
+                    break
                 }
             }
             finish()
