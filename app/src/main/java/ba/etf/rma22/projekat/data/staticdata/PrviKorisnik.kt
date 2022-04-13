@@ -1,8 +1,7 @@
-package ba.etf.rma22.projekat.data.Korisnik
+package ba.etf.rma22.projekat.data.staticdata
 
 import ba.etf.rma22.projekat.data.models.Grupa
 import ba.etf.rma22.projekat.data.models.Korisnik
-import com.example.spirala1.data.*
 
 fun dajKorisnika() : Korisnik {
     return Korisnik("Hana", listaZaGrupe())

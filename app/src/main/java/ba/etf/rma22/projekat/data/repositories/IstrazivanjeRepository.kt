@@ -3,7 +3,7 @@ package ba.etf.rma22.projekat.data.repositories
 
 import ba.etf.rma22.projekat.data.models.Grupa
 import ba.etf.rma22.projekat.data.models.Istrazivanje
-import com.example.spirala1.data.listaIstrazivanja
+import ba.etf.rma22.projekat.data.staticdata.listaIstrazivanja
 
 object IstrazivanjeRepository {
 

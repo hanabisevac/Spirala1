@@ -2,8 +2,7 @@ package ba.etf.rma22.projekat.data.repositories
 
 
 import ba.etf.rma22.projekat.data.models.Anketa
-import ba.etf.rma22.projekat.data.models.Grupa
-import com.example.spirala1.data.listaAnketa
+import ba.etf.rma22.projekat.data.staticdata.listaAnketa
 import java.util.*
 
 object AnketaRepository {

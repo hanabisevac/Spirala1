@@ -1,7 +1,6 @@
 package ba.etf.rma22.projekat.data.repositories
 
-import ba.etf.rma22.projekat.data.Korisnik.dajKorisnika
-import ba.etf.rma22.projekat.data.models.Anketa
+import ba.etf.rma22.projekat.data.staticdata.dajKorisnika
 import ba.etf.rma22.projekat.data.models.Grupa
 import ba.etf.rma22.projekat.data.models.Korisnik
 

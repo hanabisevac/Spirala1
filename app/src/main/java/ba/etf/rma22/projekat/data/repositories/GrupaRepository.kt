@@ -1,7 +1,7 @@
 package ba.etf.rma22.projekat.data.repositories
 
 import ba.etf.rma22.projekat.data.models.Grupa
-import com.example.spirala1.data.listaGrupa
+import ba.etf.rma22.projekat.data.staticdata.listaGrupa
 
 object GrupaRepository {
 
