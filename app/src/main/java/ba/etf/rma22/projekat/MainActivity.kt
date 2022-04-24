@@ -2,32 +2,19 @@ package ba.etf.rma22.projekat
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.widget.*
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import ba.etf.rma22.projekat.data.models.Anketa
-import ba.etf.rma22.projekat.data.models.Pitanje
-import ba.etf.rma22.projekat.data.models.PitanjeAnketa
-import ba.etf.rma22.projekat.data.repositories.PitanjaAnketaRepository
-import ba.etf.rma22.projekat.data.repositories.PitanjaRepository
 import ba.etf.rma22.projekat.view.*
-import ba.etf.rma22.projekat.viewmodel.AnketaViewModel
-import ba.etf.rma22.projekat.viewmodel.PitanjaAnketaViewModel
+import ba.etf.rma22.projekat.viewmodel.PitanjeAnketaViewModel
 import com.example.spirala1.R
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.util.ArrayList
 
 class MainActivity : AppCompatActivity(), Communicator {
     private lateinit var viewPager : ViewPager2
     private lateinit var viewPagerAdapter : ViewPagerAdapter
     private lateinit var viewPagerAdapter2 : ViewPagerAdapter
 
-    private val pitanjaAnketaViewModel = PitanjaAnketaViewModel()
-//    private val fragmentAnkete = FragmentAnkete.newInstance()
-//    private val fragmentIstrazivanje = FragmentIstrazivanje.newInstance()
+    private val pitanjaAnketaViewModel = PitanjeAnketaViewModel()
     private val fragmentPredaja = FragmentPredaj.newInstance()
     val fragments = mutableListOf<Fragment>(FragmentAnkete(), FragmentIstrazivanje())
 
