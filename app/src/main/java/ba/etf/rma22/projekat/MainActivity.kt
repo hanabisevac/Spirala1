@@ -1,68 +1,89 @@
 package ba.etf.rma22.projekat
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import android.os.Handler
+import android.os.Looper
 import android.widget.*
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import ba.etf.rma22.projekat.view.AnketaAdapter
+import androidx.viewpager2.widget.ViewPager2
+import ba.etf.rma22.projekat.data.models.Anketa
+import ba.etf.rma22.projekat.data.models.Pitanje
+import ba.etf.rma22.projekat.data.models.PitanjeAnketa
+import ba.etf.rma22.projekat.data.repositories.PitanjaAnketaRepository
+import ba.etf.rma22.projekat.data.repositories.PitanjaRepository
+import ba.etf.rma22.projekat.view.*
 import ba.etf.rma22.projekat.viewmodel.AnketaViewModel
+import ba.etf.rma22.projekat.viewmodel.PitanjaAnketaViewModel
 import com.example.spirala1.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.util.ArrayList
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var anketaAdapter: AnketaAdapter
-    private lateinit var anketaRecyclerView: RecyclerView
-    private lateinit var dugme : FloatingActionButton
-    private lateinit var spiner : Spinner
-    private val anketaViewModel = AnketaViewModel()
+class MainActivity : AppCompatActivity(), Communicator {
+    private lateinit var viewPager : ViewPager2
+    private lateinit var viewPagerAdapter : ViewPagerAdapter
+    private lateinit var viewPagerAdapter2 : ViewPagerAdapter
+
+    private val pitanjaAnketaViewModel = PitanjaAnketaViewModel()
+//    private val fragmentAnkete = FragmentAnkete.newInstance()
+//    private val fragmentIstrazivanje = FragmentIstrazivanje.newInstance()
+    private val fragmentPredaja = FragmentPredaj.newInstance()
+    val fragments = mutableListOf<Fragment>(FragmentAnkete(), FragmentIstrazivanje())
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        anketaRecyclerView = findViewById(R.id.listaAnketa)
-        anketaRecyclerView.layoutManager = GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false)
-        anketaAdapter = AnketaAdapter(anketaViewModel.getSveAnkete())
-        anketaRecyclerView.adapter = anketaAdapter
-
-        spiner = findViewById(R.id.filterAnketa)
-
-
-        spiner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val izbor : String = adapterView?.getItemAtPosition(position).toString()
-                if(izbor == "Urađene ankete") anketaAdapter.updateAnkete(anketaViewModel.getUradjeneAnkete())
-
-                else if(izbor == "Buduće ankete") anketaAdapter.updateAnkete(anketaViewModel.getAktvineIBuduce())
-
-                else if(izbor == "Prošle ankete") anketaAdapter.updateAnkete(anketaViewModel.getZavrseneAnkete())
-
-                else if(izbor == "Sve moje ankete") anketaAdapter.updateAnkete(anketaViewModel.getMyAnkete())
-
-                else anketaAdapter.updateAnkete(anketaViewModel.getSveAnkete())
+        viewPager = findViewById(R.id.pager)
+        viewPager.offscreenPageLimit = 3
+        viewPagerAdapter = ViewPagerAdapter(supportFragmentManager, fragments, lifecycle)
+        viewPager.adapter = viewPagerAdapter
+        /*viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+            override fun onPageSelected(position: Int) {
+                if(position == 0 && fragments[0].hashCode().toLong() == viewPagerAdapter.getItemId(position)){
+                    viewPagerAdapter.refreshFragment(1, FragmentIstrazivanje())
+                }
+                super.onPageSelected(position)
             }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                //TODO("Not yet implemented")
-            }
-
-        }
-        dugme = findViewById(R.id.upisDugme)
-
-        dugme.setOnClickListener {
-            val intent = Intent(this, UpisIstrazivanje::class.java)
-            startActivity(intent)
-        }
-
-
+        })*/
+        //refreshSecondFragment()
     }
 
 
 
+
+    /*private fun refreshSecondFragment() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            viewPagerAdapter.refreshFragment(
+                0,
+                fragments[0]
+            )
+        }, 5000)
+    }*/
+
+    override fun otvoriNoviFragment(anketa: Anketa) {
+        val pitanjaZaAnketu = pitanjaAnketaViewModel.getPitanjaZaAnketu(anketa)
+        val lista = mutableListOf<Fragment>()
+        for(i in pitanjaZaAnketu.indices){
+            lista.add(FragmentPitanje(pitanjaZaAnketu[i], pitanjaZaAnketu.size))
+        }
+        lista.add(fragmentPredaja)
+        viewPagerAdapter2 = ViewPagerAdapter(supportFragmentManager, lista, lifecycle)
+        viewPager.adapter = viewPagerAdapter2
+
+    }
+
+    override fun prebaciFragment() {
+        viewPagerAdapter.remove(1)
+        viewPagerAdapter.add(1, FragmentPoruka())
+    }
+
+    override fun vratiNaPocetnu() {
+        viewPager.adapter = viewPagerAdapter
+    }
 
 
 }

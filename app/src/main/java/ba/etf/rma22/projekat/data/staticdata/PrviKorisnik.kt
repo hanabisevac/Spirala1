@@ -11,7 +11,7 @@ fun dajKorisnika() : Korisnik {
 
 fun listaZaGrupe() : MutableList<Grupa>{
     return mutableListOf(
-        g3
+        g2
     )
 }
 

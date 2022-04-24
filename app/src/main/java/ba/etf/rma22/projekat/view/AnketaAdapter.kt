@@ -7,21 +7,28 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import ba.etf.rma22.projekat.Communicator
 import com.example.spirala1.R
 import ba.etf.rma22.projekat.data.models.Anketa
+import ba.etf.rma22.projekat.data.staticdata.p1
+import ba.etf.rma22.projekat.viewmodel.AnketaViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.round
 
-class AnketaAdapter(private var ankete : List<Anketa>) : RecyclerView.Adapter<AnketaAdapter.CustomViewHolder>() {
+class AnketaAdapter(private var ankete : List<Anketa>, private val onItemClicked : (anketa : Anketa) -> Unit) : RecyclerView.Adapter<AnketaAdapter.CustomViewHolder>() {
+
+
     class CustomViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
         val imeAnkete : TextView = itemView.findViewById(R.id.ime_ankete)
         val istrazivanje : TextView = itemView.findViewById(R.id.istrazivanje)
         val slika : ImageView = itemView.findViewById(R.id.slika)
         val datum : TextView = itemView.findViewById(R.id.datum)
         val prog : ProgressBar = itemView.findViewById(R.id.progresZavrsetak)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
@@ -48,7 +55,14 @@ class AnketaAdapter(private var ankete : List<Anketa>) : RecyclerView.Adapter<An
         var p : Int = (round(prog*10)*10).toInt()
         if((round(prog*10)).toInt() %2 != 0) p +=10
         holder.prog.progress = p
+
+        val pom = AnketaViewModel()
+        val lista = pom.getMyAnkete()
+        if((boja == "zelena" || boja=="plava") && lista.contains(ankete[position])) {
+            holder.itemView.setOnClickListener { onItemClicked(ankete[position]) }
+        }
     }
+
 
     fun getDate(position : Int) : Date {
         if(ankete[position].datumRada != null) return ankete[position].datumRada!!
@@ -68,8 +82,14 @@ class AnketaAdapter(private var ankete : List<Anketa>) : RecyclerView.Adapter<An
         return ankete.size
     }
 
+    fun updateProgress() {
+        notifyDataSetChanged()
+    }
+
     fun updateAnkete(novaLista : List<Anketa>) {
         this.ankete = novaLista
         notifyDataSetChanged()
     }
+
+
 }

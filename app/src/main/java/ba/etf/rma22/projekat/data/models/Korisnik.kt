@@ -6,7 +6,4 @@ data class Korisnik(
     val ime : String,
     val listaGrupa : MutableList<Grupa>
 ) {
-
-
-
 }

@@ -54,4 +54,9 @@ class AnketaViewModel {
 
     }
 
+    fun getAnketu(naziv : String, istrazivanje : String) : Anketa? {
+        return AnketaRepository.getAnketu(naziv, istrazivanje)
+    }
+
+
 }

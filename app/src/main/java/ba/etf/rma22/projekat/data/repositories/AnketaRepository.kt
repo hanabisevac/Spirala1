@@ -125,5 +125,20 @@ object AnketaRepository {
 
     }
 
+    fun getAnketa(naziv : String, istrazivanje : String) : Anketa? {
+        val sve = getAll()
+        for(i in sve.indices){
+            if(sve[i].naziv == naziv && sve[i].nazivIstrazivanja == istrazivanje) return sve[i]
+        }
+        return null
+    }
+
+    fun getAnketu(naziv : String, istrazivanje : String) : Anketa? {
+        val sve = getAll()
+        for(i in sve.indices) if(sve[i].naziv == naziv && sve[i].nazivIstrazivanja == istrazivanje) return sve[i]
+        return null
+    }
+
+
 
 }

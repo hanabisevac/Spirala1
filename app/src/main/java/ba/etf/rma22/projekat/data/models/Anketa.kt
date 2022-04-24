@@ -9,12 +9,16 @@ class Anketa(val naziv : String,
              val datumRada : Date ?,
              val trajanje : Int,
              val nazivGrupe : String,
-             val progres : Float) : Comparable<Anketa> {
+             var progres : Float) : Comparable<Anketa> {
 
     override fun compareTo(other: Anketa): Int {
         val cmp = this.datumPocetak.compareTo(other.datumPocetak)
         if(cmp<0) return -1
         return 1
+    }
+
+    fun setProgress(progres : Float){
+        this.progres += progres
     }
 
 

@@ -6,10 +6,17 @@
         <entry key="..\:/Users/Windows 10 Pro/AndroidStudioProjects/Spirala1/app/src/main/res/drawable/back.xml" value="0.2265" />
         <entry key="..\:/Users/Windows 10 Pro/AndroidStudioProjects/Spirala1/app/src/main/res/drawable/circle.xml" value="0.1495" />
         <entry key="..\:/Users/Windows 10 Pro/AndroidStudioProjects/Spirala1/app/src/main/res/drawable/img.xml" value="0.1495" />
+        <entry key="..\:/Users/Windows 10 Pro/AndroidStudioProjects/Spirala1/app/src/main/res/drawable/text_color.xml" value="0.1" />
         <entry key="..\:/Users/Windows 10 Pro/AndroidStudioProjects/Spirala1/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Users/Windows 10 Pro/AndroidStudioProjects/Spirala1/app/src/main/res/layout/activity_upis_istrazivanje.xml" value="0.2" />
+        <entry key="..\:/Users/Windows 10 Pro/AndroidStudioProjects/Spirala1/app/src/main/res/layout/fragment_ankete.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Windows 10 Pro/AndroidStudioProjects/Spirala1/app/src/main/res/layout/fragment_istrazivanje.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Windows 10 Pro/AndroidStudioProjects/Spirala1/app/src/main/res/layout/fragment_pitanje.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Windows 10 Pro/AndroidStudioProjects/Spirala1/app/src/main/res/layout/fragment_poruka.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Windows 10 Pro/AndroidStudioProjects/Spirala1/app/src/main/res/layout/fragment_predaj.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Windows 10 Pro/AndroidStudioProjects/Spirala1/app/src/main/res/layout/item_anketa.xml" value="0.1911231884057971" />
         <entry key="..\:/Users/Windows 10 Pro/AndroidStudioProjects/Spirala1/app/src/main/res/layout/item_izgled.xml" value="0.264" />
+        <entry key="..\:/Users/Windows 10 Pro/AndroidStudioProjects/Spirala1/app/src/main/res/layout/odgovor.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Windows 10 Pro/AndroidStudioProjects/Spirala1/app/src/main/res/layout/probni.xml" value="0.1911231884057971" />
       </map>
     </option>
