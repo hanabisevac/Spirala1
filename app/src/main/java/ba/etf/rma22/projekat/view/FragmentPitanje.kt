@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import ba.etf.rma22.projekat.Communicator
 import ba.etf.rma22.projekat.data.models.Anketa
 import ba.etf.rma22.projekat.data.models.Pitanje
+import ba.etf.rma22.projekat.data.models.PredanaAnketa
 import ba.etf.rma22.projekat.viewmodel.AnketaViewModel
 import ba.etf.rma22.projekat.viewmodel.PitanjeAnketaViewModel
 import com.example.spirala1.R
@@ -24,7 +25,7 @@ class FragmentPitanje(val pitanje : Pitanje, val size : Int) : Fragment() {
     private lateinit var dugme : Button
     private lateinit var adapterZaListu : MojAdapterZaListu
     private var pitanjaAnketaViewModel = PitanjeAnketaViewModel()
-    private val anketaViewModel = AnketaViewModel()
+    //private val anketaViewModel = AnketaViewModel()
     private val anketaPitanje = pitanjaAnketaViewModel.dajPitanjeAnketuPoNazivuPitanja(pitanje.naziv)
 
     private var progres : Float = 1.0F/size
@@ -67,8 +68,10 @@ class FragmentPitanje(val pitanje : Pitanje, val size : Int) : Fragment() {
     }
 
     fun updateProgres() {
-        val anketa : Anketa? = anketaViewModel.getAnketu(anketaPitanje!!.anketa, anketaPitanje.istrazivanje)
-        anketa!!.setProgress(progres)
+        //val anketa : Anketa? = anketaViewModel.getAnketu(anketaPitanje!!.anketa, anketaPitanje.istrazivanje)
+        //anketa!!.setProgress(progres)
+        PredanaAnketa.postaviProgres(progres)
+
     }
 
     inner class MojAdapterZaListu(context : Context, @LayoutRes private val layoutRes : Int, private val lista : List<String>)

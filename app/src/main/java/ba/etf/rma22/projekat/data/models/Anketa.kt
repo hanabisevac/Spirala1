@@ -6,7 +6,7 @@ class Anketa(val naziv : String,
              val nazivIstrazivanja : String,
              val datumPocetak : Date,
              val datumKraj : Date,
-             val datumRada : Date ?,
+             var datumRada : Date ?,
              val trajanje : Int,
              val nazivGrupe : String,
              var progres : Float) : Comparable<Anketa> {
@@ -19,6 +19,10 @@ class Anketa(val naziv : String,
 
     fun setProgress(progres : Float){
         this.progres += progres
+    }
+
+    fun setDate(date : Date) {
+        this.datumRada = date
     }
 
 

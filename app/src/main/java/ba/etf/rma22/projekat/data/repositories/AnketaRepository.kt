@@ -7,7 +7,6 @@ import java.util.*
 
 object AnketaRepository {
 
-
     fun getAll() : List<Anketa> {
         return listaAnketa()
     }

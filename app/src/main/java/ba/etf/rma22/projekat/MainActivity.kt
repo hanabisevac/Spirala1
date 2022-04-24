@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import ba.etf.rma22.projekat.data.models.Anketa
+import ba.etf.rma22.projekat.data.models.PredanaAnketa
 import ba.etf.rma22.projekat.view.*
 import ba.etf.rma22.projekat.viewmodel.PitanjeAnketaViewModel
 import com.example.spirala1.R
@@ -57,6 +58,7 @@ class MainActivity : AppCompatActivity(), Communicator {
         for(i in pitanjaZaAnketu.indices){
             lista.add(FragmentPitanje(pitanjaZaAnketu[i], pitanjaZaAnketu.size))
         }
+        PredanaAnketa.postaviAnketu(anketa)
         lista.add(fragmentPredaja)
         viewPagerAdapter2 = ViewPagerAdapter(supportFragmentManager, lista, lifecycle)
         viewPager.adapter = viewPagerAdapter2
