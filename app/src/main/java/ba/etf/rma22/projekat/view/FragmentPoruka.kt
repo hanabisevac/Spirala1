@@ -10,7 +10,7 @@ import ba.etf.rma22.projekat.data.models.Grupa
 import ba.etf.rma22.projekat.data.repositories.KorisnikRepository
 import com.example.spirala1.R
 
-class FragmentPoruka : Fragment() {
+class FragmentPoruka(val poruka : String) : Fragment() {
     lateinit var textPoruka : TextView
 
     /*override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +24,7 @@ class FragmentPoruka : Fragment() {
         textPoruka = view.findViewById(R.id.tvPoruka)
         val vel = KorisnikRepository.getGrupe().size
         val grupa : Grupa = KorisnikRepository.getGrupe()[vel-1]
-        textPoruka.text = "Uspješno ste upisani u grupu "+grupa.naziv+" istraživanja " +grupa.nazivIstrazivanja+"!"
+        textPoruka.text = poruka
         return view
     }
 

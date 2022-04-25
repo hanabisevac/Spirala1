@@ -3,7 +3,7 @@ package ba.etf.rma22.projekat.data.repositories
 import ba.etf.rma22.projekat.data.models.Anketa
 import ba.etf.rma22.projekat.data.models.Pitanje
 import ba.etf.rma22.projekat.data.models.PitanjeAnketa
-import ba.etf.rma22.projekat.view.dajSvaPitanjaAnketa
+import ba.etf.rma22.projekat.data.staticdata.dajSvaPitanjaAnketa
 
 object PitanjeAnketaRepository {
 
@@ -46,11 +46,11 @@ object PitanjeAnketaRepository {
     }
 
 
-    fun getAnketaPoNazivuPitanja(naziv : String) : PitanjeAnketa? {
+    fun getAnketaPoNazivuPitanja(naziv : String, imeAnkete : String, istrazivanje : String) : PitanjeAnketa? {
         val sve = getSvaPitanjaAnkete()
         var anketa : PitanjeAnketa? = null
         for(i in sve.indices){
-            if(naziv == sve[i].naziv) anketa = sve[i]
+            if(naziv == sve[i].naziv && imeAnkete == sve[i].anketa && istrazivanje == sve[i].istrazivanje) anketa = sve[i]
         }
         return anketa
     }

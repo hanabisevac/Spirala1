@@ -31,10 +31,12 @@ class FragmentPredaj : Fragment() {
         if((round(prog*10)).toInt() %2 != 0) p +=10
         progresText.text = ""+ p + "%"
         communicator = activity as Communicator
+        dugme.isEnabled = true
+        if(PredanaAnketa.dajAnketu().getStatus()=="plava" || PredanaAnketa.dajAnketu().getStatus()=="crvena") dugme.isEnabled = false
         dugme.setOnClickListener{
             PredanaAnketa.postaviDatum(Date())
-            //dodati da se otvori fragmentPoruka a ne pocetna
-            communicator.vratiNaPocetnu()
+            val poruka = "Završili ste anketu "+ PredanaAnketa.dajAnketu().naziv + " u okviru istraživanja " + PredanaAnketa.dajAnketu().nazivIstrazivanja
+            communicator.prebaciFragment(poruka)
         }
         return view
     }

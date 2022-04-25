@@ -58,8 +58,9 @@ class AnketaAdapter(private var ankete : List<Anketa>, private val onItemClicked
 
         val pom = AnketaViewModel()
         val lista = pom.getMyAnkete()
-        if((boja == "zelena" || boja=="plava") && lista.contains(ankete[position])) {
+        if((boja == "zelena" || boja=="plava" || boja=="crvena") && lista.contains(ankete[position])) {
             holder.itemView.setOnClickListener { onItemClicked(ankete[position]) }
+
         }
     }
 

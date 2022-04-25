@@ -24,6 +24,7 @@ class ViewPagerAdapter(fragmentManager: FragmentManager, var fragments : Mutable
         fragments[index] = fragment
         notifyItemChanged(index)
     }
+
     fun remove(index : Int) {
         fragments.removeAt(index)
         notifyItemChanged(index)

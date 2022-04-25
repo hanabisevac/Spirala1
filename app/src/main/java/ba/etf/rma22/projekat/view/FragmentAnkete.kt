@@ -76,4 +76,5 @@ class FragmentAnkete : Fragment() {
 
     }
 
+
 }

@@ -16,8 +16,8 @@ class PitanjeAnketaViewModel {
     }
 
 
-    fun dajPitanjeAnketuPoNazivuPitanja(naziv : String) : PitanjeAnketa? {
-        return PitanjeAnketaRepository.getAnketaPoNazivuPitanja(naziv)
+    fun dajPitanjeAnketuPoNazivuPitanja(naziv : String, nazivAnkete : String, nazivIstrazivanja : String) : PitanjeAnketa? {
+        return PitanjeAnketaRepository.getAnketaPoNazivuPitanja(naziv, nazivAnkete, nazivIstrazivanja)
     }
     
     fun getAll() : List<PitanjeAnketa> {

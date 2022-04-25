@@ -10,10 +10,8 @@ import android.widget.*
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import ba.etf.rma22.projekat.Communicator
-import ba.etf.rma22.projekat.data.models.Anketa
 import ba.etf.rma22.projekat.data.models.Pitanje
 import ba.etf.rma22.projekat.data.models.PredanaAnketa
-import ba.etf.rma22.projekat.viewmodel.AnketaViewModel
 import ba.etf.rma22.projekat.viewmodel.PitanjeAnketaViewModel
 import com.example.spirala1.R
 
@@ -25,8 +23,8 @@ class FragmentPitanje(val pitanje : Pitanje, val size : Int) : Fragment() {
     private lateinit var dugme : Button
     private lateinit var adapterZaListu : MojAdapterZaListu
     private var pitanjaAnketaViewModel = PitanjeAnketaViewModel()
-    //private val anketaViewModel = AnketaViewModel()
-    private val anketaPitanje = pitanjaAnketaViewModel.dajPitanjeAnketuPoNazivuPitanja(pitanje.naziv)
+    private val anketaPitanje = pitanjaAnketaViewModel
+        .dajPitanjeAnketuPoNazivuPitanja(pitanje.naziv, PredanaAnketa.dajAnketu().naziv, PredanaAnketa.dajAnketu().nazivIstrazivanja)
 
     private var progres : Float = 1.0F/size
     private var brojac : Int = 0
@@ -70,8 +68,6 @@ class FragmentPitanje(val pitanje : Pitanje, val size : Int) : Fragment() {
     }
 
     fun updateProgres() {
-        //val anketa : Anketa? = anketaViewModel.getAnketu(anketaPitanje!!.anketa, anketaPitanje.istrazivanje)
-        //anketa!!.setProgress(progres)
         PredanaAnketa.postaviProgres(progres)
 
     }

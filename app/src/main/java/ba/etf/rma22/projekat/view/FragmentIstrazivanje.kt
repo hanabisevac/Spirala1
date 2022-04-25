@@ -144,7 +144,8 @@ class FragmentIstrazivanje : Fragment() {
                     break
                 }
             }
-            communicator.prebaciFragment()
+            val poruka = "Uspješno ste upisani u grupu "+izbor2+" istraživanja " +izbor1+"!"
+            communicator.prebaciFragment(poruka)
 
         }
 
