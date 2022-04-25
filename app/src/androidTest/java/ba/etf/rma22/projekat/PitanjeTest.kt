@@ -38,7 +38,7 @@ class PitanjeTest {
         }
     }
 
-  /*  @Test
+    @Test
     fun testPredajAnketu() {
         onView(withId(R.id.pager)).perform(ViewPager2Actions.scrollToFirst())
         onView(withId(R.id.filterAnketa)).perform(click())
@@ -49,6 +49,6 @@ class PitanjeTest {
         onView(withId(R.id.pager)).perform(ViewPager2Actions.scrollToLast())
         onView(withId(R.id.dugmePredaj)).perform(click())
         onView(withSubstring("Završili ste anketu")).check(matches(isDisplayed()))
-    }*/
+    }
 
 }
