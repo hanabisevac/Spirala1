@@ -43,19 +43,20 @@ class FragmentPitanje(val pitanje : Pitanje, val size : Int) : Fragment() {
         adapterZaListu = MojAdapterZaListu(listaOdgovora.context, R.layout.odgovor, pitanje.opcije)
         textPitanja.text = pitanje.tekst
         listaOdgovora.adapter = adapterZaListu
+        listaOdgovora.isEnabled = true
+        if(PredanaAnketa.dajAnketu().getStatus() == "plava" || PredanaAnketa.dajAnketu().getStatus() == "crvena") listaOdgovora.isEnabled = false
 
-        if(PredanaAnketa.dajAnketu().getStatus() != "plava" && PredanaAnketa.dajAnketu().getStatus() != "crvena"  && anketaPitanje?.dajOdgovor() == null){
-            listaOdgovora.onItemClickListener = object : AdapterView.OnItemClickListener {
-                override fun onItemClick(adapterView: AdapterView<*>?, view: View?, position: Int, p3: Long) {
-                    val odg = adapterView?.getItemAtPosition(position).toString()
-                    val text : TextView = view?.findViewById(R.id.odgovori)!!
-                    if(stariView != null && stariView!=text) stariView!!.setTextColor(Color.parseColor("#FF000000"))
-                    stariView = text
-                    if(brojac == 0) updateProgres()
-                    text.setTextColor(Color.parseColor("#0000FF"))
-                    anketaPitanje?.postaviOdgovor(odg)
-                    brojac++
-                }
+
+        listaOdgovora.onItemClickListener = object : AdapterView.OnItemClickListener {
+            override fun onItemClick(adapterView: AdapterView<*>?, view: View?, position: Int, p3: Long) {
+                val odg = adapterView?.getItemAtPosition(position).toString()
+                val text : TextView = view?.findViewById(R.id.odgovori)!!
+                if(stariView != null && stariView!=text) stariView!!.setTextColor(Color.parseColor("#FF000000"))
+                stariView = text
+                if(brojac == 0) updateProgres()
+                text.setTextColor(Color.parseColor("#0000FF"))
+                anketaPitanje?.postaviOdgovor(odg)
+                brojac++
             }
         }
 
@@ -69,7 +70,6 @@ class FragmentPitanje(val pitanje : Pitanje, val size : Int) : Fragment() {
 
     fun updateProgres() {
         PredanaAnketa.postaviProgres(progres)
-
     }
 
     inner class MojAdapterZaListu(context : Context, @LayoutRes private val layoutRes : Int, private val lista : List<String>)
