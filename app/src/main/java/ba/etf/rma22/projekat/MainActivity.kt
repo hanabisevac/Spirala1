@@ -46,8 +46,8 @@ class MainActivity : AppCompatActivity(), Communicator {
     /*private fun refreshSecondFragment() {
         Handler(Looper.getMainLooper()).postDelayed({
             viewPagerAdapter.refreshFragment(
-                0,
-                fragments[0]
+                1,
+                fragments[1]
             )
         }, 5000)
     }*/

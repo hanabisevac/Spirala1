@@ -11,7 +11,7 @@ val anketa2 = Anketa("Anketa 2", "Istrazivanje 1", datumi(2022, 4, 1), datumi(20
 //zelena
 val anketa3 = Anketa("Anketa 3", "Istrazivanje 2", datumi(2021, 10, 2), datumi(2022, 10, 2 ), null, 5, "Grupa 3", 0.0F)
 //crvena
-val anketa4 = Anketa("Anketa 4", "Istrazivanje 3", datumi(2021, 3, 3), datumi(2021, 4, 3 ), null, 5, "Grupa 1", 0.6F)
+val anketa4 = Anketa("Anketa 4", "Istrazivanje 3", datumi(2021, 3, 3), datumi(2021, 4, 3 ), null, 5, "Grupa 1", 0.5F)
 //zuta
 val anketa5 = Anketa("Anketa 5", "Istrazivanje 4", datumi(2022, 11, 3), datumi(2023, 5, 3 ), null, 5, "Grupa 3", 0.0F)
 //crvena

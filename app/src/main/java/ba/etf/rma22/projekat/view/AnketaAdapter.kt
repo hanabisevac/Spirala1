@@ -55,12 +55,12 @@ class AnketaAdapter(private var ankete : List<Anketa>, private val onItemClicked
         var p : Int = (round(prog*10)*10).toInt()
         if((round(prog*10)).toInt() %2 != 0) p +=10
         holder.prog.progress = p
-
+        holder.itemView.isEnabled = false
         val pom = AnketaViewModel()
         val lista = pom.getMyAnkete()
-        if((boja == "zelena" || boja=="plava" || boja=="crvena") && lista.contains(ankete[position])) {
+        if(lista.contains(ankete[position]) && boja!="zuta") {
+            holder.itemView.isEnabled = true
             holder.itemView.setOnClickListener { onItemClicked(ankete[position]) }
-
         }
     }
 
