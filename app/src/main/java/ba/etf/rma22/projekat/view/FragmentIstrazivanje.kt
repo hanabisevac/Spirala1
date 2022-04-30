@@ -58,11 +58,11 @@ class FragmentIstrazivanje : Fragment() {
         dugme.isEnabled = false
 
         spinZaGodine.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, position: Int, p3: Long) {
+            override fun onItemSelected(adapterView: AdapterView<*>?, view1: View?, position: Int, p3: Long) {
                 val str : String = adapterView?.getItemAtPosition(position).toString()
                 val godina = str.toInt()
                 val lista = getStrings(godina)
-                napuniSpinnerIstrazivanje(lista)
+                napuniSpinnerIstrazivanje(lista, view)
                 spinZaIstrazivanja.setSelection(0)
                 dugme.isEnabled = false
                 dugme.isClickable = false
@@ -91,10 +91,10 @@ class FragmentIstrazivanje : Fragment() {
         }
 
         spinZaIstrazivanja.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(adapterView: AdapterView<*>?, view1: View?, position: Int, id: Long) {
                 val str : String = adapterView?.getItemAtPosition(position).toString()
                 val lista = getGrupe(str)
-                napuniSpinnerGrupe(lista)
+                napuniSpinnerGrupe(lista, view)
                 spinZaGrupe.setSelection(0)
                 izbor1 = str
 
@@ -152,15 +152,15 @@ class FragmentIstrazivanje : Fragment() {
         return view
     }
 
-    fun napuniSpinnerIstrazivanje(lista : List<String>) {
-        adapterZaSpinner = ArrayAdapter(spinZaIstrazivanja.context, android.R.layout.simple_spinner_item, lista)
+    fun napuniSpinnerIstrazivanje(lista : List<String>, view : View) {
+        adapterZaSpinner = ArrayAdapter(view.context, android.R.layout.simple_spinner_item, lista)
         adapterZaSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinZaIstrazivanja.adapter = adapterZaSpinner
     }
 
 
-    fun napuniSpinnerGrupe(lista : List<String>) {
-        adapterZaSpinner = ArrayAdapter(spinZaGrupe.context, android.R.layout.simple_spinner_item, lista)
+    fun napuniSpinnerGrupe(lista : List<String>, view : View) {
+        adapterZaSpinner = ArrayAdapter(view.context, android.R.layout.simple_spinner_item, lista)
         adapterZaSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinZaGrupe.adapter = adapterZaSpinner
     }

@@ -2,7 +2,7 @@ package ba.etf.rma22.projekat.data.models
 
 import java.util.*
 
-class Anketa(val naziv : String,
+data class Anketa(val naziv : String,
              val nazivIstrazivanja : String,
              val datumPocetak : Date,
              val datumKraj : Date,

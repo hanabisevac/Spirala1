@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import ba.etf.rma22.projekat.Communicator
-import ba.etf.rma22.projekat.data.models.PredanaAnketa
+import ba.etf.rma22.projekat.data.repositories.TrenutnaAnketaRepository
 import com.example.spirala1.R
 import java.util.*
 import kotlin.math.round
@@ -26,16 +26,16 @@ class FragmentPredaj : Fragment() {
         val view = inflater.inflate(R.layout.fragment_predaj, container, false)
         progresText = view.findViewById(R.id.progresTekst)
         dugme = view.findViewById(R.id.dugmePredaj)
-        val prog = PredanaAnketa.dajAnketu().progres
+        val prog = TrenutnaAnketaRepository.dajAnketu().progres
         var p : Int = (round(prog*10) *10).toInt()
         if((round(prog*10)).toInt() %2 != 0) p +=10
         progresText.text = ""+ p + "%"
         communicator = activity as Communicator
         dugme.isEnabled = true
-        if(PredanaAnketa.dajAnketu().getStatus()=="plava" || PredanaAnketa.dajAnketu().getStatus()=="crvena") dugme.isEnabled = false
+        if(TrenutnaAnketaRepository.dajAnketu().getStatus()=="plava" || TrenutnaAnketaRepository.dajAnketu().getStatus()=="crvena") dugme.isEnabled = false
         dugme.setOnClickListener{
-            PredanaAnketa.postaviDatum(Date())
-            val poruka = "Završili ste anketu "+ PredanaAnketa.dajAnketu().naziv + " u okviru istraživanja " + PredanaAnketa.dajAnketu().nazivIstrazivanja
+            TrenutnaAnketaRepository.postaviDatum(Date())
+            val poruka = "Završili ste anketu "+ TrenutnaAnketaRepository.dajAnketu().naziv + " u okviru istraživanja " + TrenutnaAnketaRepository.dajAnketu().nazivIstrazivanja
             communicator.prebaciFragment(poruka)
         }
         return view
@@ -43,7 +43,7 @@ class FragmentPredaj : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val prog = PredanaAnketa.dajAnketu().progres
+        val prog = TrenutnaAnketaRepository.dajAnketu().progres
         var p : Int = (round(prog*10) *10).toInt()
         if((round(prog*10)).toInt() %2 != 0) p +=10
         progresText.text = ""+ p + "%"

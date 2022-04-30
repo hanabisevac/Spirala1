@@ -1,15 +1,10 @@
 package ba.etf.rma22.projekat
 
-import android.widget.AdapterView
-import android.widget.ListView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.pressImeActionButton
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -17,12 +12,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import ba.etf.rma22.projekat.UtilTestClass.Companion.hasItemCount
 import ba.etf.rma22.projekat.UtilTestClass.Companion.itemTest
 import ba.etf.rma22.projekat.data.repositories.AnketaRepository
-import ba.etf.rma22.projekat.data.repositories.PitanjeAnketaRepository
 import com.example.spirala1.R
-import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.*
-import org.hamcrest.Matchers
-import org.hamcrest.core.AllOf
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -57,7 +48,7 @@ class MySpirala2AndroidTest {
     }
 
     //zadatak 2
-    /*@Test
+   @Test
     fun popuniAnketu() {
         onView(withId(R.id.pager)).perform(ViewPager2Actions.scrollToPosition(0))
         onView(withId(R.id.filterAnketa)).perform(click())
@@ -68,18 +59,32 @@ class MySpirala2AndroidTest {
                 allOf(hasDescendant(withText(ankete[0].naziv)),
             hasDescendant(withText(ankete[0].nazivIstrazivanja))), click())
         )
-        val pitanja = PitanjeAnketaRepository.getPitanja(ankete[0].naziv, ankete[0].nazivIstrazivanja)
 
         onView(withId(R.id.pager)).perform(ViewPager2Actions.scrollToPosition(0))
-        //onView(withId(R.id.odgovoriLista))
-        //onData(allOf(Is(instanceOf(ListView::class.java)), Is("Green mile"))).perform(click())
+        onData(anything()).inAdapterView(allOf(withId(R.id.odgovoriLista), isDisplayed())).atPosition(0).perform(click())
 
-        onData(anything()).inAdapterView(allOf(Is(instanceOf(TextView::class.java)))).atPosition(0).perform(click())
-        //Thread.sleep(5000)
+        onView(withId(R.id.pager)).perform(ViewPager2Actions.scrollToPosition(1))
+        onData(anything()).inAdapterView(allOf(withId(R.id.odgovoriLista), isDisplayed())).atPosition(1).perform(click())
+
+        onView(withId(R.id.pager)).perform(ViewPager2Actions.scrollToPosition(2))
+        onData(anything()).inAdapterView(allOf(withId(R.id.odgovoriLista), isDisplayed())).atPosition(1).perform(click())
+
+        onView(withId(R.id.pager)).perform(ViewPager2Actions.scrollToLast())
+        onView(withId(R.id.dugmePredaj)).perform(click())
+        onView(withSubstring("Završili ste anketu")).check(matches(isDisplayed()))
+        Thread.sleep(500)
+        onView(withId(R.id.pager)).perform(ViewPager2Actions.scrollToPosition(0))
+        onView(withId(R.id.filterAnketa)).perform(click())
+        onData(allOf(Is(instanceOf(String::class.java)), Is("Urađene ankete"))).perform(click())
+        val ankete1 = AnketaRepository.getDone()
+        onView(withId(R.id.listaAnketa)).check(hasItemCount(ankete1.size))
+        for (anketa in ankete1) {
+            itemTest(R.id.listaAnketa, anketa)
+        }
 
 
 
-    }*/
+    }
 
 
 }

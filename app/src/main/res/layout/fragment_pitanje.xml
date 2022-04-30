@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ba.etf.rma22.projekat.view.FragmentPitanje"
-    android:background="@color/teal_700"
     android:padding="15dp"
     >
 

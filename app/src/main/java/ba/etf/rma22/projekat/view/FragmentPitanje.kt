@@ -1,5 +1,6 @@
 package ba.etf.rma22.projekat.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -11,12 +12,12 @@ import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import ba.etf.rma22.projekat.Communicator
 import ba.etf.rma22.projekat.data.models.Pitanje
-import ba.etf.rma22.projekat.data.models.PredanaAnketa
+import ba.etf.rma22.projekat.data.repositories.TrenutnaAnketaRepository
 import ba.etf.rma22.projekat.viewmodel.PitanjeAnketaViewModel
 import com.example.spirala1.R
 
 
-class FragmentPitanje(val pitanje : Pitanje, val size : Int) : Fragment() {
+class FragmentPitanje(val pitanje : Pitanje) : Fragment() {
 
     private lateinit var textPitanja : TextView
     private lateinit var listaOdgovora : ListView
@@ -24,9 +25,9 @@ class FragmentPitanje(val pitanje : Pitanje, val size : Int) : Fragment() {
     private lateinit var adapterZaListu : MojAdapterZaListu
     private var pitanjaAnketaViewModel = PitanjeAnketaViewModel()
     private val anketaPitanje = pitanjaAnketaViewModel
-        .dajPitanjeAnketuPoNazivuPitanja(pitanje.naziv, PredanaAnketa.dajAnketu().naziv, PredanaAnketa.dajAnketu().nazivIstrazivanja)
+        .dajPitanjeAnketuPoNazivuPitanja(pitanje.naziv, TrenutnaAnketaRepository.dajAnketu().naziv, TrenutnaAnketaRepository.dajAnketu().nazivIstrazivanja)
 
-    private var progres : Float = 1.0F/size
+    private var progres : Float = 1.0F/TrenutnaAnketaRepository.dajBrojPitanja()
     private var brojac : Int = 0
     private lateinit var communicator : Communicator
     var stariView : TextView? = null
@@ -40,21 +41,23 @@ class FragmentPitanje(val pitanje : Pitanje, val size : Int) : Fragment() {
         textPitanja = view.findViewById(R.id.tekstPitanja)
         listaOdgovora = view.findViewById(R.id.odgovoriLista)
         dugme = view.findViewById(R.id.dugmeZaustavi)
-        adapterZaListu = MojAdapterZaListu(listaOdgovora.context, R.layout.odgovor, pitanje.opcije)
+        adapterZaListu = MojAdapterZaListu(view.context, android.R.layout.simple_list_item_1, pitanje.opcije)
         textPitanja.text = pitanje.tekst
         listaOdgovora.adapter = adapterZaListu
+
         listaOdgovora.isEnabled = true
-        if(PredanaAnketa.dajAnketu().getStatus() == "plava" || PredanaAnketa.dajAnketu().getStatus() == "crvena") listaOdgovora.isEnabled = false
+        if(TrenutnaAnketaRepository.dajAnketu().getStatus() == "plava" || TrenutnaAnketaRepository.dajAnketu().getStatus() == "crvena") listaOdgovora.isEnabled = false
+        else if(anketaPitanje?.dajOdgovor() != null) listaOdgovora.isEnabled = false
 
 
         listaOdgovora.onItemClickListener = object : AdapterView.OnItemClickListener {
-            override fun onItemClick(adapterView: AdapterView<*>?, view: View?, position: Int, p3: Long) {
+            override fun onItemClick(adapterView: AdapterView<*>?, view1: View?, position: Int, p3: Long) {
                 val odg = adapterView?.getItemAtPosition(position).toString()
-                val text : TextView = view?.findViewById(R.id.odgovori)!!
+                val text : TextView? = view1?.findViewById(android.R.id.text1)
                 if(stariView != null && stariView!=text) stariView!!.setTextColor(Color.parseColor("#FF000000"))
                 stariView = text
                 if(brojac == 0) updateProgres()
-                text.setTextColor(Color.parseColor("#0000FF"))
+                text!!.setTextColor(Color.parseColor("#0000FF"))
                 anketaPitanje?.postaviOdgovor(odg)
                 brojac++
             }
@@ -69,16 +72,17 @@ class FragmentPitanje(val pitanje : Pitanje, val size : Int) : Fragment() {
     }
 
     fun updateProgres() {
-        PredanaAnketa.postaviProgres(progres)
+        TrenutnaAnketaRepository.postaviProgres(progres)
     }
 
     inner class MojAdapterZaListu(context : Context, @LayoutRes private val layoutRes : Int, private val lista : List<String>)
         : ArrayAdapter<String>(context, layoutRes, lista){
 
+        @SuppressLint("ViewHolder")
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             var novi = convertView
-            novi = LayoutInflater.from(context).inflate(R.layout.odgovor, parent, false)
-            val textView : TextView = novi.findViewById(R.id.odgovori)
+            novi = LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1, parent, false)
+            val textView : TextView = novi.findViewById(android.R.id.text1)
             val opcija = lista[position]
             textView.text = opcija
             if(anketaPitanje!!.dajOdgovor()!=null && opcija == anketaPitanje.dajOdgovor()) textView.setTextColor(Color.parseColor("#0000FF"))
