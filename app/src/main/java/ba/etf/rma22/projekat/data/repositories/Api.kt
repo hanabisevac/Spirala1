@@ -73,7 +73,7 @@ interface Api {
 //ODGOVORI
     //vraca listu odgovora za pokusaj rjesavanja ankete sa idem ktid i studenta sa zadanim id
     @GET("/student/{id}/anketataken/{ktid}/odgovori")
-    suspend fun getPokusajRjesavanja(@Path("id") id : String, @Path("ktid") ktid : Int) : Response<List<Odgovor>>
+    suspend fun getPokusajRjesavanja(@Path("id") id : String, @Path("ktid") ktid : Int) : Response<List<Odgovor> ?>
 
 
     //dodaje odgovor za pokusaj rjesavanja ankete sa idem ktid za studenta sa hasnom id

@@ -97,6 +97,7 @@ class AnketaViewModel {
                     for(j in pocete.indices){
                         if(pocete[j].AnketumId == result[i].id) {
                             result[i].progres = pocete[j].progres
+                            result[i].datumRada = pocete[j].datumRada
                             break
                         }
                     }

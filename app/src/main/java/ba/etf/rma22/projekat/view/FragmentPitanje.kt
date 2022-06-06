@@ -105,8 +105,9 @@ class FragmentPitanje(val pitanje : Pitanje) : Fragment() {
             val textView : TextView = novi.findViewById(android.R.id.text1)
             val opcija = lista[position]
             textView.text = opcija
-            odgovorViewModel.dajOdgovoreNaAnketu(TrenutnaAnketaRepository.dajAnketu().id){
+            odgovorViewModel.dajOdgovoreNaAnketu(TrenutnaAnketaRepository.dajAnketu().AnketumId){
                 if(it != null){
+                    TrenutnaAnketaRepository.postaviProgres(60)
                     for(i in it.indices){
                         if(it[i].pitanjeId == pitanje.id && it[i].odgovoreno == position) {
                             textView.setTextColor(Color.parseColor("#0000FF"))

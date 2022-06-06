@@ -12,7 +12,14 @@ object OdgovorRepository {
 
     suspend fun getOdgovoriAnketa(idAnketa : Int) : List<Odgovor> ?{
         return withContext(Dispatchers.IO){
-            val response = ApiConfig.retrofit.getPokusajRjesavanja(AccountRepository.acHash, idAnketa)
+            val anketeTaken = TakeAnketaRepository.getPoceteAnkete()
+            var id : Int = 0
+            if(anketeTaken != null){
+                for(i in anketeTaken.indices){
+                    if(anketeTaken[i].AnketumId == idAnketa) id = anketeTaken[i].id
+                }
+            }
+            val response = ApiConfig.retrofit.getPokusajRjesavanja(AccountRepository.acHash, id)
             val responseBody = response.body()
             return@withContext responseBody
         }
