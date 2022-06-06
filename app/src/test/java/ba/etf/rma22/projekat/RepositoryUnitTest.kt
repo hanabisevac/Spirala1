@@ -1,144 +1,160 @@
 package ba.etf.rma22.projekat
-/*
 
-import ba.etf.rma22.projekat.data.models.Anketa
-import ba.etf.rma22.projekat.data.models.Grupa
-import ba.etf.rma22.projekat.data.models.Istrazivanje
-import ba.etf.rma22.projekat.data.repositories.AnketaRepository
-import ba.etf.rma22.projekat.data.repositories.GrupaRepository
-import ba.etf.rma22.projekat.data.repositories.IstrazivanjeRepository
-import org.hamcrest.CoreMatchers.`is` as Is
-import org.hamcrest.MatcherAssert.*
-import org.hamcrest.Matchers.hasItem
-import org.hamcrest.Matchers.not
-import org.hamcrest.beans.HasPropertyWithValue.hasProperty
-import org.junit.Assert.assertEquals
+
+import ba.etf.rma22.projekat.data.models.*
+import ba.etf.rma22.projekat.data.repositories.*
+
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.hasItem
+import org.hamcrest.MatcherAssert.assertThat
+import org.junit.FixMethodOrder
 import org.junit.Test
+import org.junit.runners.MethodSorters
+import java.net.URL
 
+
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class RepositoryUnitTest {
-
+    suspend fun obrisi(){
+        var client: OkHttpClient = OkHttpClient()
+        var builder: Request.Builder = Request.Builder()
+            .url(URL(ApiConfig.baseURL + "/student/" + AccountRepository.acHash + "/upisugrupeipokusaji"))
+            .delete()
+        var request: Request = builder.build()
+        withContext(Dispatchers.IO) {
+            var response: Response = client.newCall(request).execute()
+        }
+    }
     @Test
-    fun testGetAll(){
-        //ankete
-        val ankete = AnketaRepository.getAll()
-        assertEquals(ankete.size, 14)
-        assertThat(ankete, hasItem<Anketa>(hasProperty("naziv", Is("Odlazak mladih iz BiH"))))
-        assertThat(ankete, not(hasItem<Anketa>(hasProperty("naziv", Is("Anketa 13")))))
-        //grupe
-        val grupe = GrupaRepository.getAll()
-        assertEquals(grupe.size, 14)
-        assertThat(grupe, hasItem<Grupa>(hasProperty("naziv", Is("Grupa 8"))))
-        assertThat(grupe, hasItem<Grupa>(hasProperty("nazivIstrazivanja", Is("Istrazivanje javnog mnjenja"))))
-        assertThat(grupe, not(hasItem<Grupa>(hasProperty("naziv", Is("Grupa 15")))))
-        //istrazivanja
-        val istrazivanja = IstrazivanjeRepository.getAll()
-        assertEquals(istrazivanja.size, 6)
-        assertThat(istrazivanja, hasItem<Istrazivanje>(hasProperty("naziv", Is("Istrazivanje o cyberbullying-u"))))
-        assertThat(istrazivanja, hasItem<Istrazivanje>(hasProperty("godina", Is(5))))
-        assertThat(istrazivanja, not(hasItem<Istrazivanje>(hasProperty("godina", Is(6)))))
+    fun a0_pripremiPocetak() = runBlocking {
+        obrisi()
     }
 
     @Test
-    fun testGetDone() {
-        val gotove = AnketaRepository.getDone()
-        assertEquals(gotove.size, 1)
-        assertThat(gotove, hasItem<Anketa>(hasProperty("naziv", Is("Hackovanje"))))
-        assertThat(gotove, not(hasItem<Anketa>(hasProperty("naziv", Is("Sigurnost na internetu")))))
-        assertThat(gotove, hasItem<Anketa>(hasProperty("nazivGrupe", Is("Grupa 3"))))
+    fun a1_getIstrazivanja() = runBlocking {
+        var istrazivanja = IstrazivanjeIGrupaRepository.getIstrazivanja()
+        assertThat(istrazivanja,CoreMatchers.notNullValue())
+        assertThat(istrazivanja?.size,CoreMatchers.equalTo(6))
+
     }
 
     @Test
-    fun testGetNotTaken(){
-        val zavrsene = AnketaRepository.getNotTaken()
-        assertEquals(zavrsene.size, 1)
-        assertThat(zavrsene, hasItem<Anketa>(hasProperty("naziv", Is("Zabrana pusenja"))))
-        assertThat(zavrsene, hasItem<Anketa>(hasProperty("nazivGrupe", Is("Grupa 3"))))
+    fun a2_getGrupe() = runBlocking {
+        var grupe = IstrazivanjeIGrupaRepository.getGrupe()
+        assertThat(grupe,CoreMatchers.notNullValue())
+        assertThat(grupe?.size,CoreMatchers.equalTo(8))
+    }
+    @Test
+    fun a3_getUpisaneGrupe() = runBlocking {
+        var upisane = IstrazivanjeIGrupaRepository.getUpisaneGrupe()
+        assertThat(upisane?.size,CoreMatchers.equalTo(0))
     }
 
     @Test
-    fun testGetMyAnkete() {
-        val moje = AnketaRepository.getMyAnkete()
-        assertEquals(moje.size, 1)
-        assertThat(moje, hasItem<Anketa>(hasProperty("naziv", Is("Hackovanje"))))
-        assertThat(moje, not(hasItem<Anketa>(hasProperty("naziv", Is("Sigurnost na internetu")))))
-        assertThat(moje, hasItem<Anketa>(hasProperty("nazivGrupe", Is("Grupa 3"))))
-        assertThat(moje, hasItem<Anketa>(hasProperty("nazivIstrazivanja", Is("Istrazivanje o cyberbullying-u"))))
+    fun a4_upisiIProvjeri() = runBlocking {
+        var grupe = IstrazivanjeIGrupaRepository.getGrupe()
+        IstrazivanjeIGrupaRepository.upisiUGrupu(grupe!![0]?.id)
+        var upisane = IstrazivanjeIGrupaRepository.getUpisaneGrupe()
+        assertThat(upisane?.size,CoreMatchers.equalTo(1))
+        assertThat(upisane?.intersect(grupe)?.size,CoreMatchers.equalTo(1))
+    }
+    @Test
+    fun a4a_upisiIProvjeri() = runBlocking{
+        var grupe = IstrazivanjeIGrupaRepository.getGrupe()
+        IstrazivanjeIGrupaRepository.upisiUGrupu(6)
+        var upisane = IstrazivanjeIGrupaRepository.getUpisaneGrupe()
+        assertThat(upisane?.size,CoreMatchers.equalTo(2))
+        assertThat(upisane!!.intersect(grupe!!).size,CoreMatchers.equalTo(2))
+    }
+    @Test
+    fun a5_zapocniUpisaneAnkete() = runBlocking {
+        var upisaneAnkete = AnketaRepository.getUpisane()
+        var prije = TakeAnketaRepository.getPoceteAnkete()
+        TakeAnketaRepository.zapocniAnketu(upisaneAnkete!![0]?.id)
+        var poslije = TakeAnketaRepository.getPoceteAnkete()
+        assertThat(prije,CoreMatchers.`is`(CoreMatchers.nullValue()))
+        assertThat(poslije!!.size,CoreMatchers.equalTo(1))
     }
 
     @Test
-    fun testGetFuture() {
-        val buduce = AnketaRepository.getFuture()
-        assertEquals(buduce.size, 0)
+    fun a6_zapocniNemogucuAnketu() = runBlocking {
+        TakeAnketaRepository.zapocniAnketu(999)
+        assertThat(TakeAnketaRepository.getPoceteAnkete()!!.size,CoreMatchers.equalTo(1))
     }
 
     @Test
-    fun testGetAktivneAnkete() {
-        val aktivne = AnketaRepository.aktivneAnkete()
-        assertEquals(aktivne.size, 0)
+    fun a7_provjeriBezOdgovora() = runBlocking {
+        var poceti = TakeAnketaRepository.getPoceteAnkete()
+        assertThat(OdgovorRepository.getOdgovoriAnketa(poceti!![poceti.size-1]?.AnketumId)!!.size,CoreMatchers.equalTo(0))
+    }
+    @Test
+    fun a8_provjeriOdgovor() = runBlocking {
+        var poceti = TakeAnketaRepository.getPoceteAnkete()
+        var pitanja = PitanjeAnketaRepository.getPitanja(poceti!![poceti.size-1]?.AnketumId)
+        var result = OdgovorRepository.postaviOdgovorAnketa(poceti!![poceti.size-1]?.id,pitanja!![0]?.id,1)
+        assertThat(result,CoreMatchers.notNullValue())
+        assertThat(result,CoreMatchers.equalTo(60))
+        assertThat(OdgovorRepository.getOdgovoriAnketa(poceti!![poceti.size-1]?.AnketumId)!!.size,CoreMatchers.equalTo(1))
+    }
+    @Test
+    fun a8a_provjeriNepoceteAnkete() = runBlocking {
+        var ankete = AnketaRepository.getAll()
+        var poceti = TakeAnketaRepository.getPoceteAnkete()!!.map { ktid -> ankete!!.first{id -> id!!.id == ktid!!.AnketumId}}
+        var nepoceti = AnketaRepository.getUpisane()!!.minus(poceti)
+        assertThat(nepoceti.size, `is`(2))
+        assertThat(nepoceti, hasItem(nepoceti.first{it->it.naziv.contains("Anketa 5")}))
+    }
+    @Test
+    fun a9_provjeriAnkete() = runBlocking {
+        assertThat(AnketaRepository.getAll()!!.size,CoreMatchers.equalTo(6))
     }
 
     @Test
-    fun testDajSveBezMojih() {
-        val ankete = AnketaRepository.dajSveBezMojih()
-        assertEquals(ankete.size, 13)
+    fun a9a_provjeriPitanja() = runBlocking {
+        var ankete = AnketaRepository.getAll()
+        assertThat(ankete,CoreMatchers.notNullValue())
+        var pitanja = PitanjeAnketaRepository.getPitanja(ankete!![0]?.id)
+        assertThat(pitanja,CoreMatchers.notNullValue())
+        assertThat(pitanja!!.size,CoreMatchers.equalTo(2))
     }
 
+    fun checkProperties(propA:Collection<String>,propB:Collection<String>){
+        for(trazeniProperty in propA){
+            assertThat(propB,hasItem(trazeniProperty))
+        }
+    }
     @Test
-    fun testGetGroupsByIstrazivanje() {
-        val g1 = GrupaRepository.getGroupsByIstrazivanje("Istrazivanje o cyberbullying-u")
-        assertEquals(g1.size, 3)
-        assertThat(g1, hasItem<Grupa>(hasProperty("naziv", Is("Grupa 1"))))
-        assertThat(g1, hasItem<Grupa>(hasProperty("naziv", Is("Grupa 2"))))
-        assertThat(g1, hasItem<Grupa>(hasProperty("naziv", Is("Grupa 3"))))
-        val g2 = GrupaRepository.getGroupsByIstrazivanje("Istrazivanje o kvaliteti nastave")
-        assertEquals(g2.size, 2)
-        assertThat(g2, hasItem<Grupa>(hasProperty("naziv", Is("Grupa 1"))))
-        assertThat(g2, hasItem<Grupa>(hasProperty("naziv", Is("Grupa 2"))))
-        val g3 = GrupaRepository.getGroupsByIstrazivanje("Drustveno istrazivanje")
-        assertEquals(g3.size, 2)
-        assertThat(g3, hasItem<Grupa>(hasProperty("naziv", Is("Grupa 4"))))
-        assertThat(g3, hasItem<Grupa>(hasProperty("naziv", Is("Grupa 3"))))
-        val g4 = GrupaRepository.getGroupsByIstrazivanje("Istrazivanje o zivotinjama")
-        assertEquals(g4.size, 3)
-        assertThat(g4, hasItem<Grupa>(hasProperty("naziv", Is("Grupa 5"))))
-        assertThat(g4, hasItem<Grupa>(hasProperty("naziv", Is("Grupa 2"))))
-        assertThat(g4, hasItem<Grupa>(hasProperty("naziv", Is("Grupa 6"))))
-        val g5 = GrupaRepository.getGroupsByIstrazivanje("Istrazivanje o uticaju medija")
-        assertEquals(g5.size, 2)
-        assertThat(g5, hasItem<Grupa>(hasProperty("naziv", Is("Grupa 7"))))
-        assertThat(g5, hasItem<Grupa>(hasProperty("naziv", Is("Grupa 8"))))
-        val g6 = GrupaRepository.getGroupsByIstrazivanje("Istrazivanje javnog mnjenja")
-        assertEquals(g6.size, 2)
-        assertThat(g6, hasItem<Grupa>(hasProperty("naziv", Is("Grupa 7"))))
-        assertThat(g6, hasItem<Grupa>(hasProperty("naziv", Is("Grupa 5"))))
+    fun sveKlaseIspravne() {
+        var pitanjeProperties = Pitanje::class.java.kotlin.members.map { it.name }
+        var pitanjeTProperties = listOf("id","naziv","tekstPitanja","opcije")
+        checkProperties(pitanjeTProperties,pitanjeProperties)
+
+        var anketaProperties = Anketa::class.java.kotlin.members.map {it.name}
+        var anketaTProperties = listOf("id","naziv","datumPocetak","datumKraj","trajanje")
+        checkProperties(anketaTProperties,anketaProperties)
+
+        var anketaTakenProperties = AnketaTaken::class.java.kotlin.members.map { it.name }
+        var anketaTakenTProperties = listOf("id","student","datumRada","progres")
+        checkProperties(anketaTakenTProperties,anketaTakenProperties)
+
+        var grupaProperties = Grupa::class.java.kotlin.members.map { it.name }
+        var grupaTProperties = listOf("id","naziv")
+        checkProperties(grupaTProperties,grupaProperties)
+
+        var istrazivanjeProperties = Istrazivanje::class.java.kotlin.members.map { it.name }
+        var istrazivanjeTProperties = listOf("id","naziv","godina")
+        checkProperties(istrazivanjeTProperties,istrazivanjeProperties)
+
+        var odgovorProperties = Odgovor::class.java.kotlin.members.map { it.name }
+        var odgovorTProperties = listOf("id","odgovoreno")
+        checkProperties(odgovorTProperties,odgovorProperties)
     }
 
-    @Test
-    fun testGetIstrazivanjeByGodina() {
-        val i1 = IstrazivanjeRepository.getIstrazivanjeByGodina(1)
-        assertEquals(i1.size, 1)
-        assertThat(i1, hasItem<Istrazivanje>(hasProperty("naziv", Is("Istrazivanje o kvaliteti nastave"))))
-        val i2 = IstrazivanjeRepository.getIstrazivanjeByGodina(2)
-        assertEquals(i2.size, 2)
-        assertThat(i2, hasItem<Istrazivanje>(hasProperty("naziv", Is("Istrazivanje javnog mnjenja"))))
-        assertThat(i2, hasItem<Istrazivanje>(hasProperty("naziv", Is("Istrazivanje o cyberbullying-u"))))
-        val i3 = IstrazivanjeRepository.getIstrazivanjeByGodina(3)
-        assertEquals(i3.size, 1)
-        assertThat(i3, hasItem<Istrazivanje>(hasProperty("naziv", Is("Istrazivanje o zivotinjama"))))
-        val i4 = IstrazivanjeRepository.getIstrazivanjeByGodina(4)
-        assertEquals(i4.size, 1)
-        assertThat(i4, hasItem<Istrazivanje>(hasProperty("naziv", Is("Drustveno istrazivanje"))))
-        val i5 = IstrazivanjeRepository.getIstrazivanjeByGodina(5)
-        assertEquals(i5.size, 1)
-        assertThat(i5, hasItem<Istrazivanje>(hasProperty("naziv", Is("Istrazivanje o uticaju medija"))))
-    }
-
-    @Test
-    fun testGetUpisani() {
-        val upisan = IstrazivanjeRepository.getUpisani()
-        assertEquals(upisan.size, 1)
-        assertThat(upisan, hasItem<Istrazivanje>(hasProperty("naziv", Is("Istrazivanje o cyberbullying-u"))))
-    }
-
-
-}*/
+}

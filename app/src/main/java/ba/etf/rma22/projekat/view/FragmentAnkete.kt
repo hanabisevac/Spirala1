@@ -12,6 +12,7 @@ import androidx.core.view.size
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ba.etf.rma22.projekat.Communicator
+import ba.etf.rma22.projekat.data.models.Anketa
 import ba.etf.rma22.projekat.viewmodel.AnketaViewModel
 import com.example.spirala1.R
 
@@ -23,9 +24,8 @@ class FragmentAnkete : Fragment() {
     private val anketeViewModel = AnketaViewModel()
     private lateinit var communicator: Communicator
 
-    /*override fun onCreate(savedInstanceState: Bundle?) {
 
-    }*/
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,23 +35,29 @@ class FragmentAnkete : Fragment() {
         communicator = activity as Communicator
         anketeRecyclerView = view.findViewById(R.id.listaAnketa)
         anketeRecyclerView.layoutManager = GridLayoutManager(activity, 2)
-        anketeAdapter = AnketaAdapter(anketeViewModel.getSveAnkete()) {anketa -> communicator.otvoriNoviFragment(anketa)}
+        anketeAdapter = AnketaAdapter(listOf<Anketa>()) { anketa -> communicator.otvoriNoviFragment(anketa)}
         anketeRecyclerView.adapter = anketeAdapter
         spiner = view.findViewById(R.id.filterAnketa)
+        anketeViewModel.getAll(onSuccess = ::onSuccess)
 
         spiner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, position: Int, p3: Long) {
                 val izbor : String = adapterView?.getItemAtPosition(position).toString()
                 brojac = position
-                if(izbor == "Urađene ankete")  anketeAdapter.updateAnkete(anketeViewModel.getUradjeneAnkete())
+                if(izbor == "Sve moje ankete") anketeViewModel.getUpisane(upisane= ::upisane)
+                    //anketeAdapter.updateAnkete(anketeViewModel.getMyAnkete())
 
-                else if(izbor == "Buduće ankete") anketeAdapter.updateAnkete(anketeViewModel.getAktvineIBuduce())
+                /*else if(izbor == "Urađene ankete")  anketeViewModel.getAll(onSuccess = ::onSuccess)
+                    //anketeAdapter.updateAnkete(anketeViewModel.getUradjeneAnkete())
 
-                else if(izbor == "Prošle ankete") anketeAdapter.updateAnkete(anketeViewModel.getZavrseneAnkete())
+                else if(izbor == "Buduće ankete")  anketeViewModel.getAll(onSuccess = ::onSuccess)
+                    //anketeAdapter.updateAnkete(anketeViewModel.getAktvineIBuduce())
 
-                else if(izbor == "Sve moje ankete") anketeAdapter.updateAnkete(anketeViewModel.getMyAnkete())
+                else if(izbor == "Prošle ankete")  anketeViewModel.getAll(onSuccess = ::onSuccess)
+                    //anketeAdapter.updateAnkete(anketeViewModel.getZavrseneAnkete())*/
 
-                else anketeAdapter.updateAnkete(anketeViewModel.getSveAnkete())
+                else anketeViewModel.getAll(onSuccess = ::onSuccess)
+                    //anketeAdapter.updateAnkete(anketeViewModel.getSveAnkete())
 
             }
 
@@ -64,10 +70,21 @@ class FragmentAnkete : Fragment() {
         return view
     }
 
+    fun onSuccess(ankete : List<Anketa>){
+        anketeAdapter.updateAnkete(ankete)
+    }
+
+    fun upisane(ankete : List<Anketa>){
+        anketeAdapter.updateAnkete(ankete)
+    }
+
 
     override fun onResume() {
-        anketeAdapter.updateProgress()
         super.onResume()
+        anketeViewModel.getAll {
+            anketeAdapter.updateAnkete(it)
+        }
+        //anketeAdapter.updateProgress()
     }
 
     companion object {

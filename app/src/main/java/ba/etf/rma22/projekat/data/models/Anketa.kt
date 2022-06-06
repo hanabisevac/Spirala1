@@ -1,15 +1,18 @@
 package ba.etf.rma22.projekat.data.models
 
+import com.google.gson.annotations.SerializedName
 import java.util.*
 
-data class Anketa(val naziv : String,
-             val nazivIstrazivanja : String,
-             val datumPocetak : Date,
-             val datumKraj : Date,
-             var datumRada : Date ?,
-             val trajanje : Int,
-             val nazivGrupe : String,
-             var progres : Float) : Comparable<Anketa> {
+data class Anketa(
+    @SerializedName("id") val id : Int,
+    @SerializedName("naziv") val naziv : String,
+    var nazivIstrazivanja : String ?,
+    @SerializedName("datumPocetak") val datumPocetak : Date,
+    @SerializedName("datumKraj") val datumKraj : Date?,
+    var datumRada : Date ?,
+    @SerializedName("trajanje") val trajanje : Int,
+    var nazivGrupe : String ?,
+    var progres : Int ?) : Comparable<Anketa> {
 
     override fun compareTo(other: Anketa): Int {
         val cmp = this.datumPocetak.compareTo(other.datumPocetak)
@@ -17,8 +20,8 @@ data class Anketa(val naziv : String,
         return 1
     }
 
-    fun setProgress(progres : Float){
-        this.progres += progres
+    fun setProgress(progres : Int){
+        this.progres = progres
     }
 
     fun setDate(date : Date) {
@@ -28,12 +31,32 @@ data class Anketa(val naziv : String,
 
     fun getStatus() : String{
         if(datumRada != null) return "plava"
-        else if(datumPocetak.before(Date()) && datumKraj.after(Date())) return "zelena"
-        else if(datumKraj.before(Date())) return "crvena"
+        else if(datumKraj!=null && datumPocetak.before(Date()) && datumKraj.after(Date())) return "zelena"
+        else if(datumKraj==null && datumPocetak.before(Date())) return "zelena1"
+        else if(datumKraj!=null && datumKraj.before(Date())) return "crvena"
         return "zuta"
     }
 
     override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Anketa
+
+        if (id != other.id) return false
+        if (naziv != other.naziv) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id
+        result = 31 * result + naziv.hashCode()
+        return result
+    }
+
+
+    /*override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
@@ -61,5 +84,5 @@ data class Anketa(val naziv : String,
         result = 31 * result + nazivGrupe.hashCode()
         result = 31 * result + progres.hashCode()
         return result
-    }
+    }*/
 }

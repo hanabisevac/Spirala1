@@ -1,11 +1,11 @@
 package ba.etf.rma22.projekat.data.repositories
 
 import ba.etf.rma22.projekat.data.models.Pitanje
-import ba.etf.rma22.projekat.data.staticdata.dajListuPitanja
+//import ba.etf.rma22.projekat.data.staticdata.dajListuPitanja
 
 object PitanjaRepository {
 
-    fun dajSvaPitanja() : List<Pitanje> {
+   /* fun dajSvaPitanja() : List<Pitanje> {
         return dajListuPitanja()
     }
 
@@ -17,5 +17,5 @@ object PitanjaRepository {
         }
         return novaLista
     }
-
+*/
 }

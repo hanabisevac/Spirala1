@@ -1,3 +1,4 @@
+
 package ba.etf.rma22.projekat.view
 
 import android.os.Bundle
@@ -26,16 +27,15 @@ class FragmentPredaj : Fragment() {
         val view = inflater.inflate(R.layout.fragment_predaj, container, false)
         progresText = view.findViewById(R.id.progresTekst)
         dugme = view.findViewById(R.id.dugmePredaj)
-        val prog = TrenutnaAnketaRepository.dajAnketu().progres
-        var p : Int = (round(prog*10) *10).toInt()
-        if((round(prog*10)).toInt() %2 != 0) p +=10
-        progresText.text = ""+ p + "%"
+        val prog = TrenutnaAnketaRepository.dajProgres()
+        progresText.text = ""+ prog + "%"
         communicator = activity as Communicator
         dugme.isEnabled = true
-        if(TrenutnaAnketaRepository.dajAnketu().getStatus()=="plava" || TrenutnaAnketaRepository.dajAnketu().getStatus()=="crvena") dugme.isEnabled = false
+        //if(TrenutnaAnketaRepository.dajAnketu().getStatus()=="plava" || TrenutnaAnketaRepository.dajAnketu().getStatus()=="crvena") dugme.isEnabled = false
         dugme.setOnClickListener{
-            TrenutnaAnketaRepository.postaviDatum(Date())
-            val poruka = "Završili ste anketu "+ TrenutnaAnketaRepository.dajAnketu().naziv + " u okviru istraživanja " + TrenutnaAnketaRepository.dajAnketu().nazivIstrazivanja
+            //TrenutnaAnketaRepository.postaviDatum(Date())
+            //val poruka = "Završili ste anketu "+ TrenutnaAnketaRepository.dajAnketu().naziv + " u okviru istraživanja " + TrenutnaAnketaRepository.dajAnketu().nazivIstrazivanja
+            val poruka = "Zavrsili ste anketu"
             communicator.prebaciFragment(poruka)
         }
         return view
@@ -43,9 +43,7 @@ class FragmentPredaj : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val prog = TrenutnaAnketaRepository.dajAnketu().progres
-        var p : Int = (round(prog*10) *10).toInt()
-        if((round(prog*10)).toInt() %2 != 0) p +=10
+        val p = TrenutnaAnketaRepository.dajProgres()
         progresText.text = ""+ p + "%"
     }
 

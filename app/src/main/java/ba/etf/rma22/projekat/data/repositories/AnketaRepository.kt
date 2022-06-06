@@ -2,15 +2,90 @@ package ba.etf.rma22.projekat.data.repositories
 
 
 import ba.etf.rma22.projekat.data.models.Anketa
-import ba.etf.rma22.projekat.data.staticdata.listaAnketa
+import ba.etf.rma22.projekat.data.models.Grupa
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.*
+import java.util.concurrent.ThreadPoolExecutor
 
 object AnketaRepository {
 
-    fun getAll() : List<Anketa> {
-        return listaAnketa()
+
+    suspend fun getAll() : List<Anketa> {
+        return withContext(Dispatchers.IO){
+            val response = ApiConfig.retrofit.getAnkete(1)
+            val response1 = ApiConfig.retrofit.getAnkete(2)
+            val responseBody1 = response1.body()
+            val responseBody = response.body()
+            var lista = mutableListOf<Anketa>()
+            lista.addAll(responseBody!!)
+            lista.addAll(responseBody1!!)
+            return@withContext lista
+        }
     }
 
+    suspend fun getDostupneAnketeZaGrupu(id : Int) : List<Anketa> {
+        return withContext(Dispatchers.IO){
+            val response = ApiConfig.retrofit.getAnketeSaGrupom(id)
+            val responseBody = response.body()
+            return@withContext responseBody!!
+        }
+    }
+
+    suspend fun dodajPodatkeAnkete() : List<Anketa> {
+        return withContext(Dispatchers.IO)
+        {
+            val lista = mutableListOf<Anketa>()
+            val grupe = GrupaRepository.getAll()
+            for (i in grupe.indices) {
+                val ankete = getDostupneAnketeZaGrupu(grupe[i].id)
+                for (j in ankete.indices) {
+                    ankete[j].nazivGrupe = grupe[i].naziv
+                    lista.add(ankete[j])
+                }
+            }
+
+            return@withContext lista
+        }
+    }
+
+    suspend fun getAll(offset : Int) : List<Anketa> {
+        return withContext(Dispatchers.IO){
+            val response = ApiConfig.retrofit.getAnkete(offset)
+            val responseBody = response.body()
+            return@withContext responseBody!!
+        }
+    }
+
+    suspend fun getById(id : Int) : Anketa{
+        return withContext(Dispatchers.IO){
+            val response = ApiConfig.retrofit.getAnketaSaId(id)
+            val responseBody = response.body()
+            return@withContext responseBody!!
+        }
+    }
+
+    //vraca listu anketa na kojima je student
+     suspend fun getUpisane() : List<Anketa> {
+         return withContext(Dispatchers.IO) {
+             val response = ApiConfig.retrofit.getStudentoveGrupe(AccountRepository.acHash)
+             val responseBody = response.body()
+             val listaAnketa = mutableListOf<Anketa>()
+             for(i in responseBody!!.indices){
+                 listaAnketa.addAll(getDostupneAnketeZaGrupu(responseBody[i].id))
+             }
+             //ne znamo dal je ovo potrebno jos uvijek
+             val rezultat = listaAnketa.toSet().toList()
+             return@withContext rezultat
+         }
+    }
+
+
+
+
+
+
+    /*
     fun getDone() : List<Anketa> {
         val lista = mutableListOf<Anketa>()
         val pomocna : List<Anketa> = getMyAnkete()
@@ -23,6 +98,7 @@ object AnketaRepository {
         }
         return lista
     }
+
 
     fun dajSveBezMojih() : List<Anketa> {
         val korisnikove = KorisnikRepository.getGrupe()
@@ -130,6 +206,7 @@ object AnketaRepository {
         for(i in sve.indices) if(sve[i].naziv == naziv && sve[i].nazivIstrazivanja == istrazivanje) return sve[i]
         return null
     }
+    */
 
 
 

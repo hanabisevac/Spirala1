@@ -1,6 +1,7 @@
 package ba.etf.rma22.projekat.data.models
 
 data class Istrazivanje(
+    var id : Int,
     val naziv : String,
     val godina : Int
 ) {

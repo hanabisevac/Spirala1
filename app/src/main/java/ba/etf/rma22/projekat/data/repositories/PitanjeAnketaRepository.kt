@@ -1,14 +1,24 @@
 package ba.etf.rma22.projekat.data.repositories
 
 import ba.etf.rma22.projekat.data.models.Anketa
+import ba.etf.rma22.projekat.data.models.AnketaTaken
 import ba.etf.rma22.projekat.data.models.Pitanje
 import ba.etf.rma22.projekat.data.models.PitanjeAnketa
-import ba.etf.rma22.projekat.data.staticdata.dajSvaPitanjaAnketa
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 object PitanjeAnketaRepository {
 
+    suspend fun getPitanja(idAnkete : Int) : List<Pitanje>?{
+        return withContext(Dispatchers.IO){
+            val response = ApiConfig.retrofit.getPitanja(idAnkete)
+            val responseBody = response.body()
+            return@withContext responseBody
+        }
+    }
+
     //vraca pitanja za anketu na koju korisnik klikne
-    fun getPitanja(nazivAnkete : String, nazivIstrazivanje : String) : List<Pitanje>{
+   /* fun getPitanja(nazivAnkete : String, nazivIstrazivanje : String) : List<Pitanje>{
         val anketa = getAnketaSaIstrazivanjem(nazivAnkete, nazivIstrazivanje)
         val listaPitanjaZaAnketu = anketa?.let { getPitanjeAnketa(it) }
         val svaPitanja = PitanjaRepository.dajSvaPitanja()
@@ -75,5 +85,5 @@ object PitanjeAnketaRepository {
 
 
 
-
+*/
 }

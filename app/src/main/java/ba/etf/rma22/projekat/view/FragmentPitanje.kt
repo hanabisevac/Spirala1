@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import ba.etf.rma22.projekat.Communicator
 import ba.etf.rma22.projekat.data.models.Pitanje
 import ba.etf.rma22.projekat.data.repositories.TrenutnaAnketaRepository
-import ba.etf.rma22.projekat.viewmodel.PitanjeAnketaViewModel
+import ba.etf.rma22.projekat.viewmodel.*
 import com.example.spirala1.R
 
 
@@ -24,8 +24,9 @@ class FragmentPitanje(val pitanje : Pitanje) : Fragment() {
     private lateinit var dugme : Button
     private lateinit var adapterZaListu : MojAdapterZaListu
     private var pitanjaAnketaViewModel = PitanjeAnketaViewModel()
-    private val anketaPitanje = pitanjaAnketaViewModel
-        .dajPitanjeAnketuPoNazivuPitanja(pitanje.naziv, TrenutnaAnketaRepository.dajAnketu().naziv, TrenutnaAnketaRepository.dajAnketu().nazivIstrazivanja)
+    private var odgovorViewModel = OdgovorViewModel()
+//    private val anketaPitanje = pitanjaAnketaViewModel
+//        .dajPitanjeAnketuPoNazivuPitanja(pitanje.naziv, TrenutnaAnketaRepository.dajAnketu().naziv, TrenutnaAnketaRepository.dajAnketu().nazivIstrazivanja)
 
     private var progres : Float = 1.0F/TrenutnaAnketaRepository.dajBrojPitanja()
     private var brojac : Int = 0
@@ -42,26 +43,45 @@ class FragmentPitanje(val pitanje : Pitanje) : Fragment() {
         listaOdgovora = view.findViewById(R.id.odgovoriLista)
         dugme = view.findViewById(R.id.dugmeZaustavi)
         adapterZaListu = MojAdapterZaListu(view.context, android.R.layout.simple_list_item_1, pitanje.opcije)
-        textPitanja.text = pitanje.tekst
+        textPitanja.text = pitanje.tekstPitanja
         listaOdgovora.adapter = adapterZaListu
 
         listaOdgovora.isEnabled = true
-        if(TrenutnaAnketaRepository.dajAnketu().getStatus() == "plava" || TrenutnaAnketaRepository.dajAnketu().getStatus() == "crvena") listaOdgovora.isEnabled = false
-        else if(anketaPitanje?.dajOdgovor() != null) listaOdgovora.isEnabled = false
+        odgovorViewModel.dajOdgovoreNaAnketu(TrenutnaAnketaRepository.dajAnketu().id){
+            if(it != null){
+                for(i in it.indices) {
+                    if (it[i].pitanjeId == pitanje.id){
+                        listaOdgovora.isEnabled = false
+                    }
+                }
+            }
+        }
+        //if(TrenutnaAnketaRepository.dajAnketu().getStatus() == "plava" || TrenutnaAnketaRepository.dajAnketu().getStatus() == "crvena") listaOdgovora.isEnabled = false
+        //else if(anketaPitanje?.dajOdgovor() != null) listaOdgovora.isEnabled = false
 
 
         listaOdgovora.onItemClickListener = object : AdapterView.OnItemClickListener {
             override fun onItemClick(adapterView: AdapterView<*>?, view1: View?, position: Int, p3: Long) {
-                val odg = adapterView?.getItemAtPosition(position).toString()
+                val odg = position
                 val text : TextView? = view1?.findViewById(android.R.id.text1)
                 if(stariView != null && stariView!=text) stariView!!.setTextColor(Color.parseColor("#FF000000"))
                 stariView = text
-                if(brojac == 0) updateProgres()
+                //if(brojac == 0) TrenutnaAnketaRepository.postaviProgres(progres)
                 text!!.setTextColor(Color.parseColor("#0000FF"))
-                anketaPitanje?.postaviOdgovor(odg)
-                brojac++
+                odgovorViewModel.upisiOdgovor(TrenutnaAnketaRepository.dajAnketu().id, pitanje.id, odg){
+                    //vraca novi progres
+                    println("Novi progres je "+it)
+                    //brojac++
+                }
             }
         }
+
+        /*for(i in it.indices){
+            if(it[i].pitanjeId == pitanje.id && it[i].odgovoreno == position) {
+                textView.setTextColor(Color.parseColor("#0000FF"))
+                break
+            }
+        }*/
 
         communicator = activity as Communicator
         dugme.setOnClickListener {
@@ -71,9 +91,9 @@ class FragmentPitanje(val pitanje : Pitanje) : Fragment() {
         return view
     }
 
-    fun updateProgres() {
+    /*fun updateProgres() {
         TrenutnaAnketaRepository.postaviProgres(progres)
-    }
+    }*/
 
     inner class MojAdapterZaListu(context : Context, @LayoutRes private val layoutRes : Int, private val lista : List<String>)
         : ArrayAdapter<String>(context, layoutRes, lista){
@@ -85,7 +105,16 @@ class FragmentPitanje(val pitanje : Pitanje) : Fragment() {
             val textView : TextView = novi.findViewById(android.R.id.text1)
             val opcija = lista[position]
             textView.text = opcija
-            if(anketaPitanje!!.dajOdgovor()!=null && opcija == anketaPitanje.dajOdgovor()) textView.setTextColor(Color.parseColor("#0000FF"))
+            odgovorViewModel.dajOdgovoreNaAnketu(TrenutnaAnketaRepository.dajAnketu().id){
+                if(it != null){
+                    for(i in it.indices){
+                        if(it[i].pitanjeId == pitanje.id && it[i].odgovoreno == position) {
+                            textView.setTextColor(Color.parseColor("#0000FF"))
+                            break
+                        }
+                    }
+                }
+            }
             return novi
             }
 

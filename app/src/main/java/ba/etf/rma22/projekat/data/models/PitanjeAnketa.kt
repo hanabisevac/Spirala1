@@ -3,13 +3,7 @@ package ba.etf.rma22.projekat.data.models
 //naziv je naziv pitanja
 //anketa je naziv ankete
 
-data class PitanjeAnketa(val naziv : String, val anketa : String, val istrazivanje : String,  var odgovor : String?) {
+data class PitanjeAnketa(val PitanjeId : Int, val AnketumId : Int) {
 
-    fun postaviOdgovor(odg : String){
-        this.odgovor = odg
-    }
 
-    fun dajOdgovor() : String? {
-        return this.odgovor
-    }
 }

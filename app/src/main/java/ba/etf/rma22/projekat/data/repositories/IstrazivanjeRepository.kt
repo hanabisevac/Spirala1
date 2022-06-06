@@ -3,10 +3,9 @@ package ba.etf.rma22.projekat.data.repositories
 
 import ba.etf.rma22.projekat.data.models.Grupa
 import ba.etf.rma22.projekat.data.models.Istrazivanje
-import ba.etf.rma22.projekat.data.staticdata.listaIstrazivanja
 
 object IstrazivanjeRepository {
-
+/*
     fun getIstrazivanjeByGodina(godina : Int) : List<Istrazivanje>{
         val nova = mutableListOf<Istrazivanje>()
         val lista : List<Istrazivanje> = listaIstrazivanja()
@@ -36,9 +35,9 @@ object IstrazivanjeRepository {
     fun dajListu(imena : List<Grupa>) : List<String>{
         val lista = mutableListOf<String>()
         for(i in 0..imena.size-1){
-            lista.add(imena[i].nazivIstrazivanja)
+            lista.add(imena[i].nazivIstrazivanja!!)
         }
         return lista
     }
-
+*/
 }

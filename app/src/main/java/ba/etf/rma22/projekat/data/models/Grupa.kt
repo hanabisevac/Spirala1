@@ -1,7 +1,29 @@
 package ba.etf.rma22.projekat.data.models
 
+import com.google.gson.annotations.SerializedName
+
 data class Grupa(
-    val naziv : String,
-    val nazivIstrazivanja : String
+    @SerializedName("id") var id : Int,
+    @SerializedName("naziv") val naziv : String,
+    var nazivIstrazivanja : String ?,
+    @SerializedName("IstrazivanjeId") val istrazivanjeId : Int
 ) {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Grupa
+
+        if (id != other.id) return false
+        if (naziv != other.naziv) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id
+        result = 31 * result + naziv.hashCode()
+        return result
+    }
 }

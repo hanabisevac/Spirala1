@@ -1,3 +1,4 @@
+/*
 package ba.etf.rma22.projekat.data.staticdata
 
 import ba.etf.rma22.projekat.data.models.Pitanje
@@ -46,4 +47,4 @@ val pa29 = PitanjeAnketa("Pitanje 29", "Anketa 10", "Istrazivanje 6", null)
 fun dajSvaPitanjaAnketa() : List<PitanjeAnketa> {
     return listOf(pa1, pa2, pa3, pa4, pa5, pa6, pa7, pa8, pa9, pa10, pa11, pa12, pa13, pa14,
     pa15, pa16, pa17, pa18, pa19, pa20, pa21, pa22, pa23, pa24, pa25, pa26, pa27, pa28, pa29)
-}
+}*/
