@@ -159,6 +159,40 @@ class AnketaViewModel {
         }
     }
 
+    fun getProsle(ankete : (anketa : List<Anketa>) -> Unit){
+        scope.launch {
+            val grupe = IstrazivanjeIGrupaRepository.getUpisaneGrupe()
+            val result = mutableListOf<Anketa>()
+            for(i in grupe.indices){
+                val a = AnketaRepository.getDostupneAnketeZaGrupu(grupe[i].id)
+                for(j in a.indices){
+                    a[j].nazivGrupe = grupe[i].naziv
+                    a[j].nazivIstrazivanja = IstrazivanjeIGrupaRepository.getIstrazivanjeZaGrupe(grupe[i].id)!!.naziv
+                }
+                result.addAll(a)
+            }
+            result.stream().forEach { a -> a.progres = 0 }
+            val pocete = TakeAnketaRepository.getPoceteAnkete()
+            if(pocete != null){
+                for(i in result.indices){
+                    for(j in pocete.indices){
+                        if(result[i].id == pocete[j].AnketumId){
+                            result[i].progres = pocete[j].progres
+                            if(result[i].progres == 100) result[i].datumRada = pocete[j].datumRada
+                            break
+                        }
+                    }
+                }
+            }
+            val lista = mutableListOf<Anketa>()
+            for(i in result.indices){
+                if(result[i].datumKraj!=null && result[i].datumRada == null && result[i].datumKraj!!.before(Date())) lista.add(result[i])
+            }
+            ankete.invoke(lista)
+        }
+
+    }
+
 
 
     /*fun getSveAnkete() : List<Anketa>{

@@ -113,9 +113,6 @@ object AnketaRepository {
 
 
 
-
-
-
     /*
     fun getDone() : List<Anketa> {
         val lista = mutableListOf<Anketa>()

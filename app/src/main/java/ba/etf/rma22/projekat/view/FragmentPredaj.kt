@@ -11,15 +11,17 @@ import android.widget.TextView
 import ba.etf.rma22.projekat.Communicator
 import ba.etf.rma22.projekat.data.models.Anketa
 import ba.etf.rma22.projekat.data.repositories.TrenutnaAnketaRepository
+import ba.etf.rma22.projekat.viewmodel.AnketaViewModel
 import com.example.spirala1.R
 import java.util.*
 import kotlin.math.round
 
 class FragmentPredaj(val anketa : Anketa) : Fragment() {
+
     private lateinit var progresText : TextView
     private lateinit var dugme : Button
     private lateinit var communicator: Communicator
-
+    private val anketaViewModel = AnketaViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,8 +34,13 @@ class FragmentPredaj(val anketa : Anketa) : Fragment() {
         progresText.text = ""+ prog + "%"
         communicator = activity as Communicator
         dugme.isEnabled = true
+        anketaViewModel.getUradjene {
+            if(it.isEmpty()) dugme.isEnabled = true
+            else{
+                if(it.contains(anketa)) dugme.isEnabled = false
+            }
+        }
         dugme.setOnClickListener{
-            //TrenutnaAnketaRepository.postaviDatum(Date())
             //val poruka = "Završili ste anketu "+ TrenutnaAnketaRepository.dajAnketu().naziv + " u okviru istraživanja " + TrenutnaAnketaRepository.dajAnketu().nazivIstrazivanja
             val poruka = "Zavrsili ste anketu "+anketa.naziv +" u sklopu istraživanja "+anketa.nazivIstrazivanja+" grupe "+anketa.nazivGrupe
             communicator.prebaciFragment(poruka)

@@ -1,12 +1,13 @@
 package ba.etf.rma22.projekat.data.repositories
 
 
-import ba.etf.rma22.projekat.data.models.AnketaTaken
+
 import ba.etf.rma22.projekat.data.models.Odgovor
 import ba.etf.rma22.projekat.data.models.OdgovorBody
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.lang.Math.round
+import kotlin.math.floor
+import kotlin.math.round
 
 object OdgovorRepository {
 
@@ -54,7 +55,7 @@ object OdgovorRepository {
                 }
             }*/
             if(progres>100) progres = 100
-            println("Progres je "+progres)
+            //println("Progres je "+progres)
             TrenutnaAnketaRepository.postaviProgres(progres)
             val myOdgovor = OdgovorBody(odgovor, idPitanje, progres)
             val response = ApiConfig.retrofit.addOdgovor(AccountRepository.acHash, idAnketaTaken, myOdgovor)

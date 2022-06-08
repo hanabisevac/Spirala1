@@ -50,8 +50,7 @@ class FragmentAnkete : Fragment() {
 
                 else if(izbor == "Buduće ankete")  anketeViewModel.getBuduce { anketeAdapter.updateAnkete(it) }
 
-                //else if(izbor == "Prošle ankete")  anketeViewModel.getAll(onSuccess = ::onSuccess)
-                    //anketeAdapter.updateAnkete(anketeViewModel.getZavrseneAnkete())
+                else if(izbor == "Prošle ankete")  anketeViewModel.getProsle { anketeAdapter.updateAnkete(it) }
 
                 else anketeViewModel.dajSve { anketeAdapter.updateAnkete(it) }
 
