@@ -89,31 +89,35 @@ class AnketaViewModel {
 
     fun getUradjene(uradjene : (ankete: List<Anketa>) -> Unit) {
         scope.launch {
-            val ankete = TakeAnketaRepository.getPoceteAnkete()
-            val nova = mutableListOf<Anketa>()
-            if (ankete != null) {
-                for(i in ankete.indices){
-                    if(ankete[i].progres == 100) {
-                        val uradjena = AnketaRepository.getById(ankete[i].AnketumId)
-                        uradjena.datumRada = ankete[i].datumRada
-                        uradjena.progres = ankete[i].progres
-                        nova.add(uradjena)
+            val grupe = IstrazivanjeIGrupaRepository.getUpisaneGrupe()
+            val result = mutableListOf<Anketa>()
+            for(i in grupe.indices){
+                val a = AnketaRepository.getDostupneAnketeZaGrupu(grupe[i].id)
+                for(j in a.indices){
+                    a[j].nazivGrupe = grupe[i].naziv
+                    a[j].nazivIstrazivanja = IstrazivanjeIGrupaRepository.getIstrazivanjeZaGrupe(grupe[i].id)!!.naziv
+                }
+                result.addAll(a)
+            }
+            result.stream().forEach { a -> a.progres = 0 }
+            val pocete = TakeAnketaRepository.getPoceteAnkete()
+            if(pocete != null){
+                for(i in result.indices){
+                    for(j in pocete.indices){
+                        if(result[i].id == pocete[j].AnketumId){
+                            result[i].progres = pocete[j].progres
+                            if(result[i].progres == 100) result[i].datumRada = pocete[j].datumRada
+                            break
+                        }
                     }
                 }
             }
-
             val lista = mutableListOf<Anketa>()
-            for(i in nova.indices){
-                val grupe = IstrazivanjeIGrupaRepository.dajGrupeZaAnketu(nova[i].id)
-                for(j in grupe!!.indices){
-                    val istrazivanje = IstrazivanjeIGrupaRepository.getIstrazivanjeZaGrupe(grupe[j].id)
-                    nova[i].nazivIstrazivanja = istrazivanje!!.naziv
-                    nova[i].nazivGrupe = grupe[j].naziv
-                    lista.add(nova[i])
-                }
-            }
-            var listica = lista.toSet().toList()
-            uradjene.invoke(listica)
+           for(i in result.indices){
+               if(result[i].datumRada != null) lista.add(result[i])
+           }
+            //var listica = lista.toSet().toList()
+            uradjene.invoke(lista)
         }
     }
 
@@ -129,7 +133,6 @@ class AnketaViewModel {
                 }
                 result.addAll(a)
             }
-            result.toSet().toList()
             result.stream().forEach { a -> a.progres = 0 }
             val pocete = TakeAnketaRepository.getPoceteAnkete()
             if(pocete != null){
@@ -151,7 +154,6 @@ class AnketaViewModel {
                 }
 
             }
-            lista.toSet().toList()
             ankete.invoke(lista)
 
         }
