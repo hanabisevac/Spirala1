@@ -13,13 +13,15 @@ object AnketaRepository {
 
     suspend fun getAll() : List<Anketa> {
         return withContext(Dispatchers.IO){
-            val response = ApiConfig.retrofit.getAnkete(1)
-            val response1 = ApiConfig.retrofit.getAnkete(2)
-            val responseBody1 = response1.body()
-            val responseBody = response.body()
             var lista = mutableListOf<Anketa>()
-            lista.addAll(responseBody!!)
-            lista.addAll(responseBody1!!)
+            var brojac = 1
+            while(true){
+                val response = ApiConfig.retrofit.getAnkete(brojac)
+                val responseBody = response.body()
+                lista.addAll(responseBody!!)
+                if(responseBody.size<5) break
+                brojac++
+            }
             return@withContext lista
         }
     }
@@ -32,17 +34,46 @@ object AnketaRepository {
         }
     }
 
-    suspend fun dodajPodatkeAnkete() : List<Anketa> {
+
+    suspend fun dodajPodatkeAnkete(anketa : List<Anketa>) : List<Anketa> {
         return withContext(Dispatchers.IO)
         {
-            val lista = mutableListOf<Anketa>()
-            val grupe = GrupaRepository.getAll()
-            for (i in grupe.indices) {
-                val ankete = getDostupneAnketeZaGrupu(grupe[i].id)
-                for (j in ankete.indices) {
-                    ankete[j].nazivGrupe = grupe[i].naziv
-                    lista.add(ankete[j])
+            val lista : MutableList<Anketa> = anketa as MutableList<Anketa>
+            val istrazivanja = IstrazivanjeIGrupaRepository.getIstrazivanja()
+            val grupe = IstrazivanjeIGrupaRepository.getGrupe()
+            for (i in istrazivanja.indices) {
+                val g = IstrazivanjeIGrupaRepository.getGrupeZaIstrazivanje(istrazivanja[i].id)
+                for (j in g.indices) {
+                    for(k in grupe.indices){
+                        if(g[j] == grupe[k]) grupe[k].nazivIstrazivanja = istrazivanja[i].naziv
+                    }
                 }
+            }
+
+            for(i in grupe.indices){
+                val a = getDostupneAnketeZaGrupu(grupe[i].id)
+                for(j in a.indices){
+                    for (k in lista.indices){
+                        if(lista[k] == a[j]){
+                            lista[k].nazivGrupe = grupe[i].naziv
+                            lista[k].nazivIstrazivanja = grupe[i].nazivIstrazivanja
+                        }
+                    }
+                }
+            }
+            lista.stream().forEach { a -> a.progres = 0 }
+            val pocete = TakeAnketaRepository.getPoceteAnkete()
+            if(pocete!=null){
+                for(i in lista.indices){
+                    for(j in pocete.indices){
+                        if(pocete[j].AnketumId == lista[i].id) {
+                            lista[i].progres = pocete[j].progres
+                            //lista[i].datumRada = pocete[j].datumRada
+                            break
+                        }
+                    }
+                }
+
             }
 
             return@withContext lista
@@ -64,6 +95,8 @@ object AnketaRepository {
             return@withContext responseBody!!
         }
     }
+    
+
 
     //vraca listu anketa na kojima je student
      suspend fun getUpisane() : List<Anketa> {
@@ -74,9 +107,7 @@ object AnketaRepository {
              for(i in responseBody!!.indices){
                  listaAnketa.addAll(getDostupneAnketeZaGrupu(responseBody[i].id))
              }
-             //ne znamo dal je ovo potrebno jos uvijek
-             val rezultat = listaAnketa.toSet().toList()
-             return@withContext rezultat
+             return@withContext listaAnketa
          }
     }
 

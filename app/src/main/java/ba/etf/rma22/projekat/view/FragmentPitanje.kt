@@ -70,18 +70,12 @@ class FragmentPitanje(val pitanje : Pitanje) : Fragment() {
                 text!!.setTextColor(Color.parseColor("#0000FF"))
                 odgovorViewModel.upisiOdgovor(TrenutnaAnketaRepository.dajAnketu().id, pitanje.id, odg){
                     //vraca novi progres
+                    TrenutnaAnketaRepository.postaviProgres(it)
                     println("Novi progres je "+it)
                     //brojac++
                 }
             }
         }
-
-        /*for(i in it.indices){
-            if(it[i].pitanjeId == pitanje.id && it[i].odgovoreno == position) {
-                textView.setTextColor(Color.parseColor("#0000FF"))
-                break
-            }
-        }*/
 
         communicator = activity as Communicator
         dugme.setOnClickListener {
@@ -91,9 +85,7 @@ class FragmentPitanje(val pitanje : Pitanje) : Fragment() {
         return view
     }
 
-    /*fun updateProgres() {
-        TrenutnaAnketaRepository.postaviProgres(progres)
-    }*/
+
 
     inner class MojAdapterZaListu(context : Context, @LayoutRes private val layoutRes : Int, private val lista : List<String>)
         : ArrayAdapter<String>(context, layoutRes, lista){
@@ -107,7 +99,7 @@ class FragmentPitanje(val pitanje : Pitanje) : Fragment() {
             textView.text = opcija
             odgovorViewModel.dajOdgovoreNaAnketu(TrenutnaAnketaRepository.dajAnketu().AnketumId){
                 if(it != null){
-                    TrenutnaAnketaRepository.postaviProgres(60)
+                    TrenutnaAnketaRepository.postaviProgres(TrenutnaAnketaRepository.dajAnketu().progres)
                     for(i in it.indices){
                         if(it[i].pitanjeId == pitanje.id && it[i].odgovoreno == position) {
                             textView.setTextColor(Color.parseColor("#0000FF"))

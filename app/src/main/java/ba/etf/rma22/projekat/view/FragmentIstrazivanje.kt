@@ -17,8 +17,8 @@ import com.example.spirala1.R
 
 
 class FragmentIstrazivanje : Fragment() {
-    lateinit var spinZaGodine : Spinner
-    lateinit var spinZaIstrazivanja : Spinner
+    //lateinit var spinZaGodine : Spinner
+    //lateinit var spinZaIstrazivanja : Spinner
     lateinit var spinZaGrupe : Spinner
     lateinit var dugme : Button
 
@@ -49,16 +49,16 @@ class FragmentIstrazivanje : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_istrazivanje, container, false)
-        spinZaGodine = view.findViewById(R.id.odabirGodina)
-        spinZaIstrazivanja = view.findViewById(R.id.odabirIstrazivanja)
+        //spinZaGodine = view.findViewById(R.id.odabirGodina)
+        //spinZaIstrazivanja = view.findViewById(R.id.odabirIstrazivanja)
         spinZaGrupe = view.findViewById(R.id.odabirGrupa)
         dugme = view.findViewById(R.id.dodajIstrazivanjeDugme)
 
-        spinZaGodine.setSelection(dajPoz())
+        //spinZaGodine.setSelection(dajPoz())
         dugme.isClickable = false
         dugme.isEnabled = false
 
-        spinZaGodine.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        /*spinZaGodine.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(adapterView: AdapterView<*>?, view1: View?, position: Int, p3: Long) {
                 val str : String = adapterView?.getItemAtPosition(position).toString()
                 val godina = str.toInt()
@@ -72,21 +72,6 @@ class FragmentIstrazivanje : Fragment() {
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 TODO("Not yet implemented")
             }
-
-
-            /*fun getStrings(godina : Int) : List<String> {
-                istrazivanjeViewModel.getIstrazivanjePoGodini(godina, istrazivanjePoGodini = ::istrazivanjePoGodini)
-                val mojaIstrazivanja = istrazivanjeViewModel.getMojaIstrazivanja()
-
-                val nova = mutableListOf<String>()
-                nova.add(0, "Nista nije selectovano")
-                for (i in lista.indices){
-                    if(mojaIstrazivanja.contains(lista[i])) continue
-                    nova.add(lista[i].naziv)
-                }
-
-                return nova
-            }*/
 
             fun istrazivanjePoGodini(istrazivanja  : List<Istrazivanje>){
                 istrazivanjeViewModel.getSlobodnaIstrazivanja(istrazivanja, slobodnaIstrazivanja = ::slobodnaIstrazivanja)
@@ -130,16 +115,15 @@ class FragmentIstrazivanje : Fragment() {
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 TODO("Not yet implemented")
             }
+        }*/
 
-            /*fun getGrupe(str : String) : List<String>{
-                val lista = grupeViewModel.getGrupeByIstrazivanje(str)
-                val nova = mutableListOf<String>()
-                for (element in lista){
-                    nova.add(element.naziv)
-                }
-                nova.add(0, "Nista nije selectovano")
-                return nova
-            }*/
+        grupeViewModel.getSlobodneGrupe(){
+            val string = mutableListOf<String>()
+            for (i in it.indices) {
+                string.add(it[i].naziv)
+            }
+            string.add(0, "Nista nije selectovano")
+            napuniSpinnerGrupe(string, view)
         }
 
         spinZaGrupe.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
@@ -148,7 +132,7 @@ class FragmentIstrazivanje : Fragment() {
                 izbor2 = str
                 dugme.isEnabled = false
                 dugme.isClickable = false
-                if(izbor2 != "Nista nije selectovano" && izbor2!="" && izbor1 != "Nista nije selectovano" && izbor1 != ""){
+                if(izbor2 != "Nista nije selectovano" && izbor2!=""){
                     dugme.isEnabled = true
                     dugme.isClickable = true
                 }
@@ -164,7 +148,9 @@ class FragmentIstrazivanje : Fragment() {
         communicator = activity as Communicator
         dugme.setOnClickListener {
             //ovo sve preko upisi studenta
-            accViewModel.upisiStudenta(izbor2, porukica = ::porukica)
+            accViewModel.upisiStudenta(izbor2){
+                communicator.prebaciFragment(it)
+            }
 
             /*val grupe = grupeViewModel.getSveGrupe()
             for(i in grupe.indices){
@@ -181,17 +167,17 @@ class FragmentIstrazivanje : Fragment() {
         return view
     }
 
-    fun porukica(str : String){
+    /*fun porukica(str : String){
         communicator.prebaciFragment(str)
-    }
+    }*/
 
 
 
-    fun napuniSpinnerIstrazivanje(lista : List<String>, view : View) {
+    /*fun napuniSpinnerIstrazivanje(lista : List<String>, view : View) {
         adapterZaSpinner = ArrayAdapter(view.context, android.R.layout.simple_spinner_item, lista)
         adapterZaSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinZaIstrazivanja.adapter = adapterZaSpinner
-    }
+    }*/
 
 
     fun napuniSpinnerGrupe(lista : List<String>, view : View) {

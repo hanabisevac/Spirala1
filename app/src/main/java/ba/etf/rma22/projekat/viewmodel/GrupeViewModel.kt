@@ -34,14 +34,18 @@ class GrupeViewModel {
         }
     }
 
-    fun getSlobodneGrupe(sve : List<Grupa>, nisuStudentoveGrupe : (grupe : List<Grupa>) -> Unit){
+    fun getSlobodneGrupe(nisuStudentoveGrupe : (grupe : List<Grupa>) -> Unit){
         scope.launch {
             val grupe = IstrazivanjeIGrupaRepository.getUpisaneGrupe()
+            val sve = IstrazivanjeIGrupaRepository.getGrupe()
             val slobodne = mutableListOf<Grupa>()
             var ima : Boolean = false
             for(i in sve.indices){
                 for(j in grupe.indices){
-                    if(sve[i] == grupe[j]) ima = true
+                    if(sve[i].id == grupe[j].id) {
+                        ima = true
+                        break
+                    }
                 }
                 if(!ima){
                     slobodne.add(sve[i])
@@ -50,7 +54,6 @@ class GrupeViewModel {
             }
 
             nisuStudentoveGrupe.invoke(slobodne)
-
         }
     }
 

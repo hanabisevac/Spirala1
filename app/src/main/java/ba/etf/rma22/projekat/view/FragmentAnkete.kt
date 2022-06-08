@@ -38,26 +38,22 @@ class FragmentAnkete : Fragment() {
         anketeAdapter = AnketaAdapter(listOf<Anketa>()) { anketa -> communicator.otvoriNoviFragment(anketa)}
         anketeRecyclerView.adapter = anketeAdapter
         spiner = view.findViewById(R.id.filterAnketa)
-        anketeViewModel.getAll(onSuccess = ::onSuccess)
+        anketeViewModel.dajSve { anketeAdapter.updateAnkete(it) }
 
         spiner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, position: Int, p3: Long) {
                 val izbor : String = adapterView?.getItemAtPosition(position).toString()
                 brojac = position
-                if(izbor == "Sve moje ankete") anketeViewModel.getUpisane(upisane= ::upisane)
-                    //anketeAdapter.updateAnkete(anketeViewModel.getMyAnkete())
+                if(izbor == "Sve moje ankete") anketeViewModel.getUpisane { anketeAdapter.updateAnkete(it) }
 
-                /*else if(izbor == "Urađene ankete")  anketeViewModel.getAll(onSuccess = ::onSuccess)
-                    //anketeAdapter.updateAnkete(anketeViewModel.getUradjeneAnkete())
+                else if(izbor == "Urađene ankete")  anketeViewModel.getUradjene { anketeAdapter.updateAnkete(it) }
 
-                else if(izbor == "Buduće ankete")  anketeViewModel.getAll(onSuccess = ::onSuccess)
-                    //anketeAdapter.updateAnkete(anketeViewModel.getAktvineIBuduce())
+                else if(izbor == "Buduće ankete")  anketeViewModel.getBuduce { anketeAdapter.updateAnkete(it) }
 
-                else if(izbor == "Prošle ankete")  anketeViewModel.getAll(onSuccess = ::onSuccess)
-                    //anketeAdapter.updateAnkete(anketeViewModel.getZavrseneAnkete())*/
+                //else if(izbor == "Prošle ankete")  anketeViewModel.getAll(onSuccess = ::onSuccess)
+                    //anketeAdapter.updateAnkete(anketeViewModel.getZavrseneAnkete())
 
-                else anketeViewModel.getAll(onSuccess = ::onSuccess)
-                    //anketeAdapter.updateAnkete(anketeViewModel.getSveAnkete())
+                else anketeViewModel.dajSve { anketeAdapter.updateAnkete(it) }
 
             }
 
@@ -70,18 +66,11 @@ class FragmentAnkete : Fragment() {
         return view
     }
 
-    fun onSuccess(ankete : List<Anketa>){
-        anketeAdapter.updateAnkete(ankete)
-    }
-
-    fun upisane(ankete : List<Anketa>){
-        anketeAdapter.updateAnkete(ankete)
-    }
-
 
     override fun onResume() {
         super.onResume()
-        anketeViewModel.getAll {
+        spiner.setSelection(0)
+        anketeViewModel.dajSve {
             anketeAdapter.updateAnkete(it)
         }
         //anketeAdapter.updateProgress()

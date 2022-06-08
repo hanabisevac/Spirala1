@@ -19,14 +19,24 @@ object IstrazivanjeIGrupaRepository {
     //kada offset nije zadan
     suspend fun getIstrazivanja() : List<Istrazivanje> {
         return withContext(Dispatchers.IO){
-            val response = ApiConfig.retrofit.getIstrazivanje(1)
-            val response1 = ApiConfig.retrofit.getIstrazivanje(2)
-            val responseBody2 = response1.body()
-            val responseBody = response.body()
             val lista = mutableListOf<Istrazivanje>()
-            lista.addAll(responseBody!!)
-            lista.addAll(responseBody2!!)
+            var brojac = 1
+            while(true) {
+                val response = ApiConfig.retrofit.getIstrazivanje(brojac)
+                val responseBody = response.body()
+                lista.addAll(responseBody!!)
+                if(responseBody.size<5) break
+                brojac++
+            }
             return@withContext lista
+        }
+    }
+
+    suspend fun getIstrazivanjeZaGrupe(idGrupe : Int) : Istrazivanje ?{
+        return withContext(Dispatchers.IO){
+            val response = ApiConfig.retrofit.getIstrazivanjeZaGrupu(idGrupe)
+            val responseBody = response.body()
+            return@withContext responseBody
         }
     }
 
@@ -73,6 +83,14 @@ object IstrazivanjeIGrupaRepository {
             val response = ApiConfig.retrofit.getStudentoveGrupe(AccountRepository.acHash)
             val responseBody = response.body()
             return@withContext responseBody!!
+        }
+    }
+
+    suspend fun dajGrupeZaAnketu(id : Int) : List<Grupa> ?{
+        return withContext(Dispatchers.IO){
+            val response = ApiConfig.retrofit.getGrupeZaDostupneAnkete(id)
+            val responseBody = response.body()
+            return@withContext responseBody
         }
     }
 

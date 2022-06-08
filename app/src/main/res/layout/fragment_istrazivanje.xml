@@ -8,7 +8,7 @@
     android:layout_marginTop="100dp"
     android:padding="20dp"
     tools:context="ba.etf.rma22.projekat.view.FragmentIstrazivanje">
-
+    <!--
     <Spinner
         android:id="@+id/odabirGodina"
         android:layout_width="300dp"
@@ -24,15 +24,15 @@
         android:layout_height="50dp"
         android:layout_margin="10dp"
         android:layout_weight="1" />
-
+-->
     <Spinner
         android:id="@+id/odabirGrupa"
-        android:outlineAmbientShadowColor="@color/black"
+        android:outlineAmbientShadowColor="@color/purple_500"
         android:layout_margin="10dp"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_weight="1"
-
+        android:outlineSpotShadowColor="@color/purple_500"
         />
 
     <Button

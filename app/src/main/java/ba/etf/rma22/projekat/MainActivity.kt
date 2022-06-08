@@ -72,9 +72,10 @@ class MainActivity : AppCompatActivity(), Communicator {
             for (i in it.indices) {
                 lista.add(FragmentPitanje(it[i]))
             }
-            lista.add(FragmentPredaj())
+            lista.add(FragmentPredaj(anketa))
             anketaTakenViewModel.zapocniAnketu(anketa.id) { it ->
                 TrenutnaAnketaRepository.postaviAnketu(it)
+                TrenutnaAnketaRepository.postaviProgres(it.progres)
                 viewPagerAdapter2 = ViewPagerAdapter(supportFragmentManager, lista, lifecycle)
                 viewPager.adapter = viewPagerAdapter2
                 usao = true

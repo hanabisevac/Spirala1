@@ -45,6 +45,13 @@ data class Anketa(
 
         if (id != other.id) return false
         if (naziv != other.naziv) return false
+        if (nazivIstrazivanja != other.nazivIstrazivanja) return false
+        if (datumPocetak != other.datumPocetak) return false
+        if (datumKraj != other.datumKraj) return false
+        if (datumRada != other.datumRada) return false
+        if (trajanje != other.trajanje) return false
+        if (nazivGrupe != other.nazivGrupe) return false
+        if (progres != other.progres) return false
 
         return true
     }
@@ -52,6 +59,13 @@ data class Anketa(
     override fun hashCode(): Int {
         var result = id
         result = 31 * result + naziv.hashCode()
+        result = 31 * result + (nazivIstrazivanja?.hashCode() ?: 0)
+        result = 31 * result + datumPocetak.hashCode()
+        result = 31 * result + (datumKraj?.hashCode() ?: 0)
+        result = 31 * result + (datumRada?.hashCode() ?: 0)
+        result = 31 * result + trajanje
+        result = 31 * result + (nazivGrupe?.hashCode() ?: 0)
+        result = 31 * result + (progres ?: 0)
         return result
     }
 

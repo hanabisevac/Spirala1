@@ -12,106 +12,147 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.*
 
 class AnketaViewModel {
 
     val scope = CoroutineScope(Job() + Dispatchers.Main)
 
+
     fun getAll(onSuccess: (ankete: List<Anketa>) -> Unit)  {
         scope.launch {
-            val result = mutableListOf<Anketa>()
-            result.addAll(AnketaRepository.getAll(1))
-            result.addAll(AnketaRepository.getAll(2))
-            val grupe = IstrazivanjeIGrupaRepository.getGrupe()
-            val istrazivanja = mutableListOf<Istrazivanje>()
-            val pocete = TakeAnketaRepository.getPoceteAnkete()
-            istrazivanja.addAll(IstrazivanjeIGrupaRepository.getIstrazivanja(1))
-            istrazivanja.addAll(IstrazivanjeIGrupaRepository.getIstrazivanja(2))
+            val lista = AnketaRepository.getAll()
+            val result = AnketaRepository.dodajPodatkeAnkete(lista)
+            onSuccess.invoke(result)
+        }
+    }
 
-            for(i in istrazivanja.indices){
-                val g = IstrazivanjeIGrupaRepository.getGrupeZaIstrazivanje(istrazivanja[i].id)
-                for(j in g.indices){
-                    for(k in grupe.indices){
-                        if(g[j] == grupe[k]) grupe[k].nazivIstrazivanja = istrazivanja[i].naziv
-                    }
-                }
-            }
+    fun dajSve(sveAnkete : (ankete : List<Anketa>) -> Unit){
+        scope.launch {
+            val grupe = IstrazivanjeIGrupaRepository.getGrupe()
+            val lista = mutableListOf<Anketa>()
             for(i in grupe.indices){
                 val a = AnketaRepository.getDostupneAnketeZaGrupu(grupe[i].id)
+                val istrazivanje = IstrazivanjeIGrupaRepository.getIstrazivanjeZaGrupe(grupe[i].id)
                 for(j in a.indices){
-                    for(k in result.indices){
-                        if(result[k] == a[j]){
-                            result[k].nazivGrupe = grupe[i].naziv
-                            result[k].nazivIstrazivanja = grupe[i].nazivIstrazivanja
+                    a[j].nazivGrupe = grupe[i].naziv
+                    a[j].nazivIstrazivanja = istrazivanje!!.naziv
+                }
+                lista.addAll(a)
+            }
+            lista.stream().forEach { a -> a.progres = 0 }
+            val zapocete = TakeAnketaRepository.getPoceteAnkete()
+            if(zapocete != null){
+                for(i in lista.indices){
+                    for(j in zapocete.indices){
+                        if(zapocete[j].AnketumId == lista[i].id){
+                            lista[i].progres = zapocete[j].progres
+                            if(lista[i].progres == 100) lista[i].datumRada = zapocete[j].datumRada
                         }
                     }
                 }
             }
-            result.stream().forEach { a -> a.progres = 0 }
-            if(pocete!=null){
-                for(i in result.indices){
-                    for(j in pocete.indices){
-                        if(pocete[j].AnketumId == result[i].id) {
-                            result[i].progres = pocete[j].progres
-                            break
-                        }
-                    }
-                }
-
-            }
-            onSuccess.invoke(result)
+            sveAnkete.invoke(lista)
         }
     }
 
     fun getUpisane(upisane : (ankete : List<Anketa>) -> Unit) {
         scope.launch {
-            val result = AnketaRepository.getUpisane()
-            val grupe = IstrazivanjeIGrupaRepository.getGrupe()
-            val istrazivanja = mutableListOf<Istrazivanje>()
-            val pocete = TakeAnketaRepository.getPoceteAnkete()
-            istrazivanja.addAll(IstrazivanjeIGrupaRepository.getIstrazivanja(1))
-            istrazivanja.addAll(IstrazivanjeIGrupaRepository.getIstrazivanja(2))
-
-            for(i in istrazivanja.indices){
-                val g = IstrazivanjeIGrupaRepository.getGrupeZaIstrazivanje(istrazivanja[i].id)
-                for(j in g.indices){
-                    for(k in grupe.indices){
-                        if(g[j] == grupe[k]) grupe[k].nazivIstrazivanja = istrazivanja[i].naziv
-                    }
-                }
-            }
+            val grupe = IstrazivanjeIGrupaRepository.getUpisaneGrupe()
+            val result = mutableListOf<Anketa>()
             for(i in grupe.indices){
                 val a = AnketaRepository.getDostupneAnketeZaGrupu(grupe[i].id)
                 for(j in a.indices){
-                    for(k in result.indices){
-                        if(result[k] == a[j]){
-                            result[k].nazivGrupe = grupe[i].naziv
-                            result[k].nazivIstrazivanja = grupe[i].nazivIstrazivanja
-                        }
-                    }
+                    a[j].nazivGrupe = grupe[i].naziv
+                    a[j].nazivIstrazivanja = IstrazivanjeIGrupaRepository.getIstrazivanjeZaGrupe(grupe[i].id)!!.naziv
                 }
+                result.addAll(a)
             }
             result.stream().forEach { a -> a.progres = 0 }
-            if(pocete!=null){
+            val pocete = TakeAnketaRepository.getPoceteAnkete()
+            if(pocete != null){
                 for(i in result.indices){
                     for(j in pocete.indices){
-                        if(pocete[j].AnketumId == result[i].id) {
+                        if(result[i].id == pocete[j].AnketumId){
                             result[i].progres = pocete[j].progres
-                            result[i].datumRada = pocete[j].datumRada
+                            if(result[i].progres == 100) result[i].datumRada = pocete[j].datumRada
                             break
                         }
                     }
                 }
-
             }
+
+
             upisane.invoke(result)
         }
     }
 
-    fun getZavrsene(zavrsene : (ankete: List<Anketa>) -> Unit) {
+    fun getUradjene(uradjene : (ankete: List<Anketa>) -> Unit) {
         scope.launch {
+            val ankete = TakeAnketaRepository.getPoceteAnkete()
+            val nova = mutableListOf<Anketa>()
+            if (ankete != null) {
+                for(i in ankete.indices){
+                    if(ankete[i].progres == 100) {
+                        val uradjena = AnketaRepository.getById(ankete[i].AnketumId)
+                        uradjena.datumRada = ankete[i].datumRada
+                        uradjena.progres = ankete[i].progres
+                        nova.add(uradjena)
+                    }
+                }
+            }
 
+            val lista = mutableListOf<Anketa>()
+            for(i in nova.indices){
+                val grupe = IstrazivanjeIGrupaRepository.dajGrupeZaAnketu(nova[i].id)
+                for(j in grupe!!.indices){
+                    val istrazivanje = IstrazivanjeIGrupaRepository.getIstrazivanjeZaGrupe(grupe[j].id)
+                    nova[i].nazivIstrazivanja = istrazivanje!!.naziv
+                    nova[i].nazivGrupe = grupe[j].naziv
+                    lista.add(nova[i])
+                }
+            }
+            var listica = lista.toSet().toList()
+            uradjene.invoke(listica)
+        }
+    }
 
+    fun getBuduce(ankete : (anketa : List<Anketa>) -> Unit){
+        scope.launch {
+            val grupe = IstrazivanjeIGrupaRepository.getUpisaneGrupe()
+            val result = mutableListOf<Anketa>()
+            for(i in grupe.indices){
+                val a = AnketaRepository.getDostupneAnketeZaGrupu(grupe[i].id)
+                for(j in a.indices){
+                    a[j].nazivGrupe = grupe[i].naziv
+                    a[j].nazivIstrazivanja = IstrazivanjeIGrupaRepository.getIstrazivanjeZaGrupe(grupe[i].id)!!.naziv
+                }
+                result.addAll(a)
+            }
+            result.toSet().toList()
+            result.stream().forEach { a -> a.progres = 0 }
+            val pocete = TakeAnketaRepository.getPoceteAnkete()
+            if(pocete != null){
+                for(i in result.indices){
+                    for(j in pocete.indices){
+                        if(result[i].id == pocete[j].AnketumId){
+                            result[i].progres = pocete[j].progres
+                            if(result[i].progres == 100) result[i].datumRada = pocete[j].datumRada
+                            break
+                        }
+                    }
+                }
+            }
+            val lista = mutableListOf<Anketa>()
+            for(i in result.indices){
+                if(result[i].datumRada == null && (result[i].datumKraj == null || result[i].datumKraj!!.after(Date()))){
+                    if(result[i].datumPocetak.after(Date())) lista.add(result[i])
+                    else if(result[i].datumPocetak.before(Date())) lista.add(result[i])
+                }
+
+            }
+            lista.toSet().toList()
+            ankete.invoke(lista)
 
         }
     }

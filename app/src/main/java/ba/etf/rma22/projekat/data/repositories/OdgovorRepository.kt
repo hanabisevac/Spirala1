@@ -29,34 +29,36 @@ object OdgovorRepository {
     suspend fun postaviOdgovorAnketa(idAnketaTaken : Int, idPitanje : Int, odgovor : Int) : Int{
         return withContext(Dispatchers.IO){
             val anketa = TakeAnketaRepository.getPoceteAnkete()
-            val odgovori = getOdgovoriAnketa(idAnketaTaken)
-            var prog = 0
-            lateinit var anketaTaken : AnketaTaken
+            //val odgovori = getOdgovoriAnketa(idAnketaTaken)
+            var progres = 0
+            //var prog = TrenutnaAnketaRepository.dajProgres()
             if(anketa != null){
                 for(i in anketa.indices){
                     if(idAnketaTaken == anketa[i].id) {
-                        anketaTaken = anketa[i]
                         val pitanja = PitanjeAnketaRepository.getPitanja(anketa[i].AnketumId)
-                        var progres = 0.0F
-                        if(odgovori!=null) progres = (odgovori.size+1).toFloat()/ pitanja!!.size
-                        else progres = 1.0F/ pitanja!!.size
-                        prog = (round(progres*10)*10).toInt()
-                        if((round(progres *10)%2 !=0)) prog+=10
+                        progres = anketa[i].progres
+                        var prog = 1.0F/ pitanja!!.size
+                        var p = (round(prog*10)*10).toInt()
+                        progres +=p
+                        if((progres/10)%2 !=0) progres +=10
                         break
                     }
                 }
             }
-            for(i in odgovori!!.indices){
-                if(odgovori[i].pitanjeId == idPitanje) {
-                    prog = anketaTaken.progres
-                    break
+            /*if(odgovori != null){
+                for (i in odgovori!!.indices) {
+                    if (odgovori[i].pitanjeId == idPitanje) {
+                        prog = anketaTaken.progres
+                        break
+                    }
                 }
-            }
-            if(prog>100) prog = 100
-            TrenutnaAnketaRepository.postaviProgres(prog)
-            val myOdgovor = OdgovorBody(odgovor, idPitanje, prog)
+            }*/
+            if(progres>100) progres = 100
+            println("Progres je "+progres)
+            TrenutnaAnketaRepository.postaviProgres(progres)
+            val myOdgovor = OdgovorBody(odgovor, idPitanje, progres)
             val response = ApiConfig.retrofit.addOdgovor(AccountRepository.acHash, idAnketaTaken, myOdgovor)
-            return@withContext prog
+            return@withContext progres
         }
 
     }

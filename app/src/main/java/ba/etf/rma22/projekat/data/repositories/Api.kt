@@ -23,7 +23,7 @@ interface Api {
 
     //Vraca istrazivanja za grupu sa zadanim id-em
     @GET("/grupa/{gid}/istrazivanje")
-    suspend fun getIstrazivanjeZaGrupu(@Path("gid")  gid : Int) : Response<List<Istrazivanje>>
+    suspend fun getIstrazivanjeZaGrupu(@Path("gid")  gid : Int) : Response<Istrazivanje>
 
 //GRUPE
     //vraca grupe u kojima je anketa dostupna
