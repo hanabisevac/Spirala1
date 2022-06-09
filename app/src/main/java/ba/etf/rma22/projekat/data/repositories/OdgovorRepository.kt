@@ -2,6 +2,7 @@ package ba.etf.rma22.projekat.data.repositories
 
 
 
+import ba.etf.rma22.projekat.data.models.AnketaTaken
 import ba.etf.rma22.projekat.data.models.Odgovor
 import ba.etf.rma22.projekat.data.models.OdgovorBody
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +33,7 @@ object OdgovorRepository {
             val anketa = TakeAnketaRepository.getPoceteAnkete()
             //val odgovori = getOdgovoriAnketa(idAnketaTaken)
             var progres = 0
+            lateinit var a : AnketaTaken
             //var prog = TrenutnaAnketaRepository.dajProgres()
             if(anketa != null){
                 for(i in anketa.indices){
@@ -42,18 +44,24 @@ object OdgovorRepository {
                         var p = (round(prog*10)*10).toInt()
                         progres +=p
                         if((progres/10)%2 !=0) progres +=10
+                        a = anketa[i]
                         break
                     }
                 }
             }
-            /*if(odgovori != null){
-                for (i in odgovori!!.indices) {
+
+            val odgovori = getOdgovoriAnketa(a.AnketumId)
+            if(odgovori != null){
+                for (i in odgovori.indices) {
                     if (odgovori[i].pitanjeId == idPitanje) {
-                        prog = anketaTaken.progres
+                        progres = a.progres
+                        println(progres)
                         break
                     }
                 }
-            }*/
+            }
+
+
             if(progres>100) progres = 100
             //println("Progres je "+progres)
             TrenutnaAnketaRepository.postaviProgres(progres)

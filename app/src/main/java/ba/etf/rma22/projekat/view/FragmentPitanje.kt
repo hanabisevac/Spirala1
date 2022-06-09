@@ -47,7 +47,7 @@ class FragmentPitanje(val pitanje : Pitanje) : Fragment() {
         listaOdgovora.adapter = adapterZaListu
 
         listaOdgovora.isEnabled = true
-        odgovorViewModel.dajOdgovoreNaAnketu(TrenutnaAnketaRepository.dajAnketu().id){
+        odgovorViewModel.dajOdgovoreNaAnketu(TrenutnaAnketaRepository.dajAnketu().AnketumId){
             if(it != null){
                 for(i in it.indices) {
                     if (it[i].pitanjeId == pitanje.id){
@@ -66,13 +66,14 @@ class FragmentPitanje(val pitanje : Pitanje) : Fragment() {
                 val text : TextView? = view1?.findViewById(android.R.id.text1)
                 if(stariView != null && stariView!=text) stariView!!.setTextColor(Color.parseColor("#FF000000"))
                 stariView = text
-                //if(brojac == 0) TrenutnaAnketaRepository.postaviProgres(progres)
+                //if(brojac == 0) TrenutnaAnketaRepository.brojac = 1
                 text!!.setTextColor(Color.parseColor("#0000FF"))
                 odgovorViewModel.upisiOdgovor(TrenutnaAnketaRepository.dajAnketu().id, pitanje.id, odg){
                     //vraca novi progres
                     TrenutnaAnketaRepository.postaviProgres(it)
+                    //TrenutnaAnketaRepository.brojac = 0
                     println("Novi progres je "+it)
-                    //brojac++
+                    brojac++
                 }
             }
         }
