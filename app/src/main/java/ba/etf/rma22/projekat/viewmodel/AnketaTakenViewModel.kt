@@ -13,22 +13,8 @@ class AnketaTakenViewModel {
 
     fun zapocniAnketu(idAnkete : Int, zapocetaAnketa : (anketaTaken : AnketaTaken) -> Unit){
         scope.launch {
-            var ima : Boolean = false
-            val zapocete = TakeAnketaRepository.getPoceteAnkete()
-            if(zapocete!=null){
-                for(i in zapocete.indices){
-                    if(zapocete[i].AnketumId == idAnkete) {
-                        zapocetaAnketa.invoke(zapocete[i])
-                        ima = true
-                        break
-                    }
-                }
-            }
-            if(!ima){
-                val result = TakeAnketaRepository.zapocniAnketu(idAnkete)
-                zapocetaAnketa.invoke(result!!)
-            }
-
+            val result = TakeAnketaRepository.zapocniAnketu(idAnkete)
+            zapocetaAnketa.invoke(result!!)
         }
     }
 

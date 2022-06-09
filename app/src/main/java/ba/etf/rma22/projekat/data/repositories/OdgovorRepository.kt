@@ -7,7 +7,6 @@ import ba.etf.rma22.projekat.data.models.Odgovor
 import ba.etf.rma22.projekat.data.models.OdgovorBody
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlin.math.floor
 import kotlin.math.round
 
 object OdgovorRepository {
@@ -31,39 +30,41 @@ object OdgovorRepository {
     suspend fun postaviOdgovorAnketa(idAnketaTaken : Int, idPitanje : Int, odgovor : Int) : Int{
         return withContext(Dispatchers.IO){
             val anketa = TakeAnketaRepository.getPoceteAnkete()
-            //val odgovori = getOdgovoriAnketa(idAnketaTaken)
-            var progres = 0
+            var progresF : Float = 0.0F
+            var progres : Int = 0
+            var velicina : Int = 0
             lateinit var a : AnketaTaken
-            //var prog = TrenutnaAnketaRepository.dajProgres()
             if(anketa != null){
                 for(i in anketa.indices){
                     if(idAnketaTaken == anketa[i].id) {
                         val pitanja = PitanjeAnketaRepository.getPitanja(anketa[i].AnketumId)
-                        progres = anketa[i].progres
-                        var prog = 1.0F/ pitanja!!.size
-                        var p = (round(prog*10)*10).toInt()
-                        progres +=p
-                        if((progres/10)%2 !=0) progres +=10
+                        velicina = pitanja!!.size
                         a = anketa[i]
                         break
                     }
                 }
             }
-
             val odgovori = getOdgovoriAnketa(a.AnketumId)
-            if(odgovori != null){
+            var p : Int  = 0
+            if(!odgovori!!.isEmpty()){
+                progresF = (odgovori.size+1).toFloat()/velicina
+                p = (round(progresF*10)*10).toInt()
+                if((p/10) %2 != 0) p+=10
                 for (i in odgovori.indices) {
                     if (odgovori[i].pitanjeId == idPitanje) {
-                        progres = a.progres
+                        p = a.progres
                         println(progres)
                         break
                     }
                 }
             }
-
-
+            else {
+                progresF = 1.0F/velicina
+                p = (round(progresF*10)*10).toInt()
+                if((p/10) %2 != 0) p+=10
+            }
+            progres = p
             if(progres>100) progres = 100
-            //println("Progres je "+progres)
             TrenutnaAnketaRepository.postaviProgres(progres)
             val myOdgovor = OdgovorBody(odgovor, idPitanje, progres)
             val response = ApiConfig.retrofit.addOdgovor(AccountRepository.acHash, idAnketaTaken, myOdgovor)

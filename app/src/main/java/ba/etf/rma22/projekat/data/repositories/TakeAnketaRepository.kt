@@ -9,6 +9,14 @@ object TakeAnketaRepository {
 
     suspend fun zapocniAnketu(idAnketa : Int) : AnketaTaken?{
         return withContext(Dispatchers.IO){
+            val provjera = getPoceteAnkete()
+            if(provjera!=null){
+                for(i in provjera.indices){
+                    if(provjera[i].AnketumId == idAnketa){
+                        return@withContext provjera[i]
+                    }
+                }
+            }
             val response = ApiConfig.retrofit.pocniOdg(AccountRepository.acHash, idAnketa)
             val responseBody = response.body()
             return@withContext responseBody
