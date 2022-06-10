@@ -17,6 +17,10 @@ class AccountRepository {
             return false
         }
 
+        fun getHash() : String {
+            return acHash
+        }
+
     }
 
 }

@@ -19,6 +19,11 @@ object TakeAnketaRepository {
             }
             val response = ApiConfig.retrofit.pocniOdg(AccountRepository.acHash, idAnketa)
             val responseBody = response.body()
+            //server nije radio kada sam ovo trebala testirat akoo bude problema zakomentarisite citav when{}
+            when(responseBody){
+                is AnketaTaken -> return@withContext responseBody
+                else -> return@withContext null
+            }
             return@withContext responseBody
         }
     }
