@@ -68,6 +68,11 @@ object OdgovorRepository {
             TrenutnaAnketaRepository.postaviProgres(progres)
             val myOdgovor = OdgovorBody(odgovor, idPitanje, progres)
             val response = ApiConfig.retrofit.addOdgovor(AccountRepository.acHash, idAnketaTaken, myOdgovor)
+            val responseBody = response.body()
+            when (responseBody) {
+                is Odgovor -> progres
+                else -> progres = -1
+            }
             return@withContext progres
         }
 

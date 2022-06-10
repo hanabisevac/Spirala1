@@ -16,32 +16,12 @@ class PitanjeAnketaViewModel {
     fun getPitanjaZaAnketu(id : Int, pitanja : (pitanjaLista : List<Pitanje> ?) -> Unit){
         scope.launch {
             val result = PitanjeAnketaRepository.getPitanja(id)
-            //println(result[0].tekstPitanja)
             pitanja.invoke(result)
         }
     }
 
 
-    /*fun getPitanjaZaAnketu(anketa : Anketa) : List<Pitanje> {
-        return PitanjeAnketaRepository.getPitanja(anketa.naziv, anketa.nazivIstrazivanja)
-    }
 
-    fun getPitanjaAnketa(anketa : Anketa) : List<PitanjeAnketa> {
-        return PitanjeAnketaRepository.dajPitanjaAnketa(anketa.naziv, anketa.nazivIstrazivanja)
-    }
-
-
-    fun dajPitanjeAnketuPoNazivuPitanja(naziv : String, nazivAnkete : String, nazivIstrazivanja : String) : PitanjeAnketa? {
-        return PitanjeAnketaRepository.getAnketaPoNazivuPitanja(naziv, nazivAnkete, nazivIstrazivanja)
-    }
-    
-    fun getAll() : List<PitanjeAnketa> {
-        return PitanjeAnketaRepository.getSvaPitanjaAnkete()
-    }
-
-    fun getAnketu(naziv : String, istrazivanje : String) : Anketa? {
-        return PitanjeAnketaRepository.getAnketaSaIstrazivanjem(naziv, istrazivanje)
-    }*/
 
 
 }

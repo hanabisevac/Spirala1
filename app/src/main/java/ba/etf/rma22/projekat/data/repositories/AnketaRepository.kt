@@ -44,11 +44,15 @@ object AnketaRepository {
         }
     }
 
-    suspend fun getById(id : Int) : Anketa{
+    suspend fun getById(id : Int) : Anketa ?{
         return withContext(Dispatchers.IO){
             val response = ApiConfig.retrofit.getAnketaSaId(id)
             val responseBody = response.body()
-            return@withContext responseBody!!
+            when(responseBody){
+                is Anketa -> Unit
+                else -> return@withContext null
+            }
+            return@withContext responseBody
         }
     }
 

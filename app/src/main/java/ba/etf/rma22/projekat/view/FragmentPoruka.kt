@@ -23,8 +23,6 @@ class FragmentPoruka(val poruka : String) : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_poruka, container, false)
         textPoruka = view.findViewById(R.id.tvPoruka)
-        //val vel = KorisnikRepository.getGrupe().size
-        //val grupa : Grupa = KorisnikRepository.getGrupe()[vel-1]
         textPoruka.text = poruka
         return view
     }

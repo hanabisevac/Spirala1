@@ -5,7 +5,7 @@ import ba.etf.rma22.projekat.data.models.Grupa
 
 
 
-val g1 = Grupa(1, "Grupa 1", "Istrazivanje 1", 1)
+/*val g1 = Grupa(1, "Grupa 1", "Istrazivanje 1", 1)
 val g2 = Grupa(2, "Grupa 2", "Istrazivanje 1", 1)
 val g3 = Grupa(3, "Grupa 3", "Istrazivanje 2", 2)
 val g4 = Grupa(1, "Grupa 1", "Istrazivanje 3", 3)
@@ -18,7 +18,7 @@ val g10 = Grupa(4, "Grupa 4", "Istrazivanje 6", 6)
 
 fun listaGrupa() : List<Grupa> {
     return listOf(g1, g2, g3, g4, g5, g6, g7, g8, g9, g10)
-}
+}*/
 
 
 /*fun spojiGrupe() : List<Grupa> {

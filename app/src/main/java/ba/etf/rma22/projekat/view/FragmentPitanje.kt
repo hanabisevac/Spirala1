@@ -74,6 +74,7 @@ class FragmentPitanje(val pitanje : Pitanje) : Fragment() {
                     //TrenutnaAnketaRepository.brojac = 0
                     println("Novi progres je "+it)
                     brojac++
+                    listaOdgovora.isEnabled = false
                 }
             }
         }
