@@ -68,11 +68,11 @@ class AnketaAdapter(private var ankete : List<Anketa>, private val onItemClicked
     }
 
     fun getDate(position : Int) : Date {
-        if(ankete[position].datumRada != null) return ankete[position].datumRada!!
-        else if(ankete[position].datumKraj!=null && ankete[position].datumKraj!!.before(Date())) return ankete[position].datumKraj!!
-        else if(ankete[position].datumKraj == null && ankete[position].datumPocetak.before(Date())) return ankete[position].datumPocetak
-        else if(ankete[position].datumPocetak.after(Date())) return ankete[position].datumPocetak //buduce
-        return ankete[position].datumKraj!! //prosle
+        if(ankete[position].dajDatumRada() != null) return ankete[position].dajDatumRada()!!
+        else if(ankete[position].datumKraj!=null && ankete[position].dajDatumKraj()!!.before(Date())) return ankete[position].dajDatumKraj()!!
+        else if(ankete[position].datumKraj == null && ankete[position].dajDatumPocetak().before(Date())) return ankete[position].dajDatumPocetak()
+        else if(ankete[position].dajDatumPocetak().after(Date())) return ankete[position].dajDatumPocetak() //buduce
+        return ankete[position].dajDatumKraj()!! //prosle
     }
 
     fun getText(boja : String) : String {

@@ -2,9 +2,12 @@ package ba.etf.rma22.projekat.data.repositories
 
 
 
+import android.content.Context
+import ba.etf.rma22.projekat.data.AppDatabase
 import ba.etf.rma22.projekat.data.models.AnketaTaken
 import ba.etf.rma22.projekat.data.models.Odgovor
 import ba.etf.rma22.projekat.data.models.OdgovorBody
+import ba.etf.rma22.projekat.data.models.Pitanje
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.math.round
@@ -69,12 +72,19 @@ object OdgovorRepository {
             val myOdgovor = OdgovorBody(odgovor, idPitanje, progres)
             val response = ApiConfig.retrofit.addOdgovor(AccountRepository.acHash, idAnketaTaken, myOdgovor)
             val responseBody = response.body()
+            //dodaje odgovor
+            val db = AppDatabase.getInstance(ContextRepo.getContext())
             when (responseBody) {
-                is Odgovor -> progres
+                is Odgovor -> {
+                    db.odgovorDAO().insertOdgovor(responseBody)
+                    db.anketaTakenDAO().updateAnketaTaken(progres, idAnketaTaken)
+                }
                 else -> progres = -1
             }
             return@withContext progres
         }
 
     }
+
+
 }

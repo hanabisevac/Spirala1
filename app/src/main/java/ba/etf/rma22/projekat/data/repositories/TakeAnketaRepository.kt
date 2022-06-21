@@ -1,13 +1,15 @@
 package ba.etf.rma22.projekat.data.repositories
 
+
+import ba.etf.rma22.projekat.data.AppDatabase
 import ba.etf.rma22.projekat.data.models.AnketaTaken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-object TakeAnketaRepository {
+object  TakeAnketaRepository {
 
 
-    suspend fun zapocniAnketu(idAnketa : Int) : AnketaTaken?{
+    suspend fun zapocniAnketu(idAnketa : Int) : AnketaTaken? {
         return withContext(Dispatchers.IO){
             val provjera = getPoceteAnkete()
             if(provjera!=null){
@@ -19,20 +21,25 @@ object TakeAnketaRepository {
             }
             val response = ApiConfig.retrofit.pocniOdg(AccountRepository.acHash, idAnketa)
             val responseBody = response.body()
-            //server nije radio kada sam ovo trebala testirat akoo bude problema zakomentarisite citav when{}
+            val db = AppDatabase.getInstance(ContextRepo.getContext())
+            //dodajemo novu zapocetu anketu u bazu
             when(responseBody){
-                is AnketaTaken -> return@withContext responseBody
+                is AnketaTaken -> {
+                    println("Ovo je rez "+AnketaRepository.getById(idAnketa))
+                    if(AnketaRepository.getById(idAnketa)!!.naziv != null) db.anketaTakenDAO().insertAnketaTaken(responseBody!!)
+                    return@withContext responseBody
+                }
                 else -> return@withContext null
             }
-            return@withContext responseBody
         }
     }
 
     suspend fun getPoceteAnkete() : List<AnketaTaken> ?  {
         return withContext(Dispatchers.IO) {
             val response = ApiConfig.retrofit.getPokusajAnketa(AccountRepository.acHash)
-            if(response.body()!!.isEmpty()) return@withContext  null
-            return@withContext response.body()
+            val responseBody = response.body()
+            if(responseBody!!.isEmpty()) return@withContext  null
+            return@withContext responseBody
         }
     }
 }

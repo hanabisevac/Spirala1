@@ -1,5 +1,7 @@
 package ba.etf.rma22.projekat.data.repositories
 
+import android.content.Context
+import ba.etf.rma22.projekat.data.AppDatabase
 import ba.etf.rma22.projekat.data.models.Grupa
 import ba.etf.rma22.projekat.data.models.Istrazivanje
 import kotlinx.coroutines.Dispatchers
@@ -7,11 +9,14 @@ import kotlinx.coroutines.withContext
 
 object IstrazivanjeIGrupaRepository {
 
+
     //vraća sva istraživanja ili ako je zadan offset odgovarajući page u rezultatima
     suspend fun getIstrazivanja(offset : Int?) : List<Istrazivanje> {
         return withContext(Dispatchers.IO){
             val response = ApiConfig.retrofit.getIstrazivanje(offset)
             val responseBody = response.body()
+            val db = AppDatabase.getInstance(ContextRepo.getContext())
+            if(db.istrazivanjeDAO().getAllIstrazivanja().isEmpty()) responseBody!!.forEach { s -> db.istrazivanjeDAO().insertIstrazivanja(s) }
             return@withContext responseBody!!
         }
     }
@@ -28,6 +33,8 @@ object IstrazivanjeIGrupaRepository {
                 if(responseBody.size<5) break
                 brojac++
             }
+            val db = AppDatabase.getInstance(ContextRepo.getContext())
+            if(db.istrazivanjeDAO().getAllIstrazivanja().isEmpty()) lista.forEach {  s -> db.istrazivanjeDAO().insertIstrazivanja(s) }
             return@withContext lista
         }
     }
@@ -47,7 +54,21 @@ object IstrazivanjeIGrupaRepository {
         return withContext(Dispatchers.IO){
             val response = ApiConfig.retrofit.getAllGrupe()
             val responseBody = response.body()
+            for(i in responseBody!!.indices){
+                val istrazivanje = getIstrazivanjeZaGrupe(responseBody[i].id)
+                responseBody[i].nazivIstrazivanja = istrazivanje!!.naziv
+            }
+            val db = AppDatabase.getInstance(ContextRepo.getContext())
+            responseBody.forEach {  g -> db.grupaDAO().insertGrupe(g) }
             return@withContext responseBody!!
+        }
+    }
+
+    suspend fun getUpisaneGrupe() : List<Grupa> {
+        return withContext(Dispatchers.IO) {
+            val response = ApiConfig.retrofit.getStudentoveGrupe(AccountRepository.acHash)
+            val grupe = response.body()
+            return@withContext grupe!!
         }
     }
 
@@ -71,14 +92,34 @@ object IstrazivanjeIGrupaRepository {
         return withContext(Dispatchers.IO) {
             val response = ApiConfig.retrofit.dodajStudenta(idGrupa, AccountRepository.acHash)
             val responseBody = response.body()
+            val db = AppDatabase.getInstance(ContextRepo.getContext())
             if(responseBody?.poruka?.startsWith("Ne postoji")!! || responseBody.poruka == "Grupa not found.") return@withContext false
+            val grupa = ApiConfig.retrofit.getGrupuSaId(idGrupa)
+            val grupaBody = grupa.body()
+            val istrazivanje = getIstrazivanjeZaGrupe(idGrupa)
+            grupaBody?.nazivIstrazivanja = istrazivanje!!.naziv
+            //dodajemo novu grupu u koju se korisnik upisao u bazu
+            //db.grupaDAO().insertGrupe(grupaBody!!)
+            //dodajemo ankete koje pripadaju toj grupi
+            //AnketaRepository.getAnketaZaGrupu(grupaBody).forEach { ank -> db.anketaDAO().insertAll(ank) }
+            val lista = AnketaRepository.getAnketaZaGrupu(grupaBody!!)
+            //dodajemo pitanja koja pripadaju tim anketama
+            for(i in lista.indices) {
+                val pitanja = PitanjeAnketaRepository.getPitanja(lista[i].id)
+                pitanja!!.forEach { p ->
+                    val string = p.opcije.joinToString(" ")
+                    p.stringOpcije = string
+                    db.pitanjeDAO().insertPitanje(p)  }
+            }
+            //dodajemo istrazivanje za tu grupu
+            //db.istrazivanjeDAO().insertIstrazivanja(istrazivanje)
             return@withContext true
         }
     }
 
 
     //vraća grupe u kojima je student upisan
-    suspend fun getUpisaneGrupe() : List<Grupa> {
+    suspend fun getUpisaneGrupeApi() : List<Grupa> {
         return withContext(Dispatchers.IO){
             val response = ApiConfig.retrofit.getStudentoveGrupe(AccountRepository.acHash)
             val responseBody = response.body()

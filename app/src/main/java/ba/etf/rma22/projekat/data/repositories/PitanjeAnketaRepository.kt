@@ -1,9 +1,7 @@
 package ba.etf.rma22.projekat.data.repositories
 
-import ba.etf.rma22.projekat.data.models.Anketa
-import ba.etf.rma22.projekat.data.models.AnketaTaken
+import ba.etf.rma22.projekat.data.AppDatabase
 import ba.etf.rma22.projekat.data.models.Pitanje
-import ba.etf.rma22.projekat.data.models.PitanjeAnketa
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -12,6 +10,12 @@ object PitanjeAnketaRepository {
     suspend fun getPitanja(idAnkete : Int) : List<Pitanje>?{
         return withContext(Dispatchers.IO){
             val response = ApiConfig.retrofit.getPitanja(idAnkete)
+            /*val db = AppDatabase.getInstance(ContextRepo.getContext())
+            val pitanjeAnketa = db.pitanjeAnketaDAO().getPitanjeAnketaByAnketumId(idAnkete)
+            val svaPitanja = mutableListOf<Pitanje>()
+            pitanjeAnketa.forEach {
+                p -> svaPitanja.add(db.pitanjeDAO().getPitanjeById(p.PitanjeId))
+            }*/
             val responseBody = response.body()
             return@withContext responseBody
         }

@@ -1,9 +1,14 @@
 package ba.etf.rma22.projekat.data.models
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
 data class Istrazivanje(
-    var id : Int,
-    val naziv : String,
-    val godina : Int
+    @PrimaryKey var id : Int,
+    @ColumnInfo(name = "naziv") val naziv : String,
+    @ColumnInfo(name = "godina") val godina : Int
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

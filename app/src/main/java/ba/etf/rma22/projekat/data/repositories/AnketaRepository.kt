@@ -1,14 +1,17 @@
 package ba.etf.rma22.projekat.data.repositories
 
 
+import android.content.Context
+import ba.etf.rma22.projekat.data.AppDatabase
 import ba.etf.rma22.projekat.data.models.Anketa
+import ba.etf.rma22.projekat.data.models.Grupa
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 
-object AnketaRepository {
 
+object AnketaRepository {
 
     suspend fun getAll() : List<Anketa> {
         return withContext(Dispatchers.IO){
@@ -21,6 +24,8 @@ object AnketaRepository {
                 if(responseBody.size<5) break
                 brojac++
             }
+            val db = AppDatabase.getInstance(ContextRepo.getContext())
+            lista.forEach { ank -> db.anketaDAO().insertAll(ank) }
             return@withContext lista
         }
     }
@@ -33,7 +38,56 @@ object AnketaRepository {
         }
     }
 
+    //iz baze
 
+    suspend fun getMyAnkete() : List<Anketa> {
+        return withContext(Dispatchers.IO){
+            val db = AppDatabase.getInstance(ContextRepo.getContext())
+            val ankete = db.anketaDAO().getAll()
+            return@withContext ankete
+        }
+    }
+
+    suspend fun dodajAnketu(context: Context, anketa : Anketa) : String {
+        return withContext(Dispatchers.IO){
+            val db = AppDatabase.getInstance(context)
+            db.anketaDAO().insertAll(anketa)
+            return@withContext "Upisana"
+        }
+    }
+
+    suspend fun getDone() : List<Anketa> {
+        return withContext(Dispatchers.IO) {
+            val lista = getMyAnkete()
+            val gotove = mutableListOf<Anketa>()
+            for(i in lista.indices){
+                if(lista[i].datumRada != null) gotove.add(lista[i])
+            }
+            return@withContext gotove
+        }
+    }
+
+    suspend fun getFuture() : List<Anketa> {
+        return withContext(Dispatchers.IO) {
+            val lista = getMyAnkete()
+            val buduce = mutableListOf<Anketa>()
+            for(i in buduce.indices){
+                if(lista[i].dajDatumPocetak().after(Date()) || (lista[i].datumRada == null && (lista[i].datumKraj == null || lista[i].dajDatumKraj()!!.after(Date())))) buduce.add(lista[i])
+            }
+            return@withContext buduce
+        }
+    }
+
+    suspend fun getPast() : List<Anketa> {
+        return withContext(Dispatchers.IO) {
+            val lista = getMyAnkete()
+            val prosle = mutableListOf<Anketa>()
+            for(i in lista.indices){
+                if(lista[i].datumKraj!=null && lista[i].dajDatumKraj()!!.before(Date())) prosle.add(lista[i])
+            }
+            return@withContext prosle
+        }
+    }
 
 
     suspend fun getAll(offset : Int) : List<Anketa> {
@@ -84,6 +138,31 @@ object AnketaRepository {
         }
     }
 
+    suspend fun getAnketaZaGrupu(grupa : Grupa) : List<Anketa> {
+        return withContext(Dispatchers.IO){
+            val response = getDostupneAnketeZaGrupu(grupa.id)
+            val naziv = IstrazivanjeIGrupaRepository.getIstrazivanjeZaGrupe(grupa.id)!!.naziv
+            for (i in response.indices){
+                response[i].nazivGrupe = grupa.naziv
+                response[i].nazivIstrazivanja = naziv
+            }
+            response.stream().forEach { ank -> ank.progres = 0 }
+            val zapocete = TakeAnketaRepository.getPoceteAnkete()
+            if(zapocete != null){
+                for(i in response.indices){
+                    for(j in zapocete.indices){
+                        if(zapocete[j].AnketumId == response[i].id){
+                            response[i].progres = zapocete[j].progres
+                            if(response[i].progres == 100) response[i].datumRada = zapocete[j].datumRada
+                        }
+                    }
+                }
+            }
+            return@withContext response
+
+        }
+    }
+
 
 
 
@@ -119,7 +198,7 @@ object AnketaRepository {
     }
 
 
-    suspend fun getDone() : List<Anketa> {
+    suspend fun getDoneApi() : List<Anketa> {
         return withContext(Dispatchers.IO){
             val response = getUpisane()
             val lista = mutableListOf<Anketa>()
@@ -130,24 +209,24 @@ object AnketaRepository {
         }
     }
 
-    suspend fun getFuture() : List<Anketa> {
+    suspend fun getFutureApi() : List<Anketa> {
         return withContext(Dispatchers.IO){
             val response = getUpisane()
             val lista = mutableListOf<Anketa>()
             for(i in response.indices){
-                if(response[i].datumRada == null && (response[i].datumKraj == null || response[i].datumKraj!!.after(Date())))
+                if(response[i].datumRada == null && (response[i].datumKraj == null || response[i].dajDatumKraj()!!.after(Date())))
                     lista.add(response[i])
             }
             return@withContext lista
         }
     }
 
-    suspend fun getPast() : List<Anketa> {
+    suspend fun getPastApi() : List<Anketa> {
         return withContext(Dispatchers.IO){
             val response = getUpisane()
             val lista = mutableListOf<Anketa>()
             for(i in response.indices) {
-                if(response[i].datumKraj!=null && response[i].datumRada == null && response[i].datumKraj!!.before(Date()))
+                if(response[i].datumKraj!=null && response[i].datumRada == null && response[i].dajDatumKraj()!!.before(Date()))
                     lista.add(response[i])
             }
             return@withContext lista

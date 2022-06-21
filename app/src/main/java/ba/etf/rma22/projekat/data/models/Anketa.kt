@@ -1,18 +1,24 @@
 package ba.etf.rma22.projekat.data.models
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.*
 
+@Entity
 data class Anketa(
-    @SerializedName("id") val id : Int,
-    @SerializedName("naziv") val naziv : String,
-    var nazivIstrazivanja : String ?,
-    @SerializedName("datumPocetak") val datumPocetak : Date,
-    @SerializedName("datumKraj") val datumKraj : Date?,
-    var datumRada : Date ?,
-    @SerializedName("trajanje") val trajanje : Int,
-    var nazivGrupe : String ?,
-    var progres : Int ?) : Comparable<Anketa> {
+    @PrimaryKey @SerializedName("id") val id : Int,
+    @ColumnInfo(name ="naziv") @SerializedName("naziv") val naziv : String,
+    @ColumnInfo(name = "nazivIstrazivanja") var nazivIstrazivanja : String ?,
+    @ColumnInfo(name = "datumPocetak") @SerializedName("datumPocetak") val datumPocetak : String,
+    @ColumnInfo(name = "datumKraj") @SerializedName("datumKraj") val datumKraj : String?,
+    @ColumnInfo(name = "datumRada") var datumRada : String ?,
+    @ColumnInfo(name = "trajanje") @SerializedName("trajanje") val trajanje : Int,
+    @ColumnInfo(name = "nazivGrupe") var nazivGrupe : String ?,
+    @ColumnInfo(name = "progres") var progres : Int ?) : Comparable<Anketa> {
 
     override fun compareTo(other: Anketa): Int {
         val cmp = this.datumPocetak.compareTo(other.datumPocetak)
@@ -24,16 +30,33 @@ data class Anketa(
         this.progres = progres
     }
 
-    fun setDate(date : Date) {
-        this.datumRada = date
+
+    fun dajDatumPocetak() : Date{
+        val formatter = SimpleDateFormat("yyyy-mm-dd")
+        val dPocetak = formatter.parse(datumPocetak)
+        return dPocetak
+    }
+
+    fun dajDatumKraj() : Date ?{
+        val formatter = SimpleDateFormat("yyyy-mm-dd")
+        var dKraj : Date? = null
+        if(datumKraj != null) dKraj = formatter.parse(datumKraj)
+        return dKraj
+    }
+
+    fun dajDatumRada() : Date ?{
+        val formatter = SimpleDateFormat("yyyy-mm-dd")
+        var dRada: Date? = null
+        if(datumRada != null) dRada = formatter.parse(datumRada)
+        return dRada
     }
 
 
     fun getStatus() : String{
-        if(datumRada != null) return "plava"
-        else if(datumKraj!=null && datumPocetak.before(Date()) && datumKraj.after(Date())) return "zelena"
-        else if(datumKraj==null && datumPocetak.before(Date())) return "zelena1"
-        else if(datumKraj!=null && datumKraj.before(Date())) return "crvena"
+        if(dajDatumRada() != null) return "plava"
+        else if(dajDatumKraj()!=null && dajDatumPocetak().before(Date()) && dajDatumKraj()!!.after(Date())) return "zelena"
+        else if(dajDatumKraj()==null && dajDatumPocetak().before(Date())) return "zelena1"
+        else if(dajDatumKraj()!=null && dajDatumKraj()!!.before(Date())) return "crvena"
         return "zuta"
     }
 

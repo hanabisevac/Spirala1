@@ -1,19 +1,17 @@
 package ba.etf.rma22.projekat
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import ba.etf.rma22.projekat.data.models.Anketa
-import ba.etf.rma22.projekat.data.models.Pitanje
-import ba.etf.rma22.projekat.data.repositories.AnketaRepository
+import ba.etf.rma22.projekat.data.repositories.ContextRepo
 import ba.etf.rma22.projekat.data.repositories.TrenutnaAnketaRepository
 import ba.etf.rma22.projekat.view.*
-import ba.etf.rma22.projekat.viewmodel.AccViewModel
 import ba.etf.rma22.projekat.viewmodel.AnketaTakenViewModel
-import ba.etf.rma22.projekat.viewmodel.AnketaViewModel
 import ba.etf.rma22.projekat.viewmodel.PitanjeAnketaViewModel
 import com.example.spirala1.R
 import java.util.*
@@ -30,14 +28,19 @@ class MainActivity : AppCompatActivity(), Communicator {
     val fragments = mutableListOf<Fragment>(FragmentAnkete(), FragmentIstrazivanje())
     private var usao : Boolean = false
     var lista = mutableListOf<Anketa>()
+    //var konekcija : Boolean = true
 
 
     override  fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
         viewPager = findViewById(R.id.pager)
+
+        ContextRepo.setContext(this.applicationContext)
+        /*val connectionManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectionManager.activeNetworkInfo
+        if(networkInfo == null ) konekcija = false*/
+
         viewPager.offscreenPageLimit = 3
         viewPagerAdapter = ViewPagerAdapter(supportFragmentManager, fragments, lifecycle)
         viewPager.adapter = viewPagerAdapter
@@ -64,6 +67,7 @@ class MainActivity : AppCompatActivity(), Communicator {
             )
         }, 5000)
     }*/
+
 
     override fun otvoriNoviFragment(anketa: Anketa) {
         val lista = mutableListOf<Fragment>()
