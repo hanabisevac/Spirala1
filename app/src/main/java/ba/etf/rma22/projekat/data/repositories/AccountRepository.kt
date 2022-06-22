@@ -1,6 +1,5 @@
 package ba.etf.rma22.projekat.data.repositories
 
-import android.content.Context
 import ba.etf.rma22.projekat.data.AppDatabase
 import ba.etf.rma22.projekat.data.models.Account
 import kotlinx.coroutines.Dispatchers
@@ -14,6 +13,8 @@ class AccountRepository {
         var student : Account = Account(14, "hbisevac1@etf.unsa.ba", "ecac5bf8-b81a-4b77-8887-e3264eb4d0bb")
         var acHash : String = "ecac5bf8-b81a-4b77-8887-e3264eb4d0bb"
         var context = ContextRepo.getContext()
+
+
 
 
         suspend fun postaviHash(acc : String) : Boolean{

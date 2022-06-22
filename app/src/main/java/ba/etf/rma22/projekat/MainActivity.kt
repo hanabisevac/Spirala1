@@ -1,16 +1,18 @@
 package ba.etf.rma22.projekat
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.os.Build
+
+import android.content.Intent
+import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import ba.etf.rma22.projekat.data.models.Anketa
 import ba.etf.rma22.projekat.data.repositories.ContextRepo
+import ba.etf.rma22.projekat.data.repositories.KonekcijaRepository
 import ba.etf.rma22.projekat.data.repositories.TrenutnaAnketaRepository
 import ba.etf.rma22.projekat.view.*
+import ba.etf.rma22.projekat.viewmodel.AccViewModel
 import ba.etf.rma22.projekat.viewmodel.AnketaTakenViewModel
 import ba.etf.rma22.projekat.viewmodel.PitanjeAnketaViewModel
 import com.example.spirala1.R
@@ -21,14 +23,15 @@ class MainActivity : AppCompatActivity(), Communicator {
     private lateinit var viewPagerAdapter : ViewPagerAdapter
     private lateinit var viewPagerAdapter2 : ViewPagerAdapter
 
-    //private var accViewModel = AccViewModel()
+    private val filter = IntentFilter("android.net.conn.CONNECTIVITY_CHANGE")
+    private val br = MyBroadcastReceiver()
+
     private val anketaTakenViewModel = AnketaTakenViewModel()
     private val pitanjaAnketaViewModel = PitanjeAnketaViewModel()
     //private val fragmentPredaja = FragmentPredaj.newInstance()
     val fragments = mutableListOf<Fragment>(FragmentAnkete(), FragmentIstrazivanje())
     private var usao : Boolean = false
     var lista = mutableListOf<Anketa>()
-    //var konekcija : Boolean = true
 
 
     override  fun onCreate(savedInstanceState: Bundle?) {
@@ -36,10 +39,12 @@ class MainActivity : AppCompatActivity(), Communicator {
         setContentView(R.layout.activity_main)
         viewPager = findViewById(R.id.pager)
 
-        ContextRepo.setContext(this.applicationContext)
-        /*val connectionManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectionManager.activeNetworkInfo
-        if(networkInfo == null ) konekcija = false*/
+        ContextRepo.setContext(this)
+
+        registerReceiver(br, filter)
+        println("Konekcija "+KonekcijaRepository.getKonekcija())
+        if(intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain") handleSendText(intent)
+
 
         viewPager.offscreenPageLimit = 3
         viewPagerAdapter = ViewPagerAdapter(supportFragmentManager, fragments, lifecycle)
@@ -55,8 +60,9 @@ class MainActivity : AppCompatActivity(), Communicator {
         //refreshSecondFragment()
     }
 
-
-
+    private fun handleSendText(intent: Intent) {
+        intent.getStringExtra("playload").let { AccViewModel().postaviHash(it!!) }
+    }
 
 
     /*private fun refreshSecondFragment() {
@@ -100,6 +106,11 @@ class MainActivity : AppCompatActivity(), Communicator {
 
     override fun vratiNaPocetnu() {
         viewPager.adapter = viewPagerAdapter
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(br)
     }
 
 

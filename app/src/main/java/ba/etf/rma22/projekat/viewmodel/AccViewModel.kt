@@ -26,4 +26,10 @@ class AccViewModel {
             else porukica.invoke("Nije moguce upisati")
         }
     }
+
+    fun postaviHash(s : String) {
+        scope.launch {
+            AccountRepository.postaviHash(s)
+        }
+    }
 }

@@ -56,7 +56,7 @@ object AnketaRepository {
         }
     }
 
-    suspend fun getDone() : List<Anketa> {
+    /*suspend fun getDone() : List<Anketa> {
         return withContext(Dispatchers.IO) {
             val lista = getMyAnkete()
             val gotove = mutableListOf<Anketa>()
@@ -87,7 +87,7 @@ object AnketaRepository {
             }
             return@withContext prosle
         }
-    }
+    }*/
 
 
     suspend fun getAll(offset : Int) : List<Anketa> {
@@ -134,9 +134,13 @@ object AnketaRepository {
                     }
                 }
             }
+            val db = AppDatabase.getInstance(ContextRepo.getContext())
+            lista.forEach { ank -> db.anketaDAO().insertAll(ank) }
             return@withContext lista
         }
     }
+
+
 
     suspend fun getAnketaZaGrupu(grupa : Grupa) : List<Anketa> {
         return withContext(Dispatchers.IO){
@@ -198,7 +202,7 @@ object AnketaRepository {
     }
 
 
-    suspend fun getDoneApi() : List<Anketa> {
+    suspend fun getDone() : List<Anketa> {
         return withContext(Dispatchers.IO){
             val response = getUpisane()
             val lista = mutableListOf<Anketa>()
@@ -209,7 +213,7 @@ object AnketaRepository {
         }
     }
 
-    suspend fun getFutureApi() : List<Anketa> {
+    suspend fun getFuture() : List<Anketa> {
         return withContext(Dispatchers.IO){
             val response = getUpisane()
             val lista = mutableListOf<Anketa>()
@@ -221,7 +225,7 @@ object AnketaRepository {
         }
     }
 
-    suspend fun getPastApi() : List<Anketa> {
+    suspend fun getPast() : List<Anketa> {
         return withContext(Dispatchers.IO){
             val response = getUpisane()
             val lista = mutableListOf<Anketa>()
