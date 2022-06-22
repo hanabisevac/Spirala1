@@ -23,4 +23,7 @@ interface GrupaDAO {
 
     @Query("DELETE FROM Grupa")
     suspend fun deleteGrupe()
+
+    @Query("UPDATE Grupa SET AnketaId = :AnketaId WHERE id = :id")
+    suspend fun updateGrupu(AnketaId : String, id : Int)
 }

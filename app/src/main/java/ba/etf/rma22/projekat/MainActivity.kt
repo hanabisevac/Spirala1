@@ -8,6 +8,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import ba.etf.rma22.projekat.data.models.Anketa
+import ba.etf.rma22.projekat.data.repositories.AccountRepository
 import ba.etf.rma22.projekat.data.repositories.ContextRepo
 import ba.etf.rma22.projekat.data.repositories.KonekcijaRepository
 import ba.etf.rma22.projekat.data.repositories.TrenutnaAnketaRepository
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity(), Communicator {
     private val pitanjaAnketaViewModel = PitanjeAnketaViewModel()
     //private val fragmentPredaja = FragmentPredaj.newInstance()
     val fragments = mutableListOf<Fragment>(FragmentAnkete(), FragmentIstrazivanje())
+    //val fragments1 = mutableListOf<Fragment>(FragmentAnkete())
     private var usao : Boolean = false
     var lista = mutableListOf<Anketa>()
 
@@ -40,10 +42,10 @@ class MainActivity : AppCompatActivity(), Communicator {
         viewPager = findViewById(R.id.pager)
 
         ContextRepo.setContext(this)
-
         registerReceiver(br, filter)
-        println("Konekcija "+KonekcijaRepository.getKonekcija())
-        if(intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain") handleSendText(intent)
+        //println("Konekcija "+KonekcijaRepository.getKonekcija())
+        if(intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain")
+            handleSendText(intent)
 
 
         viewPager.offscreenPageLimit = 3
@@ -83,14 +85,16 @@ class MainActivity : AppCompatActivity(), Communicator {
                 lista.add(FragmentPitanje(it[i]))
             }
             lista.add(FragmentPredaj(anketa))
-            anketaTakenViewModel.zapocniAnketu(anketa.id) { it ->
-                TrenutnaAnketaRepository.postaviAnketu(it)
-                TrenutnaAnketaRepository.postaviProgres(it.progres)
-                viewPagerAdapter2 = ViewPagerAdapter(supportFragmentManager, lista, lifecycle)
-                viewPager.adapter = viewPagerAdapter2
-                usao = true
+            if(KonekcijaRepository.getKonekcija()){
+                anketaTakenViewModel.zapocniAnketu(anketa.id) { it ->
+                    TrenutnaAnketaRepository.postaviAnketu(it)
+                    TrenutnaAnketaRepository.postaviProgres(it.progres)
+                    viewPagerAdapter2 = ViewPagerAdapter(supportFragmentManager, lista, lifecycle)
+                    viewPager.adapter = viewPagerAdapter2
+                    usao = true
+                }
+                println("usao u  zapocinjanje")
             }
-
         }
     }
 
@@ -108,12 +112,9 @@ class MainActivity : AppCompatActivity(), Communicator {
         viewPager.adapter = viewPagerAdapter
     }
 
-    override fun onDestroy() {
+    /*override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(br)
-    }
-
-
-
+    }*/
 
 }

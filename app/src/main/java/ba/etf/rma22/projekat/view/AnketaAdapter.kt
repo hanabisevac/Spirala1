@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.spirala1.R
 import ba.etf.rma22.projekat.data.models.Anketa
 import ba.etf.rma22.projekat.data.models.AnketaTaken
+import ba.etf.rma22.projekat.data.repositories.KonekcijaRepository
 import ba.etf.rma22.projekat.viewmodel.AnketaTakenViewModel
 import ba.etf.rma22.projekat.viewmodel.AnketaViewModel
 import java.text.SimpleDateFormat
@@ -59,12 +60,15 @@ class AnketaAdapter(private var ankete : List<Anketa>, private val onItemClicked
         holder.prog.progress = ankete[position].progres!!
 
         holder.itemView.isEnabled = false
-        anketaViewModel.getUpisane {
-            if(it.contains(ankete[position]) && boja!="zuta"){
-                holder.itemView.isEnabled = true
+        if(KonekcijaRepository.getKonekcija()){
+            anketaViewModel.getUpisane {
+                if(it.contains(ankete[position]) && boja!="zuta"){
+                    holder.itemView.isEnabled = true
+                }
             }
+            holder.itemView.setOnClickListener { onItemClicked(ankete[position]) }
         }
-        holder.itemView.setOnClickListener { onItemClicked(ankete[position]) }
+
     }
 
     fun getDate(position : Int) : Date {

@@ -8,7 +8,7 @@ import ba.etf.rma22.projekat.data.dao.*
 import ba.etf.rma22.projekat.data.models.*
 
 
-@Database(entities = arrayOf(Anketa::class, Account::class, AnketaTaken::class, Grupa::class, Istrazivanje::class, Odgovor::class, Pitanje::class, PitanjeAnketa::class), version=2)
+@Database(entities = arrayOf(Anketa::class, Account::class, AnketaTaken::class, Grupa::class, Istrazivanje::class, Odgovor::class, Pitanje::class, PitanjeAnketa::class), version=5)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun anketaDAO() : AnketaDAO
     abstract fun accountDAO() : AccountDAO

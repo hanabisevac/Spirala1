@@ -10,7 +10,7 @@ import kotlinx.coroutines.withContext
 object GrupaRepository {
 
 
-    suspend fun listaGrupa() : List<Grupa>{
+   /* suspend fun listaGrupa() : List<Grupa>{
         val listaSve = IstrazivanjeIGrupaRepository.getGrupe()
         //provjerti da li za offset null zaista vraca sva istrazivanja
         val listaIstrazivanja = IstrazivanjeIGrupaRepository.getIstrazivanja()
@@ -20,18 +20,18 @@ object GrupaRepository {
             }
         }
         return listaSve
-    }
+    }*/
 
     //upisi studenta u grupu
-    suspend fun dodajStudenta(id : Int, hash : String) : ResponseMessage {
+    /*suspend fun dodajStudenta(id : Int, hash : String) : ResponseMessage {
         return withContext(Dispatchers.IO){
             val response = ApiConfig.retrofit.dodajStudenta(1, hash)
             val responseBody = response.body()
             return@withContext responseBody!!
         }
-    }
+    }*/
 
-    suspend fun getGroupsByIstrazivanje(nazivIstrazivanja : String) : List<Grupa> {
+    /*suspend fun getGroupsByIstrazivanje(nazivIstrazivanja : String) : List<Grupa> {
         val lista = listaGrupa()
         val nova = mutableListOf<Grupa>()
         for(i in lista.indices){
@@ -42,5 +42,5 @@ object GrupaRepository {
 
     suspend fun getAll() : List<Grupa> {
         return listaGrupa()
-    }
+    }*/
 }

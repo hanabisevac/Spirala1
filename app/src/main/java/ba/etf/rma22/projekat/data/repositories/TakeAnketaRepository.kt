@@ -10,36 +10,48 @@ object  TakeAnketaRepository {
 
 
     suspend fun zapocniAnketu(idAnketa : Int) : AnketaTaken? {
-        return withContext(Dispatchers.IO){
-            val provjera = getPoceteAnkete()
-            if(provjera!=null){
-                for(i in provjera.indices){
-                    if(provjera[i].AnketumId == idAnketa){
-                        return@withContext provjera[i]
+        return withContext(Dispatchers.IO) {
+            try {
+                val provjera = getPoceteAnkete()
+                if (provjera != null) {
+                    for (i in provjera.indices) {
+                        if (provjera[i].AnketumId == idAnketa) {
+                            return@withContext provjera[i]
+                        }
                     }
                 }
-            }
-            val response = ApiConfig.retrofit.pocniOdg(AccountRepository.acHash, idAnketa)
-            val responseBody = response.body()
-            val db = AppDatabase.getInstance(ContextRepo.getContext())
-            //dodajemo novu zapocetu anketu u bazu
-            when(responseBody){
-                is AnketaTaken -> {
-                    println("Ovo je rez "+AnketaRepository.getById(idAnketa))
-                    if(AnketaRepository.getById(idAnketa)!!.naziv != null) db.anketaTakenDAO().insertAnketaTaken(responseBody!!)
-                    return@withContext responseBody
+                val response = ApiConfig.retrofit.pocniOdg(AccountRepository.acHash, idAnketa)
+                val responseBody = response.body()
+                val db = AppDatabase.getInstance(ContextRepo.getContext())
+                //dodajemo novu zapocetu anketu u bazu
+                when (responseBody) {
+                    is AnketaTaken -> {
+                        println("Ovo je rez " + AnketaRepository.getById(idAnketa))
+                        if (AnketaRepository.getById(idAnketa)!!.naziv != null) db.anketaTakenDAO()
+                            .insertAnketaTaken(responseBody!!)
+                        return@withContext responseBody
+                    }
+                    else -> return@withContext null
                 }
-                else -> return@withContext null
+            }catch (eror : Exception){
+                println(eror.toString())
+                return@withContext  null
             }
         }
     }
 
     suspend fun getPoceteAnkete() : List<AnketaTaken> ?  {
         return withContext(Dispatchers.IO) {
-            val response = ApiConfig.retrofit.getPokusajAnketa(AccountRepository.acHash)
-            val responseBody = response.body()
-            if(responseBody!!.isEmpty()) return@withContext  null
-            return@withContext responseBody
+            try{
+                val response = ApiConfig.retrofit.getPokusajAnketa(AccountRepository.acHash)
+                val responseBody = response.body()
+                if(responseBody!!.isEmpty()) return@withContext  null
+                return@withContext responseBody
+            }catch (eror : Exception){
+                println(eror.toString())
+                return@withContext  null
+            }
+
         }
     }
 }

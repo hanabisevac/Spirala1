@@ -15,6 +15,7 @@ class MyBroadcastReceiver : BroadcastReceiver() {
         if(capabilities == null) {
             val toast = Toast.makeText(context, "Disconnected", Toast.LENGTH_SHORT)
             KonekcijaRepository.setKonekcija(false)
+            println("Konekcijaaaa "+KonekcijaRepository.getKonekcija())
             toast.show()
         }
         else{

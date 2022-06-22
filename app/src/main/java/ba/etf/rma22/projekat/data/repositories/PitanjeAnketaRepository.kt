@@ -1,6 +1,6 @@
 package ba.etf.rma22.projekat.data.repositories
 
-import ba.etf.rma22.projekat.data.AppDatabase
+
 import ba.etf.rma22.projekat.data.models.Pitanje
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -9,17 +9,23 @@ object PitanjeAnketaRepository {
 
     suspend fun getPitanja(idAnkete : Int) : List<Pitanje>?{
         return withContext(Dispatchers.IO){
-            val response = ApiConfig.retrofit.getPitanja(idAnkete)
-            /*val db = AppDatabase.getInstance(ContextRepo.getContext())
+            try{
+                val response = ApiConfig.retrofit.getPitanja(idAnkete)
+                val responseBody = response.body()
+                return@withContext responseBody
+            }catch (eror : Exception){
+                println(eror.toString())
+                return@withContext  null
+            }
+        }
+    }
+
+    /*val db = AppDatabase.getInstance(ContextRepo.getContext())
             val pitanjeAnketa = db.pitanjeAnketaDAO().getPitanjeAnketaByAnketumId(idAnkete)
             val svaPitanja = mutableListOf<Pitanje>()
             pitanjeAnketa.forEach {
                 p -> svaPitanja.add(db.pitanjeDAO().getPitanjeById(p.PitanjeId))
             }*/
-            val responseBody = response.body()
-            return@withContext responseBody
-        }
-    }
 
     //vraca pitanja za anketu na koju korisnik klikne
    /* fun getPitanja(nazivAnkete : String, nazivIstrazivanje : String) : List<Pitanje>{

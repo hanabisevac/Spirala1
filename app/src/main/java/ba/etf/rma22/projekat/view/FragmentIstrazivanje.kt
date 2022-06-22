@@ -12,6 +12,7 @@ import android.widget.Spinner
 import ba.etf.rma22.projekat.Communicator
 import ba.etf.rma22.projekat.data.models.Grupa
 import ba.etf.rma22.projekat.data.models.Istrazivanje
+import ba.etf.rma22.projekat.data.repositories.KonekcijaRepository
 import ba.etf.rma22.projekat.viewmodel.*
 import com.example.spirala1.R
 
@@ -132,7 +133,7 @@ class FragmentIstrazivanje : Fragment() {
                 izbor2 = str
                 dugme.isEnabled = false
                 dugme.isClickable = false
-                if(izbor2 != "Nista nije selectovano" && izbor2!=""){
+                if(izbor2 != "Nista nije selectovano" && izbor2!="" && KonekcijaRepository.getKonekcija()){
                     dugme.isEnabled = true
                     dugme.isClickable = true
                 }

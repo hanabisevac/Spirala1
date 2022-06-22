@@ -14,7 +14,7 @@ class OdgovorViewModel {
     fun upisiOdgovor(idAnketaTaken : Int, idPitanje : Int, odgovor : Int, dajProgres : (progres : Int) -> Unit) {
         scope.launch {
             val result = OdgovorRepository.postaviOdgovorAnketa(idAnketaTaken, idPitanje, odgovor)
-            dajProgres.invoke(result)
+            dajProgres.invoke(result!!)
         }
     }
 

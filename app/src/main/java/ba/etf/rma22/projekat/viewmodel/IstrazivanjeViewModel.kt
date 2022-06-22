@@ -11,7 +11,7 @@ class IstrazivanjeViewModel {
 
     val scope = CoroutineScope(Job() + Dispatchers.Main)
 
-    fun getIstrazivanja(svaIstrazivanja : (istrazivanje : List<Istrazivanje>)->Unit) {
+    /*fun getIstrazivanja(svaIstrazivanja : (istrazivanje : List<Istrazivanje>)->Unit) {
         scope.launch {
             val lista = mutableListOf<Istrazivanje>()
             lista.addAll(IstrazivanjeIGrupaRepository.getIstrazivanja(1))
@@ -50,7 +50,7 @@ class IstrazivanjeViewModel {
             slobodnaIstrazivanja.invoke(lista)
         }
     }
-
+*/
     /*fun getIstrazivanjePoGodini(g : Int) : List<Istrazivanje>{
         return IstrazivanjeRepository.getIstrazivanjeByGodina(g)
     }

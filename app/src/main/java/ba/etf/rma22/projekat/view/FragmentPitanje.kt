@@ -12,6 +12,7 @@ import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import ba.etf.rma22.projekat.Communicator
 import ba.etf.rma22.projekat.data.models.Pitanje
+import ba.etf.rma22.projekat.data.repositories.KonekcijaRepository
 import ba.etf.rma22.projekat.data.repositories.TrenutnaAnketaRepository
 import ba.etf.rma22.projekat.viewmodel.*
 import com.example.spirala1.R
@@ -23,7 +24,7 @@ class FragmentPitanje(val pitanje : Pitanje) : Fragment() {
     private lateinit var listaOdgovora : ListView
     private lateinit var dugme : Button
     private lateinit var adapterZaListu : MojAdapterZaListu
-    private var pitanjaAnketaViewModel = PitanjeAnketaViewModel()
+    //private var pitanjaAnketaViewModel = PitanjeAnketaViewModel()
     private var odgovorViewModel = OdgovorViewModel()
 //    private val anketaPitanje = pitanjaAnketaViewModel
 //        .dajPitanjeAnketuPoNazivuPitanja(pitanje.naziv, TrenutnaAnketaRepository.dajAnketu().naziv, TrenutnaAnketaRepository.dajAnketu().nazivIstrazivanja)
@@ -47,18 +48,22 @@ class FragmentPitanje(val pitanje : Pitanje) : Fragment() {
         listaOdgovora.adapter = adapterZaListu
 
         listaOdgovora.isEnabled = true
-        odgovorViewModel.dajOdgovoreNaAnketu(TrenutnaAnketaRepository.dajAnketu().AnketumId){
-            if(it != null){
-                for(i in it.indices) {
-                    if (it[i].pitanjeId == pitanje.id){
-                        listaOdgovora.isEnabled = false
+        if(KonekcijaRepository.getKonekcija()){
+            odgovorViewModel.dajOdgovoreNaAnketu(TrenutnaAnketaRepository.dajAnketu().AnketumId){
+                if(it != null){
+                    for(i in it.indices) {
+                        if (it[i].pitanjeId == pitanje.id){
+                            listaOdgovora.isEnabled = false
+                        }
                     }
                 }
             }
         }
+        else listaOdgovora.isEnabled = false
+
+
         //if(TrenutnaAnketaRepository.dajAnketu().getStatus() == "plava" || TrenutnaAnketaRepository.dajAnketu().getStatus() == "crvena") listaOdgovora.isEnabled = false
         //else if(anketaPitanje?.dajOdgovor() != null) listaOdgovora.isEnabled = false
-
 
         listaOdgovora.onItemClickListener = object : AdapterView.OnItemClickListener {
             override fun onItemClick(adapterView: AdapterView<*>?, view1: View?, position: Int, p3: Long) {

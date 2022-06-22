@@ -4,10 +4,7 @@ package ba.etf.rma22.projekat.viewmodel
 import ba.etf.rma22.projekat.data.models.Anketa
 import ba.etf.rma22.projekat.data.models.Grupa
 import ba.etf.rma22.projekat.data.models.Istrazivanje
-import ba.etf.rma22.projekat.data.repositories.AnketaRepository
-import ba.etf.rma22.projekat.data.repositories.GrupaRepository
-import ba.etf.rma22.projekat.data.repositories.IstrazivanjeIGrupaRepository
-import ba.etf.rma22.projekat.data.repositories.TakeAnketaRepository
+import ba.etf.rma22.projekat.data.repositories.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -21,7 +18,14 @@ class AnketaViewModel {
 
     fun dajSve(sveAnkete : (ankete : List<Anketa>) -> Unit){
         scope.launch {
-            val result = AnketaRepository.dajSveAnkete()
+            var result = mutableListOf<Anketa>()
+            if(KonekcijaRepository.getKonekcija()) result = AnketaRepository.dajSveAnkete() as MutableList<Anketa>
+            else {
+                result = AnketaRepository.dajSveDb() as MutableList<Anketa>
+                println("usao")
+                println("velicina "+result.size)
+                }
+
             sveAnkete.invoke(result)
         }
     }
@@ -29,21 +33,21 @@ class AnketaViewModel {
     fun getUpisane(upisane : (ankete : List<Anketa>) -> Unit) {
         scope.launch {
             val result = AnketaRepository.getUpisane()
-            upisane.invoke(result)
+            upisane.invoke(result!!)
         }
     }
 
     fun getUradjene(uradjene : (ankete: List<Anketa>) -> Unit) {
         scope.launch {
             val result = AnketaRepository.getDone()
-            uradjene.invoke(result)
+            uradjene.invoke(result!!)
         }
     }
 
     fun getBuduce(ankete : (anketa : List<Anketa>) -> Unit){
         scope.launch {
             val result = AnketaRepository.getFuture()
-            ankete.invoke(result)
+            ankete.invoke(result!!)
 
         }
     }
@@ -51,7 +55,7 @@ class AnketaViewModel {
     fun getProsle(ankete : (anketa : List<Anketa>) -> Unit){
         scope.launch {
             val result = AnketaRepository.getPast()
-            ankete.invoke(result)
+            ankete.invoke(result!!)
         }
 
     }

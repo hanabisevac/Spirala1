@@ -15,7 +15,7 @@ class AccViewModel {
         scope.launch {
             val grupe = IstrazivanjeIGrupaRepository.getGrupe()
             var id = 0
-            for(i in grupe.indices){
+            for(i in grupe!!.indices){
                 if(grupe[i].naziv == grupa){
                     id=grupe[i].id
                     break

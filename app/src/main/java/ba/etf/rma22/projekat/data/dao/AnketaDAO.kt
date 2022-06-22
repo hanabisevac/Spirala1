@@ -22,5 +22,9 @@ interface AnketaDAO {
     @Query("DELETE FROM Anketa")
     suspend fun deleteAnkete()
 
+    @Query("UPDATE Anketa SET nazivIstrazivanja = :istrazivanje WHERE id = :id")
+    suspend fun updateAnketa(istrazivanje : String, id : Int)
 
+    @Query("UPDATE Anketa SET datumRada = :datumRada WHERE id = :id")
+    suspend fun updateAnketaDatum(datumRada : String, id : Int)
 }

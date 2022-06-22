@@ -1,10 +1,9 @@
 package ba.etf.rma22.projekat.viewmodel
 
+import ba.etf.rma22.projekat.data.AppDatabase
 import ba.etf.rma22.projekat.data.models.Grupa
 import ba.etf.rma22.projekat.data.models.Istrazivanje
-import ba.etf.rma22.projekat.data.repositories.AccountRepository
-import ba.etf.rma22.projekat.data.repositories.GrupaRepository
-import ba.etf.rma22.projekat.data.repositories.IstrazivanjeIGrupaRepository
+import ba.etf.rma22.projekat.data.repositories.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -14,7 +13,7 @@ class GrupeViewModel {
 
     val scope = CoroutineScope(Job() + Dispatchers.Main)
 
-    fun upisiStudenta(poruka : (p : String) -> Unit) {
+   /* fun upisiStudenta(poruka : (p : String) -> Unit) {
         scope.launch {
             val result = GrupaRepository.dodajStudenta(1, AccountRepository.acHash)
             poruka.invoke(result.poruka)
@@ -32,26 +31,30 @@ class GrupeViewModel {
             }
             getGrupeZaIstrazivanja.invoke(grupeZadane)
         }
-    }
+    }*/
 
     fun getSlobodneGrupe(nisuStudentoveGrupe : (grupe : List<Grupa>) -> Unit){
         scope.launch {
-            val grupe = IstrazivanjeIGrupaRepository.getUpisaneGrupe()
-            val sve = IstrazivanjeIGrupaRepository.getGrupe()
-            val slobodne = mutableListOf<Grupa>()
-            var ima : Boolean = false
-            for(i in sve.indices){
-                for(j in grupe.indices){
-                    if(sve[i].id == grupe[j].id) {
-                        ima = true
-                        break
+            var slobodne = mutableListOf<Grupa>()
+            if(KonekcijaRepository.getKonekcija()){
+                val grupe = IstrazivanjeIGrupaRepository.getUpisaneGrupe()
+                val sve = IstrazivanjeIGrupaRepository.getGrupe()
+                var ima : Boolean = false
+                for(i in sve!!.indices){
+                    for(j in grupe!!.indices){
+                        if(sve[i].id == grupe[j].id) {
+                            ima = true
+                            break
+                        }
                     }
+                    if(!ima){
+                        slobodne.add(sve[i])
+                    }
+                    else ima=false
                 }
-                if(!ima){
-                    slobodne.add(sve[i])
-                }
-                else ima=false
             }
+            else slobodne = AppDatabase.getInstance(ContextRepo.getContext()).grupaDAO().getAllGrupe() as MutableList<Grupa>
+
 
             nisuStudentoveGrupe.invoke(slobodne)
         }

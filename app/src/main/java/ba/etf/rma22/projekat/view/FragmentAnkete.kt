@@ -66,14 +66,14 @@ class FragmentAnkete : Fragment() {
     }
 
 
-    override fun onResume() {
+    /*override fun onResume() {
         super.onResume()
         spiner.setSelection(0)
         anketeViewModel.dajSve {
             anketeAdapter.updateAnkete(it)
         }
         //anketeAdapter.updateProgress()
-    }
+    }*/
 
     companion object {
         fun newInstance() : FragmentAnkete = FragmentAnkete()
