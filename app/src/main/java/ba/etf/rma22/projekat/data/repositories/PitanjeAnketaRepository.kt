@@ -3,6 +3,7 @@ package ba.etf.rma22.projekat.data.repositories
 
 import ba.etf.rma22.projekat.data.AppDatabase
 import ba.etf.rma22.projekat.data.models.Pitanje
+import ba.etf.rma22.projekat.data.models.PitanjeAnketa
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -13,6 +14,14 @@ object PitanjeAnketaRepository {
             try{
                 val response = ApiConfig.retrofit.getPitanja(idAnkete)
                 val responseBody = response.body()
+                val db = AppDatabase.getInstance(ContextRepo.getContext())
+                responseBody!!.forEach { p ->
+                    val string = p.opcije.joinToString(" ")
+                    p.stringOpcije = string
+                    db.pitanjeDAO().insertPitanje(p)
+                    val pitanjeA = PitanjeAnketa(p.id, idAnkete)
+                    db.pitanjeAnketaDAO().insertPitanjeAnketa(pitanjeA)
+                }
                 return@withContext responseBody
             }catch (eror : Exception){
                 println(eror.toString())
@@ -30,7 +39,8 @@ object PitanjeAnketaRepository {
                 val p = db.pitanjeDAO().getPitanjeById(pitanjeAnketa[i].PitanjeId)
                 pitanja.add(p)
             }
-            return@withContext pitanja
+            var p = pitanja.toSet()
+            return@withContext p.toList()
         }
     }
 

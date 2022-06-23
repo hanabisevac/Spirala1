@@ -2,6 +2,7 @@ package ba.etf.rma22.projekat.viewmodel
 
 
 import ba.etf.rma22.projekat.data.models.AnketaTaken
+import ba.etf.rma22.projekat.data.repositories.KonekcijaRepository
 import ba.etf.rma22.projekat.data.repositories.TakeAnketaRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,13 +20,12 @@ class AnketaTakenViewModel {
         }
     }
 
-    fun dajPocete(poceteAnkete : (anketa : List<AnketaTaken>) -> Unit, greska : ()->Unit){
+    fun dajPocete(poceteAnkete : (anketa : List<AnketaTaken>) -> Unit){
         scope.launch {
-            val result = TakeAnketaRepository.getPoceteAnkete()
-            when(result){
-                is List<AnketaTaken> -> poceteAnkete.invoke(result)
-                else -> greska.invoke()
-            }
+            var result = mutableListOf<AnketaTaken>()
+            if(KonekcijaRepository.getKonekcija()) result = TakeAnketaRepository.getPoceteAnkete() as MutableList<AnketaTaken>
+            else result = TakeAnketaRepository.getPoceteAnketeBaza() as MutableList<AnketaTaken>
+            poceteAnkete.invoke(result)
         }
     }
 

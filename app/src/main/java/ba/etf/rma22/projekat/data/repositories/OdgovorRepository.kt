@@ -34,6 +34,17 @@ object OdgovorRepository {
         }
 
     }
+
+    suspend fun getOdgovoriAnketaBaza(idAnketa : Int) : List<Odgovor> ?{
+        return withContext(Dispatchers.IO){
+            val db = AppDatabase.getInstance(ContextRepo.getContext())
+            val id = db.anketaTakenDAO().getAnketaTakenByAnketumId(idAnketa)
+            val odg = db.odgovorDAO().getOdgovoriByAnketaTakenId(id.id)
+            return@withContext odg
+        }
+    }
+
+
     //ovo je post
     suspend fun postaviOdgovorAnketa(idAnketaTaken : Int, idPitanje : Int, odgovor : Int) : Int ?{
         return withContext(Dispatchers.IO){

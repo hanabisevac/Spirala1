@@ -16,7 +16,7 @@ interface OdgovorDAO {
     suspend fun insertOdgovor(vararg odgovor : Odgovor)
 
     @Query("SELECT * FROM Odgovor WHERE AnketaTakenId = :anketaTakenId")
-    suspend fun getOdgovoriByAnketaTakenId(anketaTakenId : Int) : Odgovor
+    suspend fun getOdgovoriByAnketaTakenId(anketaTakenId : Int) : List<Odgovor>
 
     @Query("SELECT * FROM Odgovor WHERE PitanjeId = :pitanjeId")
     suspend fun getOdgovoriZaPitanjeId(pitanjeId : Int) : List<Odgovor>

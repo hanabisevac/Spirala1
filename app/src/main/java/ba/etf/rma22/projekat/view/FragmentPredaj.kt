@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.TextView
 import ba.etf.rma22.projekat.Communicator
 import ba.etf.rma22.projekat.data.models.Anketa
+import ba.etf.rma22.projekat.data.repositories.KonekcijaRepository
 import ba.etf.rma22.projekat.data.repositories.TrenutnaAnketaRepository
 import ba.etf.rma22.projekat.viewmodel.AnketaViewModel
 import com.example.spirala1.R
@@ -34,12 +35,16 @@ class FragmentPredaj(val anketa : Anketa) : Fragment() {
         progresText.text = ""+ prog + "%"
         communicator = activity as Communicator
         dugme.isEnabled = true
-        anketaViewModel.getUradjene {
-            if(it.isEmpty()) dugme.isEnabled = true
-            else{
-                if(it.contains(anketa)) dugme.isEnabled = false
+        if(KonekcijaRepository.getKonekcija()){
+            anketaViewModel.getUradjene {
+                if(it.isEmpty()) dugme.isEnabled = true
+                else{
+                    if(it.contains(anketa)) dugme.isEnabled = false
+                }
             }
         }
+        else dugme.isEnabled = false
+
         dugme.setOnClickListener{
             //val poruka = "Završili ste anketu "+ TrenutnaAnketaRepository.dajAnketu().naziv + " u okviru istraživanja " + TrenutnaAnketaRepository.dajAnketu().nazivIstrazivanja
             val poruka = "Zavrsili ste anketu "+anketa.naziv +" u sklopu istraživanja "+anketa.nazivIstrazivanja+" grupe "+anketa.nazivGrupe

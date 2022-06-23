@@ -23,6 +23,8 @@ interface AnketaTakenDAO {
     @Query("DELETE FROM AnketaTaken")
     suspend fun deleteAnketeTaken()
 
+    @Query("SELECT * FROM AnketaTaken")
+    suspend fun getAllAnketaTaken() : List<AnketaTaken>
    //dodat delete da se sve izbrise
 
 

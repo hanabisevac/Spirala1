@@ -17,9 +17,10 @@ object IstrazivanjeIGrupaRepository {
                 val response = ApiConfig.retrofit.getIstrazivanje(offset)
                 val responseBody = response.body()
                 val db = AppDatabase.getInstance(ContextRepo.getContext())
-                if (db.istrazivanjeDAO().getAllIstrazivanja()
+                if (!db.istrazivanjeDAO().getAllIstrazivanja()
                         .isEmpty()
-                ) responseBody!!.forEach { s -> db.istrazivanjeDAO().insertIstrazivanja(s) }
+                ) db.istrazivanjeDAO().deleteIstrazivanja()
+                responseBody!!.forEach { s -> db.istrazivanjeDAO().insertIstrazivanja(s) }
                 return@withContext responseBody!!
             }catch(error : Exception){
                 println(error.toString())
@@ -42,9 +43,7 @@ object IstrazivanjeIGrupaRepository {
                     brojac++
                 }
                 val db = AppDatabase.getInstance(ContextRepo.getContext())
-                if (db.istrazivanjeDAO().getAllIstrazivanja()
-                        .isEmpty()
-                ) lista.forEach { s -> db.istrazivanjeDAO().insertIstrazivanja(s) }
+                lista.forEach { s -> db.istrazivanjeDAO().insertIstrazivanja(s) }
                 return@withContext lista
             }catch(error : Exception){
                 println(error.toString())
@@ -150,14 +149,14 @@ object IstrazivanjeIGrupaRepository {
                 grupaBody?.nazivIstrazivanja = istrazivanje!!.naziv
                 val lista = AnketaRepository.getAnketaZaGrupu(grupaBody!!)
                 //dodajemo pitanja koja pripadaju tim anketama
-                for (i in lista!!.indices) {
+                /*for (i in lista!!.indices) {
                     val pitanja = PitanjeAnketaRepository.getPitanja(lista[i].id)
                     pitanja!!.forEach { p ->
                         val string = p.opcije.joinToString(" ")
                         p.stringOpcije = string
                         db.pitanjeDAO().insertPitanje(p)
                     }
-                }
+                }*/
                 db.grupaDAO().updateUpisan(idGrupa)
                 return@withContext true
             }catch(error : Exception){

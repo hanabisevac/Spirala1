@@ -22,8 +22,4 @@ class PitanjeAnketaViewModel {
         }
     }
 
-
-
-
-
 }

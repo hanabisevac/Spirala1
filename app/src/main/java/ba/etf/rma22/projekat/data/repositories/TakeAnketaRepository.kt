@@ -61,4 +61,12 @@ object  TakeAnketaRepository {
 
         }
     }
+
+    suspend fun getPoceteAnketeBaza() : List<AnketaTaken> {
+        return  withContext(Dispatchers.IO){
+            val db = AppDatabase.getInstance(ContextRepo.getContext())
+            val result = db.anketaTakenDAO().getAllAnketaTaken()
+            return@withContext result
+        }
+    }
 }

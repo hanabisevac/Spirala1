@@ -68,8 +68,19 @@ class AnketaAdapter(private var ankete : List<Anketa>, private val onItemClicked
             }
             holder.itemView.setOnClickListener { onItemClicked(ankete[position]) }
         }
+        else{
+            anketaTakenViewModel.dajPocete() {
+                val ima = it.find { a -> a.AnketumId == ankete[position].id }
+                if(ima != null) {
+                    holder.itemView.isEnabled = true
+                    holder.itemView.setOnClickListener { onItemClicked(ankete[position]) }
+                }
+            }
+        }
 
     }
+
+
 
     fun getDate(position : Int) : Date {
         if(ankete[position].dajDatumRada() != null) return ankete[position].dajDatumRada()!!

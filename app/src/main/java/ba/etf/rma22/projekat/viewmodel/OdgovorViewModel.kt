@@ -1,6 +1,7 @@
 package ba.etf.rma22.projekat.viewmodel
 
 import ba.etf.rma22.projekat.data.models.Odgovor
+import ba.etf.rma22.projekat.data.repositories.KonekcijaRepository
 import ba.etf.rma22.projekat.data.repositories.OdgovorRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +21,9 @@ class OdgovorViewModel {
 
     fun dajOdgovoreNaAnketu(idAnketa : Int, odgovoriList : (odgovori : List<Odgovor> ?) -> Unit){
         scope.launch {
-            val result = OdgovorRepository.getOdgovoriAnketa(idAnketa)
+            var result = mutableListOf<Odgovor>()
+            if(KonekcijaRepository.getKonekcija()) result = OdgovorRepository.getOdgovoriAnketa(idAnketa) as MutableList<Odgovor>
+            else result = OdgovorRepository.getOdgovoriAnketaBaza(idAnketa) as MutableList<Odgovor>
             odgovoriList.invoke(result)
         }
     }

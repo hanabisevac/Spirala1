@@ -13,4 +13,5 @@ data class Odgovor(@PrimaryKey(autoGenerate = true) val id : Int,
                    @ColumnInfo(name = "PitanjeId") @SerializedName("PitanjeId") val pitanjeId : Int //id od pitanja
                     ){
 
+
 }

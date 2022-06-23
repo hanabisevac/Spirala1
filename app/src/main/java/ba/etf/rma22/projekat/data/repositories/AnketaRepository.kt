@@ -1,14 +1,13 @@
 package ba.etf.rma22.projekat.data.repositories
 
 
-import android.content.Context
+
 import ba.etf.rma22.projekat.data.AppDatabase
 import ba.etf.rma22.projekat.data.models.Anketa
 import ba.etf.rma22.projekat.data.models.Grupa
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
-import java.util.concurrent.ThreadPoolExecutor
 
 
 object AnketaRepository {
@@ -55,10 +54,15 @@ object AnketaRepository {
         return withContext(Dispatchers.IO){
             val sve = dajSveDb()
             val upisane = IstrazivanjeIGrupaRepository.getUpisaneGrupeBaza()
-            val lista = mutableListOf<Anketa>()
+            val listaId = mutableListOf<Int>()
             for(i in upisane.indices){
+                val l = upisane[i].anketaId!!.split(",")
+                l.forEach { a -> listaId.add(a.toInt()) }
+            }
+            val lista = mutableListOf<Anketa>()
+            for(i in listaId.indices){
                 for(j in sve.indices){
-                    if(upisane[i].naziv == sve[j].nazivGrupe) lista.add(sve[j])
+                    if(listaId[i] == sve[j].id) lista.add(sve[j])
                 }
             }
             return@withContext lista
@@ -135,9 +139,10 @@ object AnketaRepository {
             try{
                 val sve = getAll()
                 val lista = mutableListOf<Anketa>()
+                IstrazivanjeIGrupaRepository.getGrupe()
+                IstrazivanjeIGrupaRepository.getIstrazivanja()
                 val db = AppDatabase.getInstance(ContextRepo.getContext())
                 sve!!.forEach { ank -> db.anketaDAO().insertAll(ank) }
-                println("Ankete su " + db.anketaDAO().getAll().size)
                 for (i in sve.indices) {
                     val g = IstrazivanjeIGrupaRepository.dajGrupeZaAnketu(sve[i].id)
                     for (j in g!!.indices) {
@@ -179,7 +184,6 @@ object AnketaRepository {
             val ankete = db.anketaDAO().getAll()
             val lista = mutableListOf<Anketa>()
             val grupe = db.grupaDAO().getAllGrupe()
-            //val istrazivanja = db.istrazivanjeDAO().getAllIstrazivanja()
             for(i in grupe.indices) {
                 val split = grupe[i].anketaId!!.split(",")
                 val listaId = mutableListOf<Int>()
