@@ -65,7 +65,7 @@ object AnketaRepository {
                     if(listaId[i] == sve[j].id) lista.add(sve[j])
                 }
             }
-            return@withContext lista
+            return@withContext lista.toSet().toList()
         }
     }
 

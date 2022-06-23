@@ -4,6 +4,7 @@ package ba.etf.rma22.projekat.data.repositories
 import ba.etf.rma22.projekat.data.AppDatabase
 import ba.etf.rma22.projekat.data.models.Grupa
 import ba.etf.rma22.projekat.data.models.Istrazivanje
+import ba.etf.rma22.projekat.data.models.PitanjeAnketa
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -149,14 +150,15 @@ object IstrazivanjeIGrupaRepository {
                 grupaBody?.nazivIstrazivanja = istrazivanje!!.naziv
                 val lista = AnketaRepository.getAnketaZaGrupu(grupaBody!!)
                 //dodajemo pitanja koja pripadaju tim anketama
-                /*for (i in lista!!.indices) {
+                for (i in lista!!.indices) {
                     val pitanja = PitanjeAnketaRepository.getPitanja(lista[i].id)
                     pitanja!!.forEach { p ->
                         val string = p.opcije.joinToString(" ")
                         p.stringOpcije = string
                         db.pitanjeDAO().insertPitanje(p)
+                        db.pitanjeAnketaDAO().insertPitanjeAnketa(PitanjeAnketa(p.id, lista[i].id))
                     }
-                }*/
+                }
                 db.grupaDAO().updateUpisan(idGrupa)
                 return@withContext true
             }catch(error : Exception){

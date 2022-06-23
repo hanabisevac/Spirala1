@@ -15,13 +15,6 @@ object PitanjeAnketaRepository {
                 val response = ApiConfig.retrofit.getPitanja(idAnkete)
                 val responseBody = response.body()
                 val db = AppDatabase.getInstance(ContextRepo.getContext())
-                responseBody!!.forEach { p ->
-                    val string = p.opcije.joinToString(" ")
-                    p.stringOpcije = string
-                    db.pitanjeDAO().insertPitanje(p)
-                    val pitanjeA = PitanjeAnketa(p.id, idAnkete)
-                    db.pitanjeAnketaDAO().insertPitanjeAnketa(pitanjeA)
-                }
                 return@withContext responseBody
             }catch (eror : Exception){
                 println(eror.toString())
