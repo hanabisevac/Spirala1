@@ -2,6 +2,7 @@ package ba.etf.rma22.projekat.viewmodel
 
 
 import ba.etf.rma22.projekat.data.models.Pitanje
+import ba.etf.rma22.projekat.data.repositories.KonekcijaRepository
 import ba.etf.rma22.projekat.data.repositories.PitanjeAnketaRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +15,9 @@ class PitanjeAnketaViewModel {
 
     fun getPitanjaZaAnketu(id : Int, pitanja : (pitanjaLista : List<Pitanje> ?) -> Unit){
         scope.launch {
-            val result = PitanjeAnketaRepository.getPitanja(id)
+            var result = mutableListOf<Pitanje>()
+            if(KonekcijaRepository.getKonekcija()) result = PitanjeAnketaRepository.getPitanja(id) as MutableList<Pitanje>
+            else result = PitanjeAnketaRepository.getPitanjaBaza(id) as MutableList<Pitanje>
             pitanja.invoke(result)
         }
     }

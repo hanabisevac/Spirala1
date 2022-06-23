@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(), Communicator {
 
         ContextRepo.setContext(this)
         registerReceiver(br, filter)
-        //println("Konekcija "+KonekcijaRepository.getKonekcija())
+
         if(intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain")
             handleSendText(intent)
 
@@ -93,7 +93,15 @@ class MainActivity : AppCompatActivity(), Communicator {
                     viewPager.adapter = viewPagerAdapter2
                     usao = true
                 }
-                println("usao u  zapocinjanje")
+            }
+            else{
+                anketaTakenViewModel.getPocetu(anketa.id){
+                    TrenutnaAnketaRepository.postaviAnketu(it)
+                    TrenutnaAnketaRepository.postaviProgres(it.progres)
+                    viewPagerAdapter2 = ViewPagerAdapter(supportFragmentManager, lista, lifecycle)
+                    viewPager.adapter = viewPagerAdapter2
+                    usao = true
+                }
             }
         }
     }

@@ -29,4 +29,11 @@ class AnketaTakenViewModel {
         }
     }
 
+    fun getPocetu(id : Int, pocetaAnketa : (anketa : AnketaTaken) -> Unit){
+        scope.launch {
+            val result = TakeAnketaRepository.getPocetuAnketuIzBaza(id)
+            pocetaAnketa.invoke(result)
+        }
+    }
+
 }

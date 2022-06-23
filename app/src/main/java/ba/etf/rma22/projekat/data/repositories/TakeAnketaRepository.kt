@@ -26,7 +26,6 @@ object  TakeAnketaRepository {
                 //dodajemo novu zapocetu anketu u bazu
                 when (responseBody) {
                     is AnketaTaken -> {
-                        println("Ovo je rez " + AnketaRepository.getById(idAnketa))
                         if (AnketaRepository.getById(idAnketa)!!.naziv != null) db.anketaTakenDAO()
                             .insertAnketaTaken(responseBody!!)
                         return@withContext responseBody
@@ -37,6 +36,14 @@ object  TakeAnketaRepository {
                 println(eror.toString())
                 return@withContext  null
             }
+        }
+    }
+
+    suspend fun getPocetuAnketuIzBaza(idAnketa : Int) : AnketaTaken {
+        return withContext(Dispatchers.IO) {
+            val anketa = AppDatabase.getInstance(ContextRepo.getContext())
+                .anketaTakenDAO().getAnketaTakenByAnketumId(idAnketa)
+            return@withContext anketa
         }
     }
 
