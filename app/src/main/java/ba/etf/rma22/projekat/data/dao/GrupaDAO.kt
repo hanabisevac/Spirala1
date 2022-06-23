@@ -26,4 +26,10 @@ interface GrupaDAO {
 
     @Query("UPDATE Grupa SET AnketaId = :AnketaId WHERE id = :id")
     suspend fun updateGrupu(AnketaId : String, id : Int)
+
+    @Query("UPDATE Grupa SET upisana = 1 WHERE id = :id")
+    suspend fun updateUpisan( id : Int)
+
+    @Query("SELECT * FROM Grupa WHERE upisana = 1")
+    suspend fun getUpisaneGrupe() : List<Grupa>
 }

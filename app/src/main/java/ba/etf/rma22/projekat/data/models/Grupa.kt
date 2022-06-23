@@ -11,7 +11,8 @@ data class Grupa(
     @ColumnInfo(name = "naziv") @SerializedName("naziv") val naziv : String,
     @ColumnInfo(name = "Istrazivanje") var nazivIstrazivanja : String ?,
     @ColumnInfo(name = "IstrazivanjeId") @SerializedName("IstrazivanjeId") val istrazivanjeId : Int,
-    @ColumnInfo(name = "AnketaId") var anketaId : String?
+    @ColumnInfo(name = "AnketaId") var anketaId : String?,
+    @ColumnInfo(name = "upisana") var upisana : Int ?
 ) {
 
     override fun equals(other: Any?): Boolean {

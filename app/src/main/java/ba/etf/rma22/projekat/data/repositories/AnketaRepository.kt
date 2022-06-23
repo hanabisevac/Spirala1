@@ -51,25 +51,23 @@ object AnketaRepository {
 
     //iz baze
 
-    suspend fun getMyAnkete() : List<Anketa> {
+    suspend fun getMyAnketeBaza() : List<Anketa> {
         return withContext(Dispatchers.IO){
-            val db = AppDatabase.getInstance(ContextRepo.getContext())
-            val ankete = db.anketaDAO().getAll()
-            return@withContext ankete
+            val sve = dajSveDb()
+            val upisane = IstrazivanjeIGrupaRepository.getUpisaneGrupeBaza()
+            val lista = mutableListOf<Anketa>()
+            for(i in upisane.indices){
+                for(j in sve.indices){
+                    if(upisane[i].naziv == sve[j].nazivGrupe) lista.add(sve[j])
+                }
+            }
+            return@withContext lista
         }
     }
 
-    suspend fun dodajAnketu(context: Context, anketa : Anketa) : String {
-        return withContext(Dispatchers.IO){
-            val db = AppDatabase.getInstance(context)
-            db.anketaDAO().insertAll(anketa)
-            return@withContext "Upisana"
-        }
-    }
-
-    /*suspend fun getDone() : List<Anketa> {
+    suspend fun getDoneBaza() : List<Anketa> {
         return withContext(Dispatchers.IO) {
-            val lista = getMyAnkete()
+            val lista = getMyAnketeBaza()
             val gotove = mutableListOf<Anketa>()
             for(i in lista.indices){
                 if(lista[i].datumRada != null) gotove.add(lista[i])
@@ -78,27 +76,28 @@ object AnketaRepository {
         }
     }
 
-    suspend fun getFuture() : List<Anketa> {
+    suspend fun getFutureBaza() : List<Anketa> {
         return withContext(Dispatchers.IO) {
-            val lista = getMyAnkete()
+            val lista = getMyAnketeBaza()
             val buduce = mutableListOf<Anketa>()
-            for(i in buduce.indices){
-                if(lista[i].dajDatumPocetak().after(Date()) || (lista[i].datumRada == null && (lista[i].datumKraj == null || lista[i].dajDatumKraj()!!.after(Date())))) buduce.add(lista[i])
+            for(i in lista.indices){
+                if(lista[i].datumRada == null && (lista[i].dajDatumKraj() == null || lista[i].dajDatumKraj()!!
+                        .after(Date()))) buduce.add(lista[i])
             }
             return@withContext buduce
         }
     }
 
-    suspend fun getPast() : List<Anketa> {
+    suspend fun getPastBaza() : List<Anketa> {
         return withContext(Dispatchers.IO) {
-            val lista = getMyAnkete()
+            val lista = getMyAnketeBaza()
             val prosle = mutableListOf<Anketa>()
             for(i in lista.indices){
                 if(lista[i].datumKraj!=null && lista[i].dajDatumKraj()!!.before(Date())) prosle.add(lista[i])
             }
             return@withContext prosle
         }
-    }*/
+    }
 
 
     suspend fun getAll(offset : Int) : List<Anketa> ?{

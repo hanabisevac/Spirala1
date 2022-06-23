@@ -20,11 +20,7 @@ class AnketaViewModel {
         scope.launch {
             var result = mutableListOf<Anketa>()
             if(KonekcijaRepository.getKonekcija()) result = AnketaRepository.dajSveAnkete() as MutableList<Anketa>
-            else {
-                result = AnketaRepository.dajSveDb() as MutableList<Anketa>
-                println("usao")
-                println("velicina "+result.size)
-                }
+            else result = AnketaRepository.dajSveDb() as MutableList<Anketa>
 
             sveAnkete.invoke(result)
         }
@@ -32,30 +28,38 @@ class AnketaViewModel {
 
     fun getUpisane(upisane : (ankete : List<Anketa>) -> Unit) {
         scope.launch {
-            val result = AnketaRepository.getUpisane()
-            upisane.invoke(result!!)
+            var result = mutableListOf<Anketa>()
+            if(KonekcijaRepository.getKonekcija()) result = AnketaRepository.getUpisane() as MutableList<Anketa>
+            else result = AnketaRepository.getMyAnketeBaza() as MutableList<Anketa>
+            upisane.invoke(result)
         }
     }
 
     fun getUradjene(uradjene : (ankete: List<Anketa>) -> Unit) {
         scope.launch {
-            val result = AnketaRepository.getDone()
-            uradjene.invoke(result!!)
+            var result = mutableListOf<Anketa>()
+            if(KonekcijaRepository.getKonekcija()) result = AnketaRepository.getDone() as MutableList<Anketa>
+            else result = AnketaRepository.getDoneBaza() as MutableList<Anketa>
+            uradjene.invoke(result)
         }
     }
 
     fun getBuduce(ankete : (anketa : List<Anketa>) -> Unit){
         scope.launch {
-            val result = AnketaRepository.getFuture()
-            ankete.invoke(result!!)
+            var result = mutableListOf<Anketa>()
+            if(KonekcijaRepository.getKonekcija()) result = AnketaRepository.getFuture() as MutableList<Anketa>
+            else result = AnketaRepository.getFutureBaza() as MutableList<Anketa>
+            ankete.invoke(result)
 
         }
     }
 
     fun getProsle(ankete : (anketa : List<Anketa>) -> Unit){
         scope.launch {
-            val result = AnketaRepository.getPast()
-            ankete.invoke(result!!)
+            var result = mutableListOf<Anketa>()
+            if(KonekcijaRepository.getKonekcija()) result = AnketaRepository.getPast() as MutableList<Anketa>
+            else result = AnketaRepository.getPastBaza() as MutableList<Anketa>
+            ankete.invoke(result)
         }
 
     }

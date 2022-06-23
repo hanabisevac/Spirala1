@@ -1,6 +1,6 @@
 package ba.etf.rma22.projekat.viewmodel
 
-import android.net.NetworkInfo
+
 import ba.etf.rma22.projekat.data.models.AnketaTaken
 import ba.etf.rma22.projekat.data.repositories.TakeAnketaRepository
 import kotlinx.coroutines.CoroutineScope
@@ -28,6 +28,5 @@ class AnketaTakenViewModel {
             }
         }
     }
-
 
 }

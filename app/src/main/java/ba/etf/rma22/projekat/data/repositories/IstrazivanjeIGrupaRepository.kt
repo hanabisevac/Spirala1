@@ -88,6 +88,13 @@ object IstrazivanjeIGrupaRepository {
                     string = lista.joinToString(",")
                     db.grupaDAO().updateGrupu(string, responseBody[i].id)
                 }
+                val upisane = getUpisaneGrupe()
+                val bazaGrupe = db.grupaDAO().getAllGrupe()
+                for(i in upisane!!.indices){
+                    for(j in bazaGrupe.indices){
+                        if(upisane[i].id == bazaGrupe[j].id) db.grupaDAO().updateUpisan(upisane[i].id)
+                    }
+                }
                 return@withContext responseBody!!
             }catch(error : Exception){
                 println(error.toString())
@@ -141,10 +148,6 @@ object IstrazivanjeIGrupaRepository {
                 val grupaBody = grupa.body()
                 val istrazivanje = getIstrazivanjeZaGrupe(idGrupa)
                 grupaBody?.nazivIstrazivanja = istrazivanje!!.naziv
-                //dodajemo novu grupu u koju se korisnik upisao u bazu
-                //db.grupaDAO().insertGrupe(grupaBody!!)
-                //dodajemo ankete koje pripadaju toj grupi
-                //AnketaRepository.getAnketaZaGrupu(grupaBody).forEach { ank -> db.anketaDAO().insertAll(ank) }
                 val lista = AnketaRepository.getAnketaZaGrupu(grupaBody!!)
                 //dodajemo pitanja koja pripadaju tim anketama
                 for (i in lista!!.indices) {
@@ -155,8 +158,7 @@ object IstrazivanjeIGrupaRepository {
                         db.pitanjeDAO().insertPitanje(p)
                     }
                 }
-                //dodajemo istrazivanje za tu grupu
-                //db.istrazivanjeDAO().insertIstrazivanja(istrazivanje)
+                db.grupaDAO().updateUpisan(idGrupa)
                 return@withContext true
             }catch(error : Exception){
                 println(error.toString())
@@ -166,12 +168,15 @@ object IstrazivanjeIGrupaRepository {
     }
 
 
-    //vraća grupe u kojima je student upisan
-    suspend fun getUpisaneGrupeApi() : List<Grupa> {
+    suspend fun getUpisaneGrupeBaza() : List<Grupa> {
         return withContext(Dispatchers.IO){
-            val response = ApiConfig.retrofit.getStudentoveGrupe(AccountRepository.acHash)
-            val responseBody = response.body()
-            return@withContext responseBody!!
+            val db = AppDatabase.getInstance(ContextRepo.getContext())
+            val grupe = db.grupaDAO().getAllGrupe()
+            val lista = mutableListOf<Grupa>()
+            for(i in grupe.indices){
+                if(grupe[i].upisana == 1) lista.add(grupe[i])
+            }
+            return@withContext lista
         }
     }
 
