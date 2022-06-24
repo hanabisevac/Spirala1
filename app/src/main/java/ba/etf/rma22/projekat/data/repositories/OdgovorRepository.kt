@@ -96,8 +96,8 @@ object OdgovorRepository {
                 val db = AppDatabase.getInstance(ContextRepo.getContext())
                 when (responseBody) {
                     is Odgovor -> {
-                        db.odgovorDAO().insertOdgovor(responseBody)
-                        db.anketaTakenDAO().updateAnketaTaken(progres, idAnketaTaken)
+                            db.odgovorDAO().insertOdgovor(responseBody)
+                            db.anketaTakenDAO().updateAnketaTaken(progres, idAnketaTaken)
                     }
                     else -> progres = -1
                 }

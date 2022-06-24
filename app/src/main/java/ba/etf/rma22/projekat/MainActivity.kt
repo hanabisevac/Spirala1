@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
+import ba.etf.rma22.projekat.data.AppDatabase
 import ba.etf.rma22.projekat.data.models.Anketa
 import ba.etf.rma22.projekat.data.repositories.AccountRepository
 import ba.etf.rma22.projekat.data.repositories.ContextRepo
@@ -44,9 +45,9 @@ class MainActivity : AppCompatActivity(), Communicator {
         ContextRepo.setContext(this)
         registerReceiver(br, filter)
 
-        if(intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain")
-            handleSendText(intent)
-
+        if(intent.action == Intent.ACTION_VIEW && intent.data != null){
+            intent.getStringExtra("payload").let { AccViewModel().postaviHash(it!!) }
+        }
 
         viewPager.offscreenPageLimit = 3
         viewPagerAdapter = ViewPagerAdapter(supportFragmentManager, fragments, lifecycle)
@@ -60,10 +61,6 @@ class MainActivity : AppCompatActivity(), Communicator {
             }
         })
         //refreshSecondFragment()
-    }
-
-    private fun handleSendText(intent: Intent) {
-        intent.getStringExtra("playload").let { AccViewModel().postaviHash(it!!) }
     }
 
 

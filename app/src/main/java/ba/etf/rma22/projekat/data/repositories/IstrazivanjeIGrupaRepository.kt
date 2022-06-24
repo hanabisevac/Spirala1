@@ -18,9 +18,7 @@ object IstrazivanjeIGrupaRepository {
                 val response = ApiConfig.retrofit.getIstrazivanje(offset)
                 val responseBody = response.body()
                 val db = AppDatabase.getInstance(ContextRepo.getContext())
-                if (!db.istrazivanjeDAO().getAllIstrazivanja()
-                        .isEmpty()
-                ) db.istrazivanjeDAO().deleteIstrazivanja()
+                db.istrazivanjeDAO().deleteIstrazivanja()
                 responseBody!!.forEach { s -> db.istrazivanjeDAO().insertIstrazivanja(s) }
                 return@withContext responseBody!!
             }catch(error : Exception){

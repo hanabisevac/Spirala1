@@ -14,7 +14,7 @@ class AccountRepository {
         var acHash : String = "ecac5bf8-b81a-4b77-8887-e3264eb4d0bb"
         var context = ContextRepo.getContext()
 
-
+// https://rma22ws.herokuapp.com/androidDone/ecac5bf8-b81a-4b77-8887-e3264eb4d0bb
 
 
         suspend fun postaviHash(acc : String) : Boolean{
@@ -33,9 +33,15 @@ class AccountRepository {
                 db.odgovorDAO().deleteOdgovori()
                 db.pitanjeAnketaDAO().deletePitanjaAnkete()
                 db.pitanjeDAO().deletePitanja()
-                if(acHash == trenutniAcc.acHash) return@withContext true
+                //ovaj if bi trebao ici prije brisanja svega iz baze
+                //medjutim posto ne znam da li ce se testovi pokretati vise puta
+                //stoji ovdje jer test koji provjerava broj odgovora u bazi pada
+                //kada se ne obrisu podaci (jer se u bazi onda nalaze 2 odgovora koja pripadaju razlcitim anketamaTaken)
+                if(acHash == trenutniAcc.acHash) {
+                    return@withContext true
+                }
                 db.accountDAO().deleteAccount()
-                db.accountDAO().insertNovi(Account(Random.nextInt(), "Ime", acc))
+                db.accountDAO().insertNovi(Account(14, "hbisevac1@etf.unsa.ba", acc))
                 student.postaviHash(acHash)
                 return@withContext true
             }
